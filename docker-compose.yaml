@@ -1,0 +1,17 @@
+version: "3"
+name: skidoodle
+services:
+  app:
+    container_name: skidoodle-app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+  server:
+    container_name: skidoodle-server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
