@@ -142,7 +142,7 @@ The number of video frames that the current frame will be held for.
 6. [ ] UI - Export :triangular_flag_on_post:
    - [ ] BE - Generate video file/stills
 
-### /scene/{id}
+### /scenes/{id}
 
 1. [ ] Design - Scene
 2. [ ] Data - Design Scene Type
