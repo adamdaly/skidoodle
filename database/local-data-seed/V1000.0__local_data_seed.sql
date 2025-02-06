@@ -1,4 +1,4 @@
-INSERT INTO "User" (name) VALUES ('Name 1');
+INSERT INTO "User" (name) VALUES ('Name 1'), ('Name 2');
 
 INSERT INTO "Animation" ("name", "width", "height", "framerate", "userid")
     VALUES ('Animation 1', 1920, 1080, 24, (SELECT id FROM "User" LIMIT 1)),
@@ -13,3 +13,5 @@ INSERT INTO "Scene" ("name", "index", "userid", "animationid")
     ('Scene 3', 2, (SELECT id FROM "User" LIMIT 1), (SELECT id FROM "Animation" LIMIT 1)),
     ('Scene 4', 3, (SELECT id FROM "User" LIMIT 1), (SELECT id FROM "Animation" LIMIT 1)),
     ('Scene 5', 4, (SELECT id FROM "User" LIMIT 1), (SELECT id FROM "Animation" LIMIT 1));
+
+INSERT INTO "Users_Scenes" ("userid", "sceneid") VALUES ((SELECT id FROM "User" LIMIT 1 OFFSET 1), (SELECT id FROM "Scene" LIMIT 1));
