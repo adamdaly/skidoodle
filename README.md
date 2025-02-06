@@ -16,7 +16,7 @@ Solution: Skidoodle aims to be a feature rich online bitmap based animation tool
 2. Must have a method to create new Animation
 3. Must have interactive canvas to draw frames
 4. Must have basic draw and erase tools
-5. Must have a method to export complete animation
+5. Must have a method to export completed animation
 
 ### Should have
 
@@ -42,3 +42,74 @@ Solution: Skidoodle aims to be a feature rich online bitmap based animation tool
 1. Won't have advanced drawing tools, e.g. vector graphics
 2. Won't have object based animation with keyframing
 3. Won't have a social media aspect
+
+## Domain Model Diagram
+
+```mermaid
+erDiagram
+  USER ||--o{ ANIMATION: "Creates"
+  ANIMATION ||--o{ SCENE: "Has"
+  USER }o--o{ SCENE: "Has"
+  SCENE ||--o{ FRAME: "Has"
+
+```
+
+## Entity Relationship Diagram
+
+```mermaid
+erDiagram
+   USER {
+      int id PK
+   }
+
+   ANIMATION {
+      int id PK
+      int userid FK
+      string name
+      int width
+      int height
+      int framerate
+      bool isDeleted
+      DateTime createdAt
+      DateTime updatedAt
+   }
+
+   SCENE {
+      int id PK
+      int userid FK
+      int animationid FK
+      string name
+      int index
+      bool isDeleted
+      DateTime createdAt
+      DateTime updatedAt
+   }
+
+   USERS_SCENES {
+      int id PK
+      int userid FK
+      int sceneid FK
+      bool isDeleted
+      DateTime createdAt
+      DateTime updatedAt
+   }
+
+   FRAME {
+      int id PK
+      int animationid FK
+      int sceneid FK
+      int length
+      int index
+      string file
+      string thumbnail
+      DateTime createdAt
+      DateTime updatedAt
+   }
+
+  USER ||--o{ ANIMATION: ""
+  USER }o--o{ USERS_SCENES: ""
+  SCENE }o--o{ USERS_SCENES: ""
+  ANIMATION ||--o{ SCENE: ""
+  SCENE ||--o{ FRAME: ""
+
+```
