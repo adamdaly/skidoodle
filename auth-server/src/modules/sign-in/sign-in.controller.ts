@@ -45,7 +45,6 @@ export default class SignInController {
       signed: true,
     });
 
-    console.log(res.getHeaders());
     res.json({ accessToken });
   }
 }
