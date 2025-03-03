@@ -1,0 +1,35 @@
+name: Unit tests
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "./server"
+
+defaults:
+  run:
+    working-directory: ./server
+
+jobs:
+  execute:
+    runs-on: node:lts-alpine3.21
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Start only the 'server' service with Docker Compose
+      - name: Start Required Service
+        run: |
+          docker compose -f docker-compose.yml up -d server
+
+      # Run npm tests in the 'server' service
+      - name: Run Tests
+        run: |
+          docker compose -f docker-compose.yml exec -T server npm test
+        # '-T' disables TTY allocation, suitable for CI
+
+      # Cleanup: Stop and remove containers
+      - name: Cleanup
+        if: always() # Runs even if tests fail
+        run: |
+          docker compose -f docker-compose.yml down
