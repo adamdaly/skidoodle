@@ -1,7 +1,7 @@
-export const get = jest.fn();
+export const get = jest.fn(() => Promise.resolve({ data: {} }));
 
-export const post = jest.fn();
+export const post = jest.fn(() => Promise.resolve({ data: {} }));
 
-export const put = jest.fn();
+export const put = jest.fn(() => Promise.resolve({ data: {} }));
 
-export const deleteRequest = jest.fn();
+export const deleteRequest = jest.fn(() => Promise.resolve({ data: {} }));

@@ -22,6 +22,12 @@ export const put = <Response = unknown, Body = unknown>(
   config: AxiosRequestConfig<Body> = {},
 ) => axiosInstance.put<Response>(url, body, config);
 
+export const patch = <Response = unknown, Body = unknown>(
+  url: string,
+  body: Body,
+  config: AxiosRequestConfig<Body> = {},
+) => axiosInstance.patch<Response>(url, body, config);
+
 export const deleteRequest = <Response = unknown, Body = unknown>(
   url: string,
   config: AxiosRequestConfig<Body> = {},

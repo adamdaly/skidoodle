@@ -14,8 +14,7 @@ services:
       - app-net
   flyway:
     image: flyway/flyway
-    command: -url=jdbc:postgresql://db/skidoodle -schemas=public -user=postgres
-      -password=password -connectRetries=5 migrate
+    command: -url=jdbc:postgresql://db/skidoodle -schemas=public -user=postgres -password=password -connectRetries=5 migrate
     volumes:
       - ./database:/flyway/sql
     depends_on:
@@ -91,6 +90,21 @@ services:
       - "3001:8081"
     networks:
       - app-net
+  file-store:
+    build:
+      context: ./file-store
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./file-store:/usr/src/app
+      - ./file-store/frames:/usr/src/app/frames
+    depends_on:
+      - server
+    networks:
+      - app-net
+    environment:
+      - PORT=3000
 
 networks:
   app-net:

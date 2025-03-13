@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Prisma } from '@prisma/client';
+import { CacheService } from 'src/cache/cache.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AnimationsService } from './animations.service';
 
 describe('AnimationsService', () => {
   let service: AnimationsService;
+
+  const id = 123;
 
   const animation: Prisma.AnimationUpdateInput = {
     name: 'Animation',
@@ -19,10 +22,17 @@ describe('AnimationsService', () => {
 
   const mockPrismaService = {
     animation: {
-      create: jest.fn(),
-      findUnique: jest.fn(),
-      update: jest.fn(),
+      create: jest.fn(() => ({ ...animation, id })),
+      findUnique: jest.fn(() => ({ ...animation, id })),
+      update: jest.fn(() => ({ ...animation, id })),
     },
+  };
+
+  const mockCacheService = {
+    reset: jest.fn(),
+    cacheFromResponse: jest.fn((ket: string, callback: () => unknown) =>
+      callback(),
+    ),
   };
 
   beforeEach(async () => {
@@ -32,6 +42,10 @@ describe('AnimationsService', () => {
         {
           provide: PrismaService,
           useValue: mockPrismaService,
+        },
+        {
+          provide: CacheService,
+          useValue: mockCacheService,
         },
       ],
     }).compile();

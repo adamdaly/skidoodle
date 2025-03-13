@@ -1,4 +1,4 @@
-import { RegisterResponse, SignInResponse } from '../auth-api';
+import { RefreshResponse, RegisterResponse, SignInResponse } from '../auth-api';
 
 export const register = jest.fn(
   (): Promise<{ data: RegisterResponse }> =>
@@ -24,4 +24,9 @@ export const signIn = jest.fn(
 
 export const verify = jest.fn(() => Promise.resolve());
 
-export const refresh = jest.fn(() => Promise.resolve());
+export const refresh = jest.fn(() =>
+  Promise.resolve<RefreshResponse>({
+    accessToken: 'asdf1234',
+    refreshToken: 'asdf5678',
+  }),
+);

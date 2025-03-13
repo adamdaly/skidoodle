@@ -15,7 +15,9 @@ export class AuthGuard implements CanActivate {
 
     const response = context.switchToHttp().getResponse<Response>();
     const accessToken = request.headers['authorization']?.split(' ')[1];
-    const refreshToken = request.signedCookies['refresh_token'];
+    const refreshToken =
+      request.signedCookies['refresh_token'] ??
+      request.cookies['refresh_token'];
 
     if (!accessToken) {
       return false;
@@ -32,12 +34,13 @@ export class AuthGuard implements CanActivate {
 
       try {
         const result = await refresh();
+
         response.setHeader(
           'authorization',
           `Bearer ${result.data.accessToken}`,
         );
 
-        response.cookie('refresh_token', refreshToken, {
+        response.cookie('refresh_token', result.data.refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           maxAge: 24 * 60 * 60 * 1000, // 1 day

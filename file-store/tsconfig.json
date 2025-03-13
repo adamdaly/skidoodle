@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // Matches Node.js 18+ capabilities
+    "module": "commonjs", // For ES modules (import/export) with .js resolution
+    "moduleResolution": "node", // Aligns with Node.js module resolution
+    "lib": ["ES2022"], // Includes modern JS features
+    "outDir": "./dist", // Output directory for compiled JS
+    "rootDir": "./src", // Source directory
+    "strict": true, // Enables all strict type-checking options
+    "esModuleInterop": true, // Better interop with CommonJS modules (like Express)
+    "skipLibCheck": true, // Speeds up compilation by skipping .d.ts checks
+    "forceConsistentCasingInFileNames": true, // Prevents case-sensitivity bugs
+    "resolveJsonModule": true, // Allows importing JSON files
+    "sourceMap": true, // For debugging with TS source
+    "strictPropertyInitialization": false
+  },
+  "include": ["src/**/*"], // Include all TS files in src/
+  "exclude": ["node_modules", "dist"] // Exclude build artifacts and dependencies
+}

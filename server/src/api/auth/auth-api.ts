@@ -24,6 +24,7 @@ export type SignInResponse = {
 
 export type RefreshResponse = {
   accessToken: string;
+  refreshToken: string;
 };
 
 export const register = (payload: RegisterPayload) =>
