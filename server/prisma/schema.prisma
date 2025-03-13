@@ -25,6 +25,7 @@ model Frame {
   id        Int      @id @default(autoincrement())
   length    Int      @default(2)
   index     Int
+  filename  String   @db.Uuid()
   sceneid   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -36,7 +37,7 @@ model Scene {
   id           Int            @id @default(autoincrement())
   name         String         @db.VarChar(255)
   index        Int
-  userid       Int
+  userid       String         @db.VarChar(255)
   animationid  Int
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @default(now())

@@ -9,10 +9,11 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { Animation, Prisma } from '@prisma/client';
-import { AnimationsService } from './animations.service';
 
+import { Animation } from '@prisma/client';
 import { AuthGuard } from '../auth/auth.guard';
+import { CreateDto, UpdateDto } from './animations.dto';
+import { AnimationsService } from './animations.service';
 
 @Controller('animations')
 @UseGuards(AuthGuard)
@@ -20,7 +21,7 @@ export class AnimationsController {
   constructor(private readonly animationsService: AnimationsService) {}
 
   @Post()
-  create(@Body() data: Prisma.AnimationCreateInput): Promise<Animation> {
+  create(@Body() data: CreateDto): Promise<Animation> {
     return this.animationsService.create(data);
   }
 
@@ -31,10 +32,17 @@ export class AnimationsController {
     return this.animationsService.getAnimationById(id);
   }
 
+  @Get('users/:userid')
+  getAnimationsByUserId(
+    @Param('userid') userid: string,
+  ): Promise<Animation[] | null> {
+    return this.animationsService.getAnimationsByUserId(userid);
+  }
+
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    data: Prisma.AnimationUpdateInput,
+    @Body() data: UpdateDto,
   ): Promise<Animation> {
     return this.animationsService.update(id, data);
   }

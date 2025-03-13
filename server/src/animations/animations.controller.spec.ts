@@ -3,6 +3,7 @@ import { Animation, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AnimationsController } from './animations.controller';
 import { AnimationsService } from './animations.service';
+import { CreateDto, UpdateDto } from './animations.dto';
 
 describe('AnimationsController', () => {
   let controller: AnimationsController;
@@ -20,10 +21,24 @@ describe('AnimationsController', () => {
     isDeleted: false,
   };
 
+  const mockAnimationService = {
+    create: jest.fn(),
+    getAnimationById: jest.fn(),
+    getAnimationsByUserId: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AnimationsController],
-      providers: [PrismaService, AnimationsService],
+      providers: [
+        PrismaService,
+        {
+          provide: AnimationsService,
+          useValue: mockAnimationService,
+        },
+      ],
     }).compile();
 
     controller = module.get<AnimationsController>(AnimationsController);
@@ -35,7 +50,7 @@ describe('AnimationsController', () => {
   });
 
   it('should create an animation when the create POST method is called', async () => {
-    const payload: Prisma.AnimationCreateInput = {
+    const payload: CreateDto = {
       name: 'Animation',
       width: 1920,
       height: 1024,
@@ -75,8 +90,11 @@ describe('AnimationsController', () => {
       ...animation,
     };
 
-    const payload: Prisma.AnimationUpdateInput = {
+    const payload: UpdateDto = {
       name: 'Updated Animation',
+      width: 1920,
+      height: 1024,
+      framerate: 24,
     };
 
     const spy = jest

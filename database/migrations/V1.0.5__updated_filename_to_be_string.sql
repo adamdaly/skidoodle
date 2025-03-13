@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Frame" ALTER COLUMN "filename" SET DATA TYPE VARCHAR(255);
+
