@@ -1,7 +1,9 @@
 /* istanbul ignore file */
 import axios, { AxiosRequestConfig } from 'axios';
 
-export const axiosInstance = axios.create({});
+export const axiosInstance = axios.create({
+  withCredentials: true,
+});
 
 export const get = <Response = unknown>(
   url: string,

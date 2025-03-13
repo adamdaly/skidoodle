@@ -7,7 +7,6 @@ export class AnimationsService {
   constructor(private readonly prisma: PrismaService) {}
 
   create(data: Prisma.AnimationCreateInput): Promise<Animation> {
-    console.log('AnimationsService', data);
     return this.prisma.animation.create({ data });
   }
 

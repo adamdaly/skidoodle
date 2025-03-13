@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { refresh, verify } from 'src/api/auth';
 
 declare module 'express' {
   interface Request {
@@ -11,20 +12,17 @@ declare module 'express' {
 export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
+
     const response = context.switchToHttp().getResponse<Response>();
     const accessToken = request.headers['authorization']?.split(' ')[1];
-    const refreshToken =
-      request.signedCookies['refresh_token'] ??
-      request.cookies['refresh_token'];
+    const refreshToken = request.signedCookies['refresh_token'];
 
     if (!accessToken) {
       return false;
     }
 
     try {
-      await fetch(
-        `http://auth-server:3000/token/verify?access_token=${accessToken}`,
-      );
+      await verify(accessToken);
     } catch (e) {
       console.log('accessToken failed', e);
 
@@ -33,13 +31,12 @@ export class AuthGuard implements CanActivate {
       }
 
       try {
-        const result = await fetch('http://auth-server:3000/token/refresh');
-        const body = (await result.json()) as {
-          accessToken: string;
-          refreshToken: string;
-        };
+        const result = await refresh();
+        response.setHeader(
+          'authorization',
+          `Bearer ${result.data.accessToken}`,
+        );
 
-        response.setHeader('authorization', `Bearer ${body.accessToken}`);
         response.cookie('refresh_token', refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
