@@ -23,6 +23,7 @@ describe('ScenesService', () => {
     scene: {
       create: jest.fn(),
       update: jest.fn(() => ({ ...scene })),
+      findMany: jest.fn(),
     },
   };
 
@@ -78,6 +79,33 @@ describe('ScenesService', () => {
         Animation: {
           connect: {
             id: sceneCreate.animationid,
+          },
+        },
+      },
+    });
+  });
+
+  it('should call prisma.scene.findMany with an animationid and params to handle pagination', async () => {
+    const id = 1234;
+    const orderBy = 'updatedAt';
+    const skip = 0;
+    const take = 10;
+    const sortOrder = 'desc';
+
+    await service.getScenesByAnimationId(id, orderBy, skip, take, sortOrder);
+
+    expect(mockPrismaService.scene.findMany).toHaveBeenCalledWith({
+      where: { animationid: id },
+      skip,
+      take,
+      orderBy: {
+        [orderBy]: sortOrder,
+      },
+      include: {
+        Frame: {
+          take: 1,
+          select: {
+            filename: true,
           },
         },
       },

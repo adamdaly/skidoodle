@@ -7,18 +7,24 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 
-import { Animation } from '@prisma/client';
+import { Animation, Scene } from '@prisma/client';
+import { DMMF } from '@prisma/client/runtime/library';
+import { ScenesService } from 'src/scenes/scenes.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { CreateDto, UpdateDto } from './animations.dto';
 import { AnimationsService } from './animations.service';
+import { CreateDto, UpdateDto } from './animations.dto';
 
 @Controller('animations')
 @UseGuards(AuthGuard)
 export class AnimationsController {
-  constructor(private readonly animationsService: AnimationsService) {}
+  constructor(
+    private readonly animationsService: AnimationsService,
+    private readonly scenesService: ScenesService,
+  ) {}
 
   @Post()
   create(@Body() data: CreateDto): Promise<Animation> {
@@ -32,11 +38,28 @@ export class AnimationsController {
     return this.animationsService.getAnimationById(id);
   }
 
-  @Get('users/:userid')
+  @Get('')
   getAnimationsByUserId(
-    @Param('userid') userid: string,
+    @Query('userid') userid: string,
   ): Promise<Animation[] | null> {
     return this.animationsService.getAnimationsByUserId(userid);
+  }
+
+  @Get(':id/scenes')
+  getScenesByAnimationId(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('orderBy') orderBy?: keyof Scene,
+    @Query('take', new ParseIntPipe({ optional: true })) take?: number,
+    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
+    @Query('sortOrder') sortOrder?: DMMF.SortOrder,
+  ): Promise<Scene[] | null> {
+    return this.scenesService.getScenesByAnimationId(
+      id,
+      orderBy,
+      skip,
+      take,
+      sortOrder,
+    );
   }
 
   @Put(':id')

@@ -8,6 +8,38 @@ Problem: Modern animation with perfectly drawn lines have lost much of their cha
 
 Solution: Skidoodle aims to be a feature rich online bitmap based animation tool. It should provide users with the ability to create and arrange complex animations built from Scenes; Scenes which are composed of Frames created using a HTML Canvas element. Being bitmap based the user will use brush tools to sketch, paint, and to erase.
 
+### Persona
+
+- **Description**: College Student & Hobbyist Animator
+- **Goals**: Create short, fun animations with or without friends for social media, and learn animation basics without a steep learning curve.
+- **Pain Points**: Finds complex tools like After Effects overwhelming, wants to avoid subscription costs, and wants a browser based lightweight app that runs on a basic laptop.
+- **Tech Habits**: Uses free tools like GIMP or Paint.NET, shares animations on social media, and prefers simple interfaces.
+- **Persona Use Case**: User needs a bitmap animation tool with an easy timeline editor, pre-made brushes, and easy export to quickly post online.
+
+### User Journeys
+
+```mermaid
+journey
+    title User Journey
+    section Register
+        Sign Up: 0: User:
+        Sign In: 0: User:
+        View Dashboard: 1: User:
+    section Animations
+        View Empty List: 1: User:
+        Create New Animation: 2: User:
+    section Scenes
+        View Empty List: 3: User:
+        Create New Scene: 3: User:
+    section Scene
+        Draw First Frame: 4: User:
+        Add Second Frame: 5: User:
+        Add nth Frame: 6: User:
+    section Export
+        Returns to Animation: 7: User:
+        Exports animation: 9: User:
+```
+
 ## Priorities
 
 ### Must have

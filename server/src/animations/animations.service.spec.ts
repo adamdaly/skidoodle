@@ -92,7 +92,12 @@ describe('AnimationsService', () => {
     expect(mockPrismaService.animation.findUnique).toHaveBeenCalledWith({
       where: { id },
       include: {
-        Scene: true,
+        Scene: {
+          take: expect.any(Number) as number,
+          orderBy: {
+            updatedAt: expect.any(String) as string,
+          },
+        },
       },
     });
   });
