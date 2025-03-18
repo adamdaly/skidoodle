@@ -63,7 +63,7 @@ describe('FramesController', () => {
       filename,
       index,
       length,
-      Scene: { connect: { id: sceneid } },
+      sceneid,
     });
   });
 

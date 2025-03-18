@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FramesService } from './frames.service';
+import { CreateDto, UpdateDto } from './frames.dto';
 
 describe('FramesService', () => {
   let service: FramesService;
@@ -13,13 +14,16 @@ describe('FramesService', () => {
     },
   };
 
-  // @ts-expect-error - Testing
-  const frame: Prisma.FrameCreateInput = {
+  const frameCreate: CreateDto = {
     length: 10,
     index: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    isDeleted: false,
+    filename: 'filename.png',
+    sceneid: 1234,
+  };
+
+  const frameUpdate: UpdateDto = {
+    length: 10,
+    index: 0,
   };
 
   beforeEach(async () => {
@@ -45,20 +49,30 @@ describe('FramesService', () => {
   });
 
   it('should call prisma.frame.create with the correct data when the create service function is called', async () => {
-    await service.create(frame);
+    await service.create(frameCreate);
 
     expect(mockPrismaService.frame.create).toHaveBeenCalledWith({
-      data: frame,
+      data: {
+        length: frameCreate.length,
+        index: frameCreate.index,
+        filename: frameCreate.filename,
+
+        Scene: {
+          connect: {
+            id: frameCreate.sceneid,
+          },
+        },
+      },
     });
   });
 
   it('should call prisma.frame.update with the correct data when the update service function is called', async () => {
     const id = 123;
-    await service.update(id, frame);
+    await service.update(id, frameUpdate);
 
     expect(mockPrismaService.frame.update).toHaveBeenCalledWith({
       where: { id },
-      data: frame,
+      data: frameUpdate,
     });
   });
 

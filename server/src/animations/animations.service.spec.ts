@@ -1,30 +1,47 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Prisma } from '@prisma/client';
+import { Animation } from '@prisma/client';
 import { CacheService } from 'src/cache/cache.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AnimationsService } from './animations.service';
+import { CreateDto, UpdateDto } from './animations.dto';
 
 describe('AnimationsService', () => {
   let service: AnimationsService;
 
   const id = 123;
 
-  const animation: Prisma.AnimationUpdateInput = {
+  const animation: Animation = {
+    id,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isDeleted: false,
     name: 'Animation',
     width: 1920,
     height: 1024,
     framerate: 24,
     userid: 'user-1234',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    isDeleted: false,
+  };
+
+  const animationCreate: CreateDto = {
+    name: 'Animation',
+    width: 1920,
+    height: 1024,
+    framerate: 24,
+    userid: 'user-1234',
+  };
+
+  const animationUpdate: UpdateDto = {
+    name: 'Animation',
+    width: 1920,
+    height: 1024,
+    framerate: 24,
   };
 
   const mockPrismaService = {
     animation: {
-      create: jest.fn(() => ({ ...animation, id })),
-      findUnique: jest.fn(() => ({ ...animation, id })),
-      update: jest.fn(() => ({ ...animation, id })),
+      create: jest.fn(() => ({ ...animation })),
+      findUnique: jest.fn(() => ({ ...animation })),
+      update: jest.fn(() => ({ ...animation })),
     },
   };
 
@@ -62,20 +79,9 @@ describe('AnimationsService', () => {
   });
 
   it('should call prisma.animation.create with the correct data', async () => {
-    const payload: Prisma.AnimationCreateInput = {
-      name: 'Animation',
-      width: 1920,
-      height: 1024,
-      framerate: 24,
-      userid: 'user-1234',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      isDeleted: false,
-    };
-
-    await service.create(payload);
+    await service.create(animationCreate);
     expect(mockPrismaService.animation.create).toHaveBeenCalledWith({
-      data: payload,
+      data: animationCreate,
     });
   });
 
@@ -94,11 +100,11 @@ describe('AnimationsService', () => {
   it('should call prisma.animation.update function with the correct data when the update service function is called', async () => {
     const id = 1;
 
-    await service.update(id, animation);
+    await service.update(id, animationUpdate);
 
     expect(mockPrismaService.animation.update).toHaveBeenCalledWith({
       where: { id },
-      data: animation,
+      data: animationUpdate,
     });
   });
 

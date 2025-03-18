@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Animation, Prisma } from '@prisma/client';
+import { Animation } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CacheService } from 'src/cache/cache.service';
+import { CreateDto, UpdateDto } from './animations.dto';
 
 @Injectable()
 export class AnimationsService {
@@ -19,7 +20,7 @@ export class AnimationsService {
     return await this.cacheService.reset(cacheKey);
   }
 
-  async create(data: Prisma.AnimationCreateInput): Promise<Animation> {
+  async create(data: CreateDto): Promise<Animation> {
     const response = await this.prisma.animation.create({ data });
     await this.resetAnimationCache(response.userid);
     return response;
@@ -55,10 +56,7 @@ export class AnimationsService {
     );
   }
 
-  async update(
-    id: number,
-    data: Prisma.AnimationUpdateInput,
-  ): Promise<Animation> {
+  async update(id: number, data: UpdateDto): Promise<Animation> {
     const response = await this.prisma.animation.update({
       where: { id },
       data,
