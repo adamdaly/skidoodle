@@ -9,8 +9,8 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { CreateDto, UpdateDto } from './scenes.dto';
 import { ScenesService } from './scenes.service';
 
 @Controller('scenes')
@@ -19,7 +19,7 @@ export class ScenesController {
   constructor(private readonly scenesService: ScenesService) {}
 
   @Post()
-  create(@Body() data: Prisma.SceneCreateInput) {
+  create(@Body() data: CreateDto) {
     return this.scenesService.create(data);
   }
 
@@ -29,10 +29,7 @@ export class ScenesController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: Prisma.SceneUpdateInput,
-  ) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateDto) {
     return this.scenesService.update(id, data);
   }
 
