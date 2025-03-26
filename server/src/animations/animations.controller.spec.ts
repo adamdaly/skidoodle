@@ -1,13 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Animation, Prisma } from '@prisma/client';
+import { Animation, Scene } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AnimationsController } from './animations.controller';
 import { AnimationsService } from './animations.service';
 import { CreateDto, UpdateDto } from './animations.dto';
 
+import { ScenesService } from 'src/scenes/scenes.service';
+
 describe('AnimationsController', () => {
   let controller: AnimationsController;
   let service: AnimationsService;
+  let sceneService: ScenesService;
 
   const animation: Animation = {
     name: 'Animation',
@@ -29,6 +32,10 @@ describe('AnimationsController', () => {
     delete: jest.fn(),
   };
 
+  const mockSceneService = {
+    getScenesByAnimationId: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AnimationsController],
@@ -38,11 +45,16 @@ describe('AnimationsController', () => {
           provide: AnimationsService,
           useValue: mockAnimationService,
         },
+        {
+          provide: ScenesService,
+          useValue: mockSceneService,
+        },
       ],
     }).compile();
 
     controller = module.get<AnimationsController>(AnimationsController);
     service = module.get<AnimationsService>(AnimationsService);
+    sceneService = module.get<ScenesService>(ScenesService);
   });
 
   it('should be defined', () => {
@@ -83,6 +95,16 @@ describe('AnimationsController', () => {
       .mockImplementation(() => Promise.resolve(result));
 
     expect(await controller.getAnimationById(123)).toEqual(result);
+  });
+
+  it('should read all animation scenes based on animationid using the getScenesByAnimationId method', async () => {
+    const result: Scene[] = [];
+
+    jest
+      .spyOn(sceneService, 'getScenesByAnimationId')
+      .mockImplementation(() => Promise.resolve(result));
+
+    expect(await controller.getScenesByAnimationId(123)).toEqual(result);
   });
 
   it('should update an animation based on its id', async () => {

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Scene } from '@prisma/client';
+import { DMMF } from '@prisma/client/runtime/library';
 import { CacheService } from 'src/cache/cache.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateDto, UpdateDto } from './scenes.dto';
@@ -36,16 +37,29 @@ export class ScenesService {
     });
   }
 
-  async getScenesByAnimationId(id: number): Promise<Scene[]> {
-    const cacheKey = this.createCacheKey(id);
-
-    return this.cacheService.cacheFromResponse<Scene[]>(
-      cacheKey,
-      async () =>
-        await this.prisma.scene.findMany({
-          where: { animationid: id },
-        }),
-    );
+  getScenesByAnimationId(
+    id: number,
+    orderBy: keyof Scene = 'updatedAt',
+    skip?: number,
+    take?: number,
+    sortOrder: DMMF.SortOrder = 'desc',
+  ): Promise<Scene[]> {
+    return this.prisma.scene.findMany({
+      where: { animationid: id },
+      skip,
+      take,
+      orderBy: {
+        [orderBy]: sortOrder,
+      },
+      include: {
+        Frame: {
+          take: 1,
+          select: {
+            filename: true,
+          },
+        },
+      },
+    });
   }
 
   getSceneById(id: number): Promise<Scene | null> {
@@ -56,7 +70,13 @@ export class ScenesService {
       async () =>
         await this.prisma.scene.findFirst({
           where: { id },
-          include: { Frame: true },
+          include: {
+            Frame: {
+              orderBy: {
+                index: 'asc',
+              },
+            },
+          },
         }),
     );
   }

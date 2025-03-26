@@ -20,40 +20,46 @@ export class AnimationsService {
     return await this.cacheService.reset(cacheKey);
   }
 
+  getAnimationById(id: number): Promise<Animation | null> {
+    return this.prisma.animation.findUnique({
+      where: { id },
+      include: {
+        Scene: {
+          take: 10,
+          orderBy: {
+            updatedAt: 'asc',
+          },
+        },
+      },
+    });
+  }
+
+  getAnimationsByUserId(userid: string): Promise<Animation[] | null> {
+    return this.prisma.animation.findMany({
+      where: { userid },
+      include: {
+        Scene: {
+          take: 1,
+          include: {
+            Frame: {
+              take: 1,
+              select: {
+                filename: true,
+              },
+            },
+          },
+          orderBy: {
+            updatedAt: 'asc',
+          },
+        },
+      },
+    });
+  }
+
   async create(data: CreateDto): Promise<Animation> {
     const response = await this.prisma.animation.create({ data });
     await this.resetAnimationCache(response.userid);
     return response;
-  }
-
-  async getAnimationById(id: number): Promise<Animation | null> {
-    const cacheKey = this.createCacheKey(id);
-
-    return this.cacheService.cacheFromResponse<Animation | null>(
-      cacheKey,
-      async () =>
-        await this.prisma.animation.findUnique({
-          where: { id },
-          include: {
-            Scene: true,
-          },
-        }),
-    );
-  }
-
-  async getAnimationsByUserId(userid: string): Promise<Animation[] | null> {
-    const cacheKey = this.createCacheKey(userid);
-
-    return this.cacheService.cacheFromResponse<Animation[] | null>(
-      cacheKey,
-      async () =>
-        await this.prisma.animation.findMany({
-          where: { userid },
-          include: {
-            Scene: true,
-          },
-        }),
-    );
   }
 
   async update(id: number, data: UpdateDto): Promise<Animation> {
