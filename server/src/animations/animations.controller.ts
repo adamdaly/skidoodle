@@ -9,8 +9,10 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-
+import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 import { Animation } from '@prisma/client';
+import { User } from 'src/shared/decorators/decorator-user';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateDto, UpdateDto } from './animations.dto';
 import { AnimationsService } from './animations.service';
@@ -18,11 +20,21 @@ import { AnimationsService } from './animations.service';
 @Controller('animations')
 @UseGuards(AuthGuard)
 export class AnimationsController {
-  constructor(private readonly animationsService: AnimationsService) {}
+  constructor(
+    private readonly animationsService: AnimationsService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post()
   create(@Body() data: CreateDto): Promise<Animation> {
     return this.animationsService.create(data);
+  }
+
+  @Get('')
+  async getAnimationsByUserId(
+    @User() user: Request['user'],
+  ): Promise<Animation[] | null> {
+    return this.animationsService.getAnimationsByUserId(user.userId);
   }
 
   @Get(':id')
@@ -30,13 +42,6 @@ export class AnimationsController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Animation | null> {
     return this.animationsService.getAnimationById(id);
-  }
-
-  @Get('users/:userid')
-  getAnimationsByUserId(
-    @Param('userid') userid: string,
-  ): Promise<Animation[] | null> {
-    return this.animationsService.getAnimationsByUserId(userid);
   }
 
   @Put(':id')

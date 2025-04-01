@@ -5,16 +5,15 @@ import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "../../constants";
 type VerifyRequest = Request<
   {},
   any,
-  {},
   {
-    access_token: string;
-  }
+    accessToken: string;
+  },
+  {}
 >;
 
-export default class SignInController {
+export default class TokenController {
   static async verify(req: VerifyRequest, res: Response) {
-    const accessToken = req.query.access_token;
-    console.log("verify", accessToken);
+    const { accessToken } = req.body;
 
     try {
       if (accessToken) {
@@ -34,10 +33,7 @@ export default class SignInController {
   }
 
   static async refresh(req: Request, res: Response) {
-    const refreshToken =
-      req.signedCookies["refresh_token"] ?? req.cookies["refresh_token"];
-
-    console.log(refreshToken);
+    const { refreshToken } = req.body;
 
     if (!refreshToken) {
       res.status(401).send("");
@@ -66,7 +62,6 @@ export default class SignInController {
         refreshToken: updatedRefreshToken,
       });
     } catch (e) {
-      console.log(e);
       res.status(401).json(e);
     }
   }

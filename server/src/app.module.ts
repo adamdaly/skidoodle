@@ -9,6 +9,7 @@ import { FramesModule } from './frames/frames.module';
 import { ScenesModule } from './scenes/scenes.module';
 import { PrismaService } from './prisma/prisma.service';
 import { CacheService } from './cache/cache.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CacheService } from './cache/cache.service';
     ScenesModule,
     FramesModule,
     AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [PrismaService, FileService, CacheService],

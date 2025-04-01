@@ -29,22 +29,15 @@ export default class SignInController {
     const accessToken = jwt.sign(
       { userId: user._id, username },
       ACCESS_TOKEN_SECRET,
-      { expiresIn: "10m" } // Short-lived access token
+      { expiresIn: "1h" } // Short-lived access token
     );
 
     const refreshToken = jwt.sign(
       { userId: user._id },
       REFRESH_TOKEN_SECRET,
-      { expiresIn: "20m" } // Long-lived refresh token
+      { expiresIn: "24h" } // Long-lived refresh token
     );
 
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      signed: true,
-    });
-
-    res.status(200).json({ accessToken });
+    res.status(200).json({ id: user._id, username, accessToken, refreshToken });
   }
 }

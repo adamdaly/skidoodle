@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "express-requests-logger": "^4.0.2"
-  }
-}

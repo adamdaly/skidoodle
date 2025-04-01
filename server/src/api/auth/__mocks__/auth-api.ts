@@ -17,7 +17,10 @@ export const signIn = jest.fn(
   (): Promise<{ data: SignInResponse }> =>
     Promise.resolve({
       data: {
+        id: 'asdf-1234',
+        username: 'Some Name',
         accessToken: 'asdf-1234',
+        refreshToken: 'asdf5678',
       },
     }),
 );

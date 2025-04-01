@@ -105,6 +105,19 @@ services:
       - app-net
     environment:
       - PORT=3000
+  # client:
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile.local
+  #   ports:
+  #     - "3004:3000"
+  #   volumes:
+  #     - ./client:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   depends_on:
+  #     - server
+  #   networks:
+  #     - app-net
 
 networks:
   app-net:

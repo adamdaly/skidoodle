@@ -1,4 +1,5 @@
-import { get, post } from '../api';
+import { AxiosRequestConfig } from 'axios';
+import { post } from '../api';
 
 export type RegisterPayload = {
   username: string;
@@ -19,7 +20,10 @@ export type SignInPayload = {
 };
 
 export type SignInResponse = {
+  id: string;
+  username: string;
   accessToken: string;
+  refreshToken: string;
 };
 
 export type RefreshResponse = {
@@ -33,8 +37,12 @@ export const register = (payload: RegisterPayload) =>
 export const signIn = (payload: SignInPayload) =>
   post<SignInResponse>('http://auth-server:3000/sign-in', payload);
 
-export const verify = (accessToken: string) =>
-  get(`http://auth-server:3000/token/verify?access_token=${accessToken}`);
+export const verify = (accessToken: string, config?: AxiosRequestConfig) =>
+  post('http://auth-server:3000/token/verify', { accessToken }, config);
 
-export const refresh = () =>
-  get<RefreshResponse>('http://auth-server:3000/token/refresh');
+export const refresh = (refreshToken: string, config?: AxiosRequestConfig) =>
+  post<RefreshResponse>(
+    'http://auth-server:3000/token/refresh',
+    { refreshToken },
+    config,
+  );
