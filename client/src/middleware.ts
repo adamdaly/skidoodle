@@ -1,18 +1,31 @@
+import axios, { AxiosError } from "axios";
 import { NextResponse } from "next/server";
 import type { MiddlewareConfig, NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { postTokenRefresh, postTokenVerify } from "./api/auth-api";
 
 export async function middleware(request: NextRequest) {
+  const host = request.headers.get("host") || "localhost:3000";
+  const protocol = request.headers.get("x-forwarded-proto") || "http";
+  const baseUrl = `${protocol}://${host}`;
+
   if (request.nextUrl.pathname.startsWith("/sign-in")) {
     const accessToken = request.cookies.get("access_token");
 
     try {
       if (accessToken) {
-        await postTokenVerify(accessToken.value);
-        return NextResponse.redirect(new URL("/animations", request.url));
+        await axios.post(
+          "http://auth-server:3000/token/verify",
+
+          {
+            accessToken: accessToken.value,
+          }
+        );
+
+        return NextResponse.redirect(new URL("/animations", baseUrl));
       }
-    } catch {}
+    } catch (e) {
+      console.log("sign-in error", (e as AxiosError).status);
+    }
   }
 
   if (request.nextUrl.pathname.startsWith("/signed-out")) {
@@ -30,14 +43,19 @@ export async function middleware(request: NextRequest) {
 
     try {
       if (accessToken) {
-        await postTokenVerify(accessToken.value);
+        await axios.post("http://auth-server:3000/token/verify", {
+          accessToken: accessToken.value,
+        });
       } else {
         throw new Error();
       }
     } catch {
       if (refreshToken) {
         try {
-          const response = await postTokenRefresh(refreshToken.value);
+          const response = await axios.post(
+            "http://auth-server:3000/token/refresh",
+            { refreshToken: refreshToken.value }
+          );
 
           const cookieJar = await cookies();
 

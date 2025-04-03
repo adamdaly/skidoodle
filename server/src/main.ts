@@ -15,6 +15,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
+    // origin: 'http://client:3000',
     origin: 'http://localhost:3004',
     credentials: true,
   });

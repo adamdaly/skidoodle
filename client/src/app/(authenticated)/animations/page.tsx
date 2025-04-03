@@ -29,7 +29,6 @@ async function getRecents() {
 
 export default async function Animations() {
   const animations = await getAnimations();
-  console.log(animations);
   const recents = await getRecents();
 
   return (

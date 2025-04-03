@@ -12,6 +12,8 @@ import {
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateDto, UpdateDto } from './scenes.dto';
 import { ScenesService } from './scenes.service';
+import { User } from 'src/shared/decorators/decorator-user';
+import { Request } from 'express';
 
 @Controller('scenes')
 @UseGuards(AuthGuard)
@@ -19,8 +21,8 @@ export class ScenesController {
   constructor(private readonly scenesService: ScenesService) {}
 
   @Post()
-  create(@Body() data: CreateDto) {
-    return this.scenesService.create(data);
+  create(@User() user: Request['user'], @Body() data: CreateDto) {
+    return this.scenesService.create({ ...data, userid: user.userId });
   }
 
   @Get(':id')

@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 
 export const axiosInstance = axios.create({
   withCredentials: true,
+  baseURL: "http://server:3000",
 });
 
 export const get = <Response = unknown>(

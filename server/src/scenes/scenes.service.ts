@@ -20,7 +20,7 @@ export class ScenesService {
     return await this.cacheService.reset(cacheKey);
   }
 
-  async create(data: CreateDto) {
+  async create(data: CreateDto & { userid: string }) {
     const { animationid, ...scene } = data;
     await this.resetCache(animationid);
 
@@ -49,16 +49,20 @@ export class ScenesService {
   }
 
   getSceneById(id: number): Promise<Scene | null> {
-    const cacheKey = this.createCacheKey(id);
+    return this.prisma.scene.findFirst({
+      where: { id },
+      include: { Frame: true },
+    });
+    // const cacheKey = this.createCacheKey(id);
 
-    return this.cacheService.cacheFromResponse<Scene | null>(
-      cacheKey,
-      async () =>
-        await this.prisma.scene.findFirst({
-          where: { id },
-          include: { Frame: true },
-        }),
-    );
+    // return this.cacheService.cacheFromResponse<Scene | null>(
+    //   cacheKey,
+    //   async () =>
+    //     await this.prisma.scene.findFirst({
+    //       where: { id },
+    //       include: { Frame: true },
+    //     }),
+    // );
   }
 
   async update(id: number, data: UpdateDto) {

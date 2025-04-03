@@ -1,6 +1,6 @@
 "use client";
-import { Provider as JotaiProvider } from "jotai";
-import { store } from "@/custom/state/store";
+// import { Provider as JotaiProvider } from "jotai";
+// import { store } from "@/custom/state/store";
 import { ReactNode } from "react";
 
 export type ProvidersProps = {
@@ -8,5 +8,6 @@ export type ProvidersProps = {
 };
 
 export const Providers = ({ children }: ProvidersProps) => {
-  return <JotaiProvider store={store}>{children}</JotaiProvider>;
+  return <>{children}</>;
+  // return <JotaiProvider store={store}>{children}</JotaiProvider>;
 };

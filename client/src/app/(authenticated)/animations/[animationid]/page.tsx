@@ -1,6 +1,6 @@
 import { getAnimation as getAnimationRequest } from "@/api/animation-api";
 import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
-import { CreateScene } from "./_components/create-scene";
+import { Scenes } from "./_components/scenes";
 
 async function getAnimation(animationid: string) {
   const result = await getAnimationRequest(animationid, {
@@ -36,8 +36,10 @@ export default async function Animation({
         <dd>{animation.createdAt}</dd>
         <dt>Updated</dt>
         <dd>{animation.updatedAt}</dd>
+
+        <dt>Updated</dt>
       </dl>
-      <CreateScene />
+      <Scenes scenes={animation.Scene} />
     </div>
   );
 }

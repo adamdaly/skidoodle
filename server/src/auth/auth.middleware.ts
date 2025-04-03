@@ -24,7 +24,7 @@ export class AuthMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     const cookie =
-      req.signedCookies['access_token'] ?? req.cookies['access_token']; // Assuming the cookie name is 'auth_token'
+      req.signedCookies['access_token'] ?? req.cookies['access_token'];
 
     if (!cookie) {
       return next();
@@ -32,8 +32,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       const payload = this.jwtService.decode<JwtPayload>(cookie);
-      // Attach decoded JWT payload to request (e.g., req.user)
-      req['user'] = payload; // Type this properly in a real app (see below)
+      req['user'] = payload;
     } catch {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }

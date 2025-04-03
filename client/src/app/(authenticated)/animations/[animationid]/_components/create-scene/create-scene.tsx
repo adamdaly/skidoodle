@@ -13,14 +13,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { Plus } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RHFTextField } from "@/custom/components/inputs/textfields/rhf-textfield";
-import { postScene } from "@/api/animation-api";
+
 import { useParams } from "next/navigation";
+import axios from "axios";
+
+import { Scene } from "@/custom/types";
 
 // interface CreateSceneValues {
 //   name: string;
@@ -36,15 +38,20 @@ const createCreateSceneSchema = () =>
 
 type CreateSceneSchema = z.infer<ReturnType<typeof createCreateSceneSchema>>;
 
-export function CreateScene() {
-  const {} = useParams();
+export type CreateSceneProps = {
+  onCreate(scene: Scene): void;
+};
+
+export function CreateScene({ onCreate }: CreateSceneProps) {
+  const params = useParams();
+
   const [open, setOpen] = useState(false);
 
   const schema = useRef(createCreateSceneSchema());
   const form = useForm<CreateSceneSchema>({
     resolver: zodResolver(schema.current),
     defaultValues: {
-      name: "asdf",
+      name: "",
       index: 1,
     },
   });
@@ -54,23 +61,29 @@ export function CreateScene() {
     form.reset();
   };
 
-  const submit = useCallback(async (data: CreateSceneSchema) => {
-    console.log(data);
-
-    try {
-      const response = await postScene({
-        animationid: 15,
-        name: data.name,
-        index: data.index,
-      });
-      console.log(response);
-
-      setOpen(false);
-      form.reset();
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+  const submit = useCallback(
+    async (data: CreateSceneSchema) => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/scenes",
+          {
+            animationid: parseInt(params.animationid as string, 10),
+            name: data.name,
+            index: data.index,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        onCreate(response.data);
+        setOpen(false);
+        form.reset();
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [form, params.animationid, onCreate]
+  );
 
   const onSubmit = useMemo(() => form.handleSubmit(submit), [form, submit]);
 
@@ -86,7 +99,7 @@ export function CreateScene() {
         <DialogContent className="sm:max-w-[425px]">
           <form {...{ onSubmit }}>
             <DialogHeader className="mb-4">
-              <DialogTitle>Add Dimensions</DialogTitle>
+              <DialogTitle>Add Scene</DialogTitle>
               <DialogDescription>
                 Enter a name and dimensions for your item.
               </DialogDescription>

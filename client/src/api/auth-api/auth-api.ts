@@ -16,7 +16,7 @@ export type RegisterResponse = {
 
 export const postRegister = (body: RegisterBody, config?: AxiosRequestConfig) =>
   post<RegisterResponse, RegisterBody>(
-    "http://localhost:3000/register",
+    "http://auth-server:3000/register",
     body,
     config
   );
@@ -37,30 +37,5 @@ export const postSignIn = (body: SignInBody, config?: AxiosRequestConfig) =>
   post<SignInResponse, SignInBody>(
     "http://localhost:3004/api/auth",
     body,
-    config
-  );
-
-export const postTokenVerify = (
-  accessToken: string,
-  config?: AxiosRequestConfig
-) =>
-  post<void, { accessToken: string }>(
-    "http://localhost:3002/token/verify",
-    { accessToken },
-    config
-  );
-
-export type TokenRefreshResponse = {
-  accessToken: string;
-  refreshToken: string;
-};
-
-export const postTokenRefresh = (
-  refreshToken: string,
-  config?: AxiosRequestConfig
-) =>
-  post<TokenRefreshResponse, { refreshToken: string }>(
-    "http://localhost:3002/token/refresh",
-    { refreshToken },
     config
   );

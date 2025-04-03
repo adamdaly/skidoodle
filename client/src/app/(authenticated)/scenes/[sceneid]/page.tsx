@@ -1,7 +1,9 @@
 import { getScene as getSceneRequest } from "@/api/animation-api";
 import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
+import { SceneProvider } from "./_components/context";
+import { Frames } from "./_components/frames";
 
-async function getScene(sceneid: string) {
+async function getScene(sceneid: number) {
   const result = await getSceneRequest(sceneid, {
     headers: {
       Cookie: await getAccessTokenCookie(),
@@ -16,22 +18,20 @@ export default async function Scene({
 }: {
   params: Promise<{ sceneid: string }>;
 }) {
-  const { sceneid } = await params;
-  const animation = await getScene(sceneid);
+  const p = await params;
+
+  const sceneid = parseInt(p.sceneid, 10);
+
+  if (Number.isNaN(sceneid)) {
+    throw new Error(`Unknown Scene Id: ${sceneid}`);
+  }
+
+  const scene = await getScene(sceneid);
 
   return (
-    <div>
-      <div>Scene {sceneid}</div>
-      <dl>
-        <dt>Name</dt>
-        <dd>{animation.name}</dd>
-        <dt>Animation Id</dt>
-        <dd>{animation.animationid}</dd>
-        <dt>Created</dt>
-        <dd>{animation.createdAt}</dd>
-        <dt>Updated</dt>
-        <dd>{animation.updatedAt}</dd>
-      </dl>
-    </div>
+    <SceneProvider {...{ scene }}>
+      <p>{sceneid}</p>
+      <Frames />
+    </SceneProvider>
   );
 }
