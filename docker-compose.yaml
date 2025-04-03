@@ -105,11 +105,20 @@ services:
       - app-net
     environment:
       - PORT=3000
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.local
+    ports:
+      - "3004:3000"
+    depends_on:
+      - server
+    networks:
+      - app-net
 
 networks:
   app-net:
     driver: bridge
-
 volumes:
   db:
   pgadmin:
