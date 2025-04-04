@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { MongoServerError } from "mongodb";
-import { createHashedPassword } from "../../services/password";
+import { PasswordService } from "../../services/password";
 import { mongodbErrors } from "../../services/mongo/mongo.service";
 import RegisterService from "./register.service";
 
@@ -18,9 +18,14 @@ export default class RegisterController {
   static async register(req: RegisterRequest, res: Response) {
     const { username, password } = req.body;
 
+    if (!PasswordService.validatePassword(password)) {
+      res.status(400).send({ message: "Password failed validation" });
+      return;
+    }
+
     const payload = {
       username,
-      password: await createHashedPassword(password),
+      password: await PasswordService.createHashedPassword(password),
       createdAt: new Date(),
       updatedAt: new Date(),
       isDeleted: false,
@@ -39,7 +44,7 @@ export default class RegisterController {
     } catch (e) {
       if (e instanceof MongoServerError && e.code === mongodbErrors.DUPLICATE) {
         res.status(409).json({
-          message: e.message,
+          message: "This user already exists",
           error: e,
         });
       } else {

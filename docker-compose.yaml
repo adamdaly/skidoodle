@@ -111,6 +111,8 @@ services:
       dockerfile: Dockerfile.local
     ports:
       - "3004:3000"
+    volumes:
+      - ./client/src:/usr/src/app/src
     depends_on:
       - server
     networks:
