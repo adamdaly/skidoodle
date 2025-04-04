@@ -3,7 +3,7 @@ import controller from "./token.controller";
 
 const router = Router();
 
-router.get("/verify", controller.verify);
-router.get("/refresh", controller.refresh);
+router.post("/verify", controller.verify);
+router.post("/refresh", controller.refresh);
 
 export default router;
