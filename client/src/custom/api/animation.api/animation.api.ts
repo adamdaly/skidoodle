@@ -1,7 +1,6 @@
 import { AxiosRequestConfig } from "axios";
-
-import { Animation, Scene } from "@/custom/types";
-import { get, post } from "../api";
+import { Animation, Frame, Scene } from "@/custom/types";
+import { get, post, deleteRequest, patch } from "../api";
 
 export type GetAnimationsResponse = Animation[];
 export type GetAnimationsParams = {
@@ -84,3 +83,64 @@ export const postAnimation = (
     body,
     config
   );
+
+export type PostFrameResponse = Frame;
+
+export const postFrame = (
+  body: PostFrameRequest,
+  config?: AxiosRequestConfig
+) => {
+  const formData = new FormData();
+
+  formData.append("file", body.file);
+  formData.append("length", body.length.toString());
+  formData.append("index", body.index.toString());
+  formData.append("sceneid", body.sceneid.toString());
+
+  return post<PostFrameResponse, FormData>(
+    "http://localhost:3000/frames",
+    formData,
+    {
+      ...config,
+      headers: {
+        ...config?.headers,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+};
+
+export const deleteFrame = (id: number, config?: AxiosRequestConfig) =>
+  deleteRequest<Frame, void>(`http://localhost:3000/frames/${id}`, config);
+
+export type PatchFrameRequest = {
+  file?: File;
+  length?: number;
+  index?: number;
+};
+
+export const patchFrame = (
+  id: number,
+  body: PatchFrameRequest,
+  config?: AxiosRequestConfig
+) => {
+  const formData = new FormData();
+
+  if (body.file) {
+    formData.append("file", body.file);
+  }
+
+  if (typeof body.length === "number") {
+    formData.append("length", body.length.toString());
+  }
+
+  if (typeof body.index === "number") {
+    formData.append("index", body.index.toString());
+  }
+
+  return patch<Frame, FormData>(
+    `http://localhost:3000/frames/${id}`,
+    formData,
+    config
+  );
+};

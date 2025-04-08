@@ -53,8 +53,8 @@ export const useMouseLocation = <E extends HTMLElement>(
         initialX.current = e.pageX;
         initialY.current = e.pageY;
 
-        relativeOffsetX.current = e.pageX - data.current.left;
-        relativeOffsetY.current = e.pageY - data.current.top;
+        relativeOffsetX.current = e.pageX - data.current.left - window.scrollX;
+        relativeOffsetY.current = e.pageY - data.current.top - window.scrollY;
         mouseDown?.(e, {
           deltaX: 0,
           deltaY: 0,
@@ -82,8 +82,10 @@ export const useMouseLocation = <E extends HTMLElement>(
         offsetX.current = offsetX.current - deltaX;
         offsetY.current = offsetY.current - deltaY;
 
-        relativeOffsetX.current = e.pageX - (data.current?.left ?? 0);
-        relativeOffsetY.current = e.pageY - (data.current?.top ?? 0);
+        relativeOffsetX.current =
+          e.pageX - (data.current?.left ?? 0) - window.scrollX;
+        relativeOffsetY.current =
+          e.pageY - (data.current?.top ?? 0) - window.scrollY;
 
         mouseMove?.(e, {
           deltaX,

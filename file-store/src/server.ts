@@ -1,7 +1,16 @@
 import express, { Request } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+
+import {
+  existsSync,
+  mkdirSync,
+  readFile,
+  readFileSync,
+  writeFileSync,
+  promises,
+} from "fs";
+
 import multer from "multer";
 import { join } from "path";
 import { Readable } from "stream";
@@ -85,7 +94,6 @@ server.patch(
   "/",
   upload.single("file"),
   (req: Request<{ id: string }>, res) => {
-    console.log("file", req.file);
     const file = req.file;
     if (!file) {
       res.status(400).send("No file");
