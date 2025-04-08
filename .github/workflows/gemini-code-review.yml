@@ -1,28 +1,38 @@
-name: "Code Review by Gemini AI"
-
+name: "Test PR Trigger"
 on:
   pull_request:
-
+    types: [opened, synchronize, reopened]
+    branches: [main]
 jobs:
-  review:
+  test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Generate Diff Chunks
-        id: generate_diff_chunks
-        uses: some-diff-chunking-action
-        with:
-          base_sha: ${{ github.event.pull_request.base.sha }}
-          head_sha: ${{ github.event.pull_request.head.sha }}
-          chunk_size: 3500
-      - name: "Code Review by Gemini AI"
-        uses: rubensflinco/gemini-code-review-action@1.0.5
-        id: review
-        with:
-          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          model: "gemini-1.5-pro-latest"
-          extra_prompt: "Provide a concise and technical review of the code changes."
+      - run: echo "Workflow triggered!"
+# name: "Code Review by Gemini AI"
+
+# on:
+#   pull_request:
+
+# jobs:
+#   review:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       pull-requests: write
+#     steps:
+#       - uses: actions/checkout@v4
+#       - name: Generate Diff Chunks
+#         id: generate_diff_chunks
+#         uses: some-diff-chunking-action
+#         with:
+#           base_sha: ${{ github.event.pull_request.base.sha }}
+#           head_sha: ${{ github.event.pull_request.head.sha }}
+#           chunk_size: 3500
+#       - name: "Code Review by Gemini AI"
+#         uses: rubensflinco/gemini-code-review-action@1.0.5
+#         id: review
+#         with:
+#           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           model: "gemini-1.5-pro-latest"
+#           extra_prompt: "Provide a concise and technical review of the code changes."
