@@ -27,5 +27,6 @@ jobs:
         with:
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          pull_request_diff: ${{ steps.download_diff.outputs.diff }}
           model: "gemini-1.5-pro-latest"
           extra_prompt: "Provide a concise and technical review of the code changes."
