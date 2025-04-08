@@ -27,7 +27,7 @@ jobs:
           git fetch origin "${{ env.PULL_REQUEST_HEAD_REF }}" || exit 1
           git fetch origin "${{ env.PULL_REQUEST_BASE_REF }}" || exit 1
           git diff "origin/${{ env.PULL_REQUEST_BASE_REF }}..origin/${{ env.PULL_REQUEST_HEAD_REF }}" > "diff.txt"
-          echo "diff.txt"
+          echo diff.txt
           {
             echo "pull_request_diff<<EOF";
             cat "diff.txt";
