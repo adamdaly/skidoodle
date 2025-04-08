@@ -1,16 +1,20 @@
 name: "Code Review by Gemini AI"
+description: "Reviews code changes using Gemini AI."
 
 on:
   pull_request:
+    branches: [main]
 
 jobs:
   review:
+    if: ${{ github.event.sender.type != 'Bot' && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        name: "Checkout repository"
       - name: Generate Diff Chunks
         id: generate_diff_chunks
         uses: some-diff-chunking-action # Use a dedicated action or script
@@ -18,16 +22,23 @@ jobs:
           base_sha: ${{ github.event.pull_request.base.sha }}
           head_sha: ${{ github.event.pull_request.head.sha }}
           chunk_size: 3500 # Control chunk size explicitly
-      - name: Code Review by Gemini AI
-        uses: rubensflinco/gemini-code-review-action@1.0.5
+      - uses: rubensflinco/gemini-code-review-action@1.0.5
+        name: "Code Review by Gemini AI"
+        id: review
+        continue-on-error: true
         with:
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           github_repository: ${{ github.repository }}
           github_pull_request_number: ${{ github.event.pull_request.number }}
-          # ... other parameters
-          pull_request_diff: ${{ steps.generate_diff_chunks.outputs.diff_chunks }} # Pass chunks
-          model: ${{ inputs.gemini_model }} # Use an input parameter for the model
+          git_commit_hash: ${{ github.event.pull_request.head.sha }}
+          model: "gemini-1.5-pro-latest"
+          pull_request_diff: ${{ steps.get_diff.outputs.pull_request_diff }}
+          pull_request_chunk_size: "3500"
           extra_prompt: "Provide a concise and technical review of the code changes."
-          # Remove log_level: DEBUG for production
-        continue-on-error: false # Example of basic error handling. Add more robust error reporting
+          log_level: "DEBUG"
+      - name: "Check review step status"
+        if: steps.review.outcome != 'success'
+        run: |
+          echo "Code review step failed or was skipped. Check logs for details."
+          exit 1
