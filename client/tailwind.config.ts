@@ -21,6 +21,9 @@ export default {
         // "128": "32rem", // Custom spacing example
       },
     },
+    boxShadow: {
+      canvas: "0 0 40px rgba(0, 0, 0, 0.1)",
+    },
   },
   plugins: [],
 } satisfies Config;

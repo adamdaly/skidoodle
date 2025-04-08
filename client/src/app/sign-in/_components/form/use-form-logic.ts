@@ -4,7 +4,7 @@ import { isAxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
-import { postSignIn } from "@/custom/requests/auth";
+import { postSignIn } from "@/custom/api/auth.api";
 import {
   createSignInSchema,
   SignInSchema,

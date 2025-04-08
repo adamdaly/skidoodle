@@ -17,8 +17,12 @@ destroy:
 	docker compose down -v
 
 .PHONY: restart
-destroy:
+restart:
 	docker compose restart
+
+.PHONY: act
+act:
+	./bin/act
 
 help:
 	@echo "options:"
