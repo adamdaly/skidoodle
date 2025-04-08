@@ -12,8 +12,11 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: Debug
+        run: |
+          echo "${{github.event.pull_request.head.ref}}"
+          echo "${{github.event.pull_request.base.ref}}"
       - uses: actions/checkout@v3
-
       - name: "Get diff of the pull request"
         id: get_diff
         shell: bash
@@ -29,6 +32,9 @@ jobs:
             cat "diff.txt";
             echo 'EOF';
           } >> $GITHUB_OUTPUT
+      - name: Debug Diff
+        run: |
+          echo "${{ steps.download_diff.outputs.diff }}"
       - uses: rubensflinco/gemini-code-review-action@1.0.5
         name: "Code Review by Gemini AI"
         id: review
