@@ -5,7 +5,10 @@ on:
 
 jobs:
   review:
+<<<<<<< Updated upstream
     if: ${{ github.event.sender.type != 'Bot' && !github.event.pull_request.draft }}
+=======
+>>>>>>> Stashed changes
     runs-on: ubuntu-latest
     permissions:
       contents: read
