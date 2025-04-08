@@ -1,0 +1,38 @@
+name: "Code Review by Gemini AI"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    if: ${{ github.event.sender.type != 'Bot' && !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Debug Diff URL
+        run: |
+          echo "Diff URL: ${{ github.event.pull_request.diff_url }}"
+      - uses: actions/checkout@v3
+      - name: Download Diff
+        id: download_diff
+        run: |
+          wget -qO - ${{ github.event.pull_request.diff_url }} > diff.txt
+          echo "Contents of diff.txt:"
+          cat diff.txt
+          cat <<EOF >> "$GITHUB_OUTPUT"
+          diff<<DELIMITER
+          $(cat diff.txt)
+          DELIMITER
+          EOF
+      - uses: rubensflinco/gemini-code-review-action@1.0.5
+        name: "Code Review by Gemini AI"
+        id: review
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pull_request_diff: ${{ steps.download_diff.outputs.diff }}
+          model: "gemini-1.5-pro-latest"
+          extra_prompt: "Provide a concise and technical review of the code changes."
