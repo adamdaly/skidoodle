@@ -6,6 +6,7 @@ on:
 
 jobs:
   review:
+    if: ${{ github.event.sender.type != 'Bot' && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -13,27 +14,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Download Diff
-        id: download_diff
-        run: |
-          wget -qO - ${{ github.event.pull_request.diff_url }} > diff.txt
-          echo "::set-output name=diff::$(cat diff.txt)"
-      # - name: "Get diff of the pull request"
-      #   id: get_diff
-      #   shell: bash
-      #   env:
-      #     PULL_REQUEST_HEAD_REF: "${{ github.event.pull_request.head.ref }}"
-      #     PULL_REQUEST_BASE_REF: "${{ github.event.pull_request.base.ref }}"
-      #   run: |-
-      #     git fetch origin "${{ env.PULL_REQUEST_HEAD_REF }}"
-      #     git fetch origin "${{ env.PULL_REQUEST_BASE_REF }}"
-      #     git checkout "${{ env.PULL_REQUEST_HEAD_REF }}"
-      #     git diff "origin/${{ env.PULL_REQUEST_BASE_REF }}" > "diff.txt"
-      #     {
-      #       echo "pull_request_diff<<EOF";
-      #       cat "diff.txt";
-      #       echo 'EOF';
-      #     } >> $GITHUB_OUTPUT
+      - name: "Get diff of the pull request"
+        id: get_diff
+        shell: bash
+        env:
+          PULL_REQUEST_HEAD_REF: "${{ github.event.pull_request.head.ref }}"
+          PULL_REQUEST_BASE_REF: "${{ github.event.pull_request.base.ref }}"
+        run: |-
+          git fetch origin "${{ env.PULL_REQUEST_HEAD_REF }}" || exit 1
+          git fetch origin "${{ env.PULL_REQUEST_BASE_REF }}" || exit 1
+          git diff "origin/${{ env.PULL_REQUEST_BASE_REF }}..origin/${{ env.PULL_REQUEST_HEAD_REF }}" > "diff.txt"
+          {
+            echo "pull_request_diff<<EOF";
+            cat "diff.txt";
+            echo 'EOF';
+          } >> $GITHUB_OUTPUT
       - uses: rubensflinco/gemini-code-review-action@1.0.5
         name: "Code Review by Gemini AI"
         id: review
