@@ -1,0 +1,29 @@
+name: "Code Review by Gemini AI"
+
+on:
+  pull_request:
+
+jobs:
+  review:
+    if: ${{ github.event.sender.type != 'Bot' && !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Diff Chunks
+        id: generate_diff_chunks
+        uses: some-diff-chunking-action
+        with:
+          base_sha: ${{ github.event.pull_request.base.sha }}
+          head_sha: ${{ github.event.pull_request.head.sha }}
+          chunk_size: 3500
+      - name: "Code Review by Gemini AI"
+        uses: rubensflinco/gemini-code-review-action@1.0.5
+        id: review
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          model: "gemini-1.5-pro-latest"
+          extra_prompt: "Provide a concise and technical review of the code changes."
