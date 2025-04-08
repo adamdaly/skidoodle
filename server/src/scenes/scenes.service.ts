@@ -21,7 +21,7 @@ export class ScenesService {
     return await this.cacheService.reset(cacheKey);
   }
 
-  async create(data: CreateDto) {
+  async create(data: CreateDto & { userid: string }) {
     const { animationid, ...scene } = data;
     await this.resetCache(animationid);
 

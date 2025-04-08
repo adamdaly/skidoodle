@@ -38,13 +38,6 @@ export class AnimationsController {
     return this.animationsService.getAnimationById(id);
   }
 
-  @Get('')
-  getAnimationsByUserId(
-    @Query('userid') userid: string,
-  ): Promise<Animation[] | null> {
-    return this.animationsService.getAnimationsByUserId(userid);
-  }
-
   @Get(':id/scenes')
   getScenesByAnimationId(
     @Param('id', ParseIntPipe) id: number,

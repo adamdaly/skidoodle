@@ -1,6 +1,7 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CacheModule } from '@nestjs/cache-manager';
+import { JwtService } from '@nestjs/jwt';
 import { AnimationsModule } from './animations/animations.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
@@ -9,6 +10,7 @@ import { FramesModule } from './frames/frames.module';
 import { ScenesModule } from './scenes/scenes.module';
 import { PrismaService } from './prisma/prisma.service';
 import { CacheService } from './cache/cache.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -18,8 +20,9 @@ import { CacheService } from './cache/cache.service';
     ScenesModule,
     FramesModule,
     AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
-  providers: [PrismaService, FileService, CacheService],
+  providers: [PrismaService, FileService, CacheService, JwtService],
 })
 export class AppModule {}

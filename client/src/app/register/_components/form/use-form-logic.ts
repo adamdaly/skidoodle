@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { isAxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { postRegister } from "@/custom/requests/auth";
+import { postRegister } from "@/custom/api/auth.api";
 import {
   createRegisterSchema,
   RegisterSchema,

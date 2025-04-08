@@ -7,6 +7,11 @@ import { ScenesService } from './scenes.service';
 describe('ScenesController', () => {
   let controller: ScenesController;
 
+  const user = {
+    username: 'Some Name',
+    userId: 'asdf-1234',
+  };
+
   const mockScenesService = {
     create: jest.fn(),
     update: jest.fn(),
@@ -36,12 +41,14 @@ describe('ScenesController', () => {
     const payload: CreateDto = {
       name: 'Scene 01',
       index: 0,
-      userid: 'asdf-1234',
       animationid: 1234,
     };
 
-    await controller.create(payload);
-    expect(mockScenesService.create).toHaveBeenCalledWith(payload);
+    await controller.create(user, payload);
+    expect(mockScenesService.create).toHaveBeenCalledWith({
+      ...payload,
+      userid: user.userId,
+    });
   });
 
   it('should call the ScenesService.update method with Prisma.SceneCreateInput payload when the update method is called', async () => {

@@ -8,6 +8,11 @@ import { Scene } from '@prisma/client';
 describe('ScenesService', () => {
   let service: ScenesService;
 
+  const user = {
+    username: 'Some User',
+    userId: 'asdf-1234',
+  };
+
   const scene: Scene = {
     id: 1234,
     name: 'Scene 01',
@@ -30,7 +35,6 @@ describe('ScenesService', () => {
   const sceneCreate: CreateDto = {
     name: 'Scene 01',
     index: 0,
-    userid: 'asdf-1234',
     animationid: 1234,
   };
 
@@ -69,13 +73,13 @@ describe('ScenesService', () => {
   });
 
   it('should call prisma.scene.create with the correct data when the create service function is called', async () => {
-    await service.create(sceneCreate);
+    await service.create({ ...sceneCreate, userid: user.userId });
 
     expect(mockPrismaService.scene.create).toHaveBeenCalledWith({
       data: {
         name: sceneCreate.name,
         index: sceneCreate.index,
-        userid: sceneCreate.userid,
+        userid: user.userId,
         Animation: {
           connect: {
             id: sceneCreate.animationid,
