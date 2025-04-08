@@ -21,6 +21,9 @@ jobs:
         run: |
           wget -qO - ${{ github.event.pull_request.diff_url }} > diff.txt
           echo "::set-output name=diff::$(cat diff.txt)"
+      - name: Debug
+        run: |
+          echo ${{ steps.download_diff.outputs.diff }}
       - uses: rubensflinco/gemini-code-review-action@1.0.5
         name: "Code Review by Gemini AI"
         id: review
