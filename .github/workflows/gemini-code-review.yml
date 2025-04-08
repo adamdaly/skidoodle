@@ -1,25 +1,27 @@
-name: "Test PR Trigger"
+# name: "Test PR Trigger"
+# on:
+#   pull_request:
+#     types: [opened, synchronize, reopened]
+#     branches: [main, development]
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - run: echo "Workflow triggered!"
+name: "Code Review by Gemini AI"
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [main, development]
 jobs:
-  test:
+  review:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - run: echo "Workflow triggered!"
-# name: "Code Review by Gemini AI"
-
-# on:
-#   pull_request:
-
-# jobs:
-#   review:
-#     runs-on: ubuntu-latest
-#     permissions:
-#       contents: read
-#       pull-requests: write
-#     steps:
 #       - uses: actions/checkout@v4
 #       - name: Generate Diff Chunks
 #         id: generate_diff_chunks
