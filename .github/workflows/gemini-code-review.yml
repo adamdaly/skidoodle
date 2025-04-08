@@ -23,13 +23,13 @@ jobs:
     steps:
       - run: echo "Workflow triggered!"
       - uses: actions/checkout@v4
-      # - name: Generate Diff Chunks
-      #   id: generate_diff_chunks
-      #   uses: some-diff-chunking-action
-      #   with:
-      #     base_sha: ${{ github.event.pull_request.base.sha }}
-      #     head_sha: ${{ github.event.pull_request.head.sha }}
-      #     chunk_size: 3500
+      - name: Generate Diff Chunks
+        id: generate_diff_chunks
+        uses: some-diff-chunking-action
+        with:
+          base_sha: ${{ github.event.pull_request.base.sha }}
+          head_sha: ${{ github.event.pull_request.head.sha }}
+          chunk_size: 3500
 #       - name: "Code Review by Gemini AI"
 #         uses: rubensflinco/gemini-code-review-action@1.0.5
 #         id: review
