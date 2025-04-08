@@ -22,7 +22,11 @@ jobs:
           wget -qO - ${{ github.event.pull_request.diff_url }} > diff.txt
           echo "Contents of diff.txt:"
           cat diff.txt
-          echo "diff=$(cat diff.txt)" >> "$GITHUB_OUTPUT"
+          cat <<EOF >> "$GITHUB_OUTPUT"
+          diff<<DELIMITER
+          $(cat diff.txt)
+          DELIMITER
+          EOF
       - uses: rubensflinco/gemini-code-review-action@1.0.5
         name: "Code Review by Gemini AI"
         id: review
