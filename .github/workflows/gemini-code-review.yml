@@ -17,7 +17,6 @@ jobs:
         id: download_diff
         run: |
           wget -qO - ${{ github.event.pull_request.diff_url }} > diff.txt
-          echo "Contents of diff.txt:"
           cat diff.txt
           cat <<EOF >> "$GITHUB_OUTPUT"
           diff<<DELIMITER
