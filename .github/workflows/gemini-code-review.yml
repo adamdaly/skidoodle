@@ -12,9 +12,6 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: Debug Diff URL
-        run: |
-          echo "Diff URL: ${{ github.event.pull_request.diff_url }}"
       - uses: actions/checkout@v3
       - name: Download Diff
         id: download_diff
