@@ -1,11 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Animation, Scene } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ScenesService } from 'src/scenes/scenes.service';
 import { AnimationsController } from './animations.controller';
 import { AnimationsService } from './animations.service';
 import { CreateDto, UpdateDto } from './animations.dto';
-
-import { ScenesService } from 'src/scenes/scenes.service';
 
 describe('AnimationsController', () => {
   let controller: AnimationsController;

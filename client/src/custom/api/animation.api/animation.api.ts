@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "axios";
+
 import { Animation, Scene } from "@/custom/types";
 import { get, post } from "../api";
 
@@ -45,6 +46,25 @@ export type GetSceneResponse = Scene;
 
 export const getScene = (sceneid: number, config?: AxiosRequestConfig) =>
   get<GetSceneResponse>(`http://server:3000/scenes/${sceneid}`, config);
+
+export type PostSceneRequest = Pick<Scene, "animationid" | "name" | "index">;
+
+export const postScene = (
+  body: PostSceneRequest,
+  config?: AxiosRequestConfig
+) =>
+  post<GetSceneResponse, PostSceneRequest>(
+    "http://localhost:3000/scenes",
+    body,
+    config
+  );
+
+export type PostFrameRequest = {
+  file: File;
+  length: number;
+  index: number;
+  sceneid: number;
+};
 
 export type PostAnimationRequest = {
   name: string;

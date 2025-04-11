@@ -3,11 +3,10 @@ import {
   getRecents as getRecentsRequest,
 } from "@/custom/api/animation.api";
 import { H1, H2 } from "@/custom/components/typography";
-import { Animations } from "./_components/animations";
-import { Recents } from "./_components/recents";
-import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
 import { FramesProvider } from "@/custom/components/frames";
-import { CreateAnimation } from "./_components/create-animation";
+import { Animations } from "@/custom/components/animations";
+import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
+import { Recents } from "./_components/recents";
 
 async function getAnimations() {
   const result = await getAnimationsRequest({
@@ -50,7 +49,6 @@ export default async function Page() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_300px]">
         <div>
           <H1 className="mb-4">Animations</H1>
-
           <Animations animations={animations} />
         </div>
         <div>
