@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
           accessToken: accessToken.value,
         });
 
-        return NextResponse.redirect(new URL("/animations", baseUrl));
+        return NextResponse.redirect(new URL("/dashboard", baseUrl));
       }
     } catch (e) {
       console.log("sign-in error", (e as AxiosError).status);
@@ -74,10 +74,12 @@ export async function middleware(request: NextRequest) {
             maxAge: 60 * 60 * 24, // 1 day in seconds
             sameSite: "lax",
           });
-        } catch {
+        } catch (e) {
+          debugger;
           return NextResponse.redirect(new URL("/sign-in", request.url));
         }
       } else {
+        debugger;
         return NextResponse.redirect(new URL("/sign-in", request.url));
       }
     }

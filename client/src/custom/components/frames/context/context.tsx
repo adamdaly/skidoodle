@@ -12,7 +12,7 @@ import {
 
 export type FramesProviderProps = {
   children: ReactNode;
-  animations: Animation[];
+  frames: string[];
 };
 
 type Frames = Record<string, string>;
@@ -21,27 +21,8 @@ export const Context = createContext({});
 
 export const useFramesContext = () => useContext<Frames>(Context);
 
-export const FramesProvider = ({
-  children,
-  animations,
-}: FramesProviderProps) => {
+export const FramesProvider = ({ children, frames }: FramesProviderProps) => {
   const [images, setImages] = useState<Frames>({});
-
-  const frames = useMemo(
-    () => [
-      ...new Set(
-        animations
-          .map((animation) =>
-            animation.Scene.map((scene) =>
-              scene.Frame.map((frame) => frame.filename).flat()
-            ).flat()
-          )
-          .flat()
-      ),
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
 
   const processStream = useCallback(async () => {
     if (frames.length === 0) {

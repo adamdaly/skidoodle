@@ -3,6 +3,7 @@ import { Animation } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CacheService } from 'src/cache/cache.service';
 import { CreateDto, UpdateDto } from './animations.dto';
+import { DMMF } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class AnimationsService {
@@ -20,14 +21,37 @@ export class AnimationsService {
     return await this.cacheService.reset(cacheKey);
   }
 
-  getAnimationById(id: number): Promise<Animation | null> {
+  getAnimationById(
+    id: number,
+    sceneTake: number = 0,
+    sceneSkip: number = 0,
+    sceneSortOrder: DMMF.SortOrder = 'asc',
+    frameTake: number = 0,
+    frameSkip: number = 0,
+    frameSortOrder: DMMF.SortOrder = 'asc',
+  ): Promise<Animation | null> {
     return this.prisma.animation.findUnique({
       where: { id },
       include: {
         Scene: {
-          take: 10,
+          take: sceneTake,
+          skip: sceneSkip,
           orderBy: {
-            updatedAt: 'asc',
+            updatedAt: sceneSortOrder,
+          },
+          select: {
+            id: true,
+            name: true,
+            userid: true,
+            createdAt: true,
+            updatedAt: true,
+            Frame: {
+              take: frameTake,
+              skip: frameSkip,
+              orderBy: {
+                updatedAt: frameSortOrder,
+              },
+            },
           },
         },
       },

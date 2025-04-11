@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Auth Server",
+      "type": "node",
+      "request": "attach",
+      "port": 1234,
+      "skipFiles": ["<node_internals>/**"],
+      "restart": true
+    },
+    {
+      "name": "Client",
+      "type": "node",
+      "request": "attach",
+      "port": 9230,
+      "skipFiles": ["<node_internals>/**"],
+      "restart": true
+    }
+  ]
+}

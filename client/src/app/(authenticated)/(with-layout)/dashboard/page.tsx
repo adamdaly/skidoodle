@@ -6,7 +6,7 @@ import { H1, H2 } from "@/custom/components/typography";
 import { Animations } from "./_components/animations";
 import { Recents } from "./_components/recents";
 import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
-import { FramesProvider } from "./_components/context";
+import { FramesProvider } from "@/custom/components/frames";
 
 async function getAnimations() {
   const result = await getAnimationsRequest({
@@ -32,8 +32,23 @@ export default async function Page() {
   const animations = await getAnimations();
   const recents = await getRecents();
 
+  const frames = [
+    ...new Set(
+      animations
+        .map((animation) =>
+          animation.Scene.map((scene) =>
+            scene.Frame.map((frame) => frame.filename).flat()
+          ).flat()
+        )
+        .flat()
+    ),
+  ];
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   []
+  // );
+
   return (
-    <FramesProvider {...{ animations }}>
+    <FramesProvider {...{ frames }}>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_300px]">
         <div>
           <H1 className="mb-4">Animations</H1>

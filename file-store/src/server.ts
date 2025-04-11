@@ -1,14 +1,7 @@
 import express, { Request } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import {
-  existsSync,
-  mkdirSync,
-  readFile,
-  readFileSync,
-  writeFileSync,
-  promises,
-} from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import multer from "multer";
 import { join } from "path";
 import { Readable } from "stream";
@@ -69,29 +62,6 @@ server.post("/frames", async (req: FramesRequest, res) => {
   });
 
   stream.pipe(res);
-
-  // res.setHeader("Content-Type", "application/zip");
-  // res.setHeader("Content-Disposition", "attachment; filename=images.zip");
-
-  // const archive = archiver("zip", {
-  //   zlib: {
-  //     level: 9,
-  //   },
-  // });
-
-  // archive.pipe(res);
-
-  // await Promise.allSettled(
-  //   frames.map((frame) => {
-  //     const path = `${directory}/${frame}`;
-  //     if (existsSync(path)) {
-  //       archive.file(path, { name: frame });
-  //     }
-  //     // TODO - add placeholder image if image doesn't exist
-  //   })
-  // );
-
-  // archive.finalize();
 });
 
 server.post("/", upload.single("file"), (req, res) => {

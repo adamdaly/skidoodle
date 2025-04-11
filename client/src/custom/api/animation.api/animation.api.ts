@@ -1,8 +1,20 @@
-import axios, { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig } from "axios";
 import { Animation, Frame, Scene } from "@/custom/types";
-import { get, post } from "../api";
+import { get, post, deleteRequest } from "../api";
 
 export type GetAnimationsResponse = Animation[];
+export type GetAnimationsParams = {
+  sceneTake?: number;
+  sceneSkip?: number;
+  sceneSortOrder?: "asc" | "desc";
+  frameTake?: number;
+  frameSkip?: number;
+  frameSortOrder?: "asc" | "desc";
+};
+
+interface GetAnimationsConfig extends AxiosRequestConfig {
+  params?: GetAnimationsParams;
+}
 
 export const getAnimations = (config?: AxiosRequestConfig) =>
   get<GetAnimationsResponse>("http://server:3000/", config);
@@ -10,8 +22,8 @@ export const getAnimations = (config?: AxiosRequestConfig) =>
 export type GetAnimationResponse = Animation;
 
 export const getAnimation = (
-  animationid: string,
-  config?: AxiosRequestConfig
+  animationid: number | string,
+  config?: GetAnimationsConfig
 ) =>
   get<GetAnimationResponse>(
     `http://server:3000/animations/${animationid}`,
@@ -46,38 +58,41 @@ export type PostSceneRequest = Pick<Scene, "animationid" | "name" | "index">;
 //     config
 //   );
 
-// export type PostFrameRequest = {
-//   file: File;
-//   length: number;
-//   index: number;
-//   sceneid: number;
-// };
+export type PostFrameRequest = {
+  file: File;
+  length: number;
+  index: number;
+  sceneid: number;
+};
 
-// export type PostFrameResponse = Frame;
+export type PostFrameResponse = Frame;
 
-// export const postFrame = (
-//   body: PostFrameRequest,
-//   config?: AxiosRequestConfig
-// ) => {
-//   const formData = new FormData();
+export const postFrame = (
+  body: PostFrameRequest,
+  config?: AxiosRequestConfig
+) => {
+  const formData = new FormData();
 
-//   formData.append("file", body.file);
-//   formData.append("length", body.length.toString());
-//   formData.append("index", body.index.toString());
-//   formData.append("sceneid", body.sceneid.toString());
+  formData.append("file", body.file);
+  formData.append("length", body.length.toString());
+  formData.append("index", body.index.toString());
+  formData.append("sceneid", body.sceneid.toString());
 
-//   return post<PostFrameResponse, FormData>(
-//     "http://localhost:3000/frames",
-//     formData,
-//     {
-//       ...config,
-//       headers: {
-//         ...config?.headers,
-//         "Content-Type": "multipart/form-data",
-//       },
-//     }
-//   );
-// };
+  return post<PostFrameResponse, FormData>(
+    "http://localhost:3000/frames",
+    formData,
+    {
+      ...config,
+      headers: {
+        ...config?.headers,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+};
+
+export const deleteFrame = (id: number, config?: AxiosRequestConfig) =>
+  deleteRequest<Frame, void>(`http://localhost:3000/frames/${id}`, config);
 
 // export type PostGetFramesRequest = {
 //   frames: string[];

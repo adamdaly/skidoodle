@@ -33,11 +33,14 @@ export default class SignInController {
   }
 
   static async refresh(req: Request, res: Response) {
-    const refreshToken =
-      req.signedCookies["refresh_token"] ?? req.cookies["refresh_token"];
+    const { refreshToken } = req.body;
+
+    debugger;
 
     if (!refreshToken) {
-      res.status(401).send("");
+      res.status(401).json({
+        message: "Missing refresh token",
+      });
       return;
     }
 

@@ -34,8 +34,26 @@ export class AnimationsController {
   @Get(':id')
   getAnimationById(
     @Param('id', ParseIntPipe) id: number,
+    @Query('sceneTake', new ParseIntPipe({ optional: true }))
+    sceneTake?: number,
+    @Query('sceneSkip', new ParseIntPipe({ optional: true }))
+    sceneSkip?: number,
+    @Query('sceneSortOrder') sceneSortOrder?: DMMF.SortOrder,
+    @Query('frameTake', new ParseIntPipe({ optional: true }))
+    frameTake?: number,
+    @Query('frameSkip', new ParseIntPipe({ optional: true }))
+    frameSkip?: number,
+    @Query('frameSortOrder') frameSortOrder?: DMMF.SortOrder,
   ): Promise<Animation | null> {
-    return this.animationsService.getAnimationById(id);
+    return this.animationsService.getAnimationById(
+      id,
+      sceneTake,
+      sceneSkip,
+      sceneSortOrder,
+      frameTake,
+      frameSkip,
+      frameSortOrder,
+    );
   }
 
   @Get(':id/scenes')

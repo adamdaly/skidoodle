@@ -17,7 +17,7 @@ destroy:
 	docker compose down -v
 
 .PHONY: restart
-destroy:
+restart:
 	docker compose restart
 
 help:
