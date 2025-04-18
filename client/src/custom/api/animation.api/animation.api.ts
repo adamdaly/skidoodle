@@ -125,3 +125,22 @@ export const patchFrame = (
     config
   );
 };
+
+export type PostAnimationRequest = {
+  name: string;
+  width: number;
+  height: number;
+  framerate: number;
+};
+
+export type PostAnimationResponse = Animation;
+
+export const postAnimation = (
+  body: PostAnimationRequest,
+  config?: AxiosRequestConfig
+) =>
+  post<PostAnimationResponse, PostAnimationRequest>(
+    "http://localhost:3000/animations",
+    body,
+    config
+  );

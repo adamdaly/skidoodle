@@ -71,9 +71,8 @@ describe('FramesController', () => {
 
     const payload: Parameters<typeof controller.update> = [
       id,
+      { length, index },
       file as unknown as Express.Multer.File,
-      length,
-      index,
     ];
 
     await controller.update(...payload);

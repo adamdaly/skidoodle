@@ -3,10 +3,10 @@ import {
   getRecents as getRecentsRequest,
 } from "@/custom/api/animation.api";
 import { H1, H2 } from "@/custom/components/typography";
-import { Animations } from "./_components/animations";
-import { Recents } from "./_components/recents";
-import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
 import { FramesProvider } from "@/custom/components/frames";
+import { Animations } from "@/custom/components/animations";
+import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
+import { Recents } from "./_components/recents";
 
 async function getAnimations() {
   const result = await getAnimationsRequest({
@@ -43,9 +43,6 @@ export default async function Page() {
         .flat()
     ),
   ];
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   []
-  // );
 
   return (
     <FramesProvider {...{ frames }}>

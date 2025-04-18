@@ -86,6 +86,9 @@ describe('ScenesService', () => {
           },
         },
       },
+      include: {
+        Frame: true,
+      },
     });
   });
 
@@ -108,6 +111,9 @@ describe('ScenesService', () => {
       include: {
         Frame: {
           take: 1,
+          where: {
+            isDeleted: false,
+          },
           select: {
             filename: true,
           },

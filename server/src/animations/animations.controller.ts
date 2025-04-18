@@ -11,8 +11,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
+import { Request } from 'express';
 import { Animation, Scene } from '@prisma/client';
 import { DMMF } from '@prisma/client/runtime/library';
+import { User } from 'src/shared/decorators/user.decorator';
 import { ScenesService } from 'src/scenes/scenes.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { AnimationsService } from './animations.service';
@@ -27,8 +29,11 @@ export class AnimationsController {
   ) {}
 
   @Post()
-  create(@Body() data: CreateDto): Promise<Animation> {
-    return this.animationsService.create(data);
+  create(
+    @User() user: Request['user'],
+    @Body() data: CreateDto,
+  ): Promise<Animation> {
+    return this.animationsService.create({ userid: user.userId, ...data });
   }
 
   @Get(':id')
