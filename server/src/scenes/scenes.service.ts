@@ -34,6 +34,9 @@ export class ScenesService {
           },
         },
       },
+      include: {
+        Frame: true,
+      },
     });
   }
 

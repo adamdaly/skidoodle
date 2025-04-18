@@ -4,6 +4,7 @@ import { FramesProvider } from "@/custom/components/frames";
 import { H1, H2 } from "@/custom/components/typography";
 import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
 import { Scenes } from "./_components/scenes";
+import { AnimationProvider } from "./_components/context";
 
 async function getAnimation(animationid: string) {
   const result = await getAnimationRequest(animationid, {
@@ -11,12 +12,7 @@ async function getAnimation(animationid: string) {
       Cookie: await getAccessTokenCookie(),
     },
     params: {
-      sceneTake: 1,
-      // sceneSkip: 0,
-      // sceneSortOrder
       frameTake: 10,
-      // frameSkip:
-      // frameSortOrder
     },
   });
 
@@ -45,18 +41,20 @@ export default async function Animation({
 
   return (
     <FramesProvider {...{ frames }}>
-      <H1 className="mb-4">{animation.name}</H1>
-      <H2 className="mb-2 text-2xl">Info</H2>
-      <dl className="mb-4">
-        <dt className="inline-block mr-2 font-semibold">Width</dt>
-        <dd className="inline-block mr-4">{animation.width}</dd>
-        <dt className="inline-block mr-2 font-semibold">Height</dt>
-        <dd className="inline-block mr-4">{animation.height}</dd>
-        <dt className="inline-block mr-2 font-semibold">Framerate</dt>
-        <dd className="inline-block mr-4">{animation.framerate}</dd>
-      </dl>
-      <H2 className="mb-4">Scenes</H2>
-      <Scenes scenes={animation.Scene} />
+      <AnimationProvider animation={animation}>
+        <H1 className="mb-4">{animation.name}</H1>
+        <H2 className="mb-2 text-2xl">Info</H2>
+        <dl className="mb-4">
+          <dt className="inline-block mr-2 font-semibold">Width</dt>
+          <dd className="inline-block mr-4">{animation.width}</dd>
+          <dt className="inline-block mr-2 font-semibold">Height</dt>
+          <dd className="inline-block mr-4">{animation.height}</dd>
+          <dt className="inline-block mr-2 font-semibold">Framerate</dt>
+          <dd className="inline-block mr-4">{animation.framerate}</dd>
+        </dl>
+        <H2 className="mb-4">Scenes</H2>
+        <Scenes />
+      </AnimationProvider>
     </FramesProvider>
   );
 }

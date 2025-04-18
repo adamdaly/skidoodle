@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { Animation, Frame, Scene } from "@/custom/types";
-import { get, post, deleteRequest } from "../api";
+import { get, post, deleteRequest, patch } from "../api";
 
 export type GetAnimationsResponse = Animation[];
 export type GetAnimationsParams = {
@@ -48,15 +48,15 @@ export const getScene = (sceneid: number, config?: AxiosRequestConfig) =>
 
 export type PostSceneRequest = Pick<Scene, "animationid" | "name" | "index">;
 
-// export const postScene = (
-//   body: PostSceneRequest,
-//   config?: AxiosRequestConfig
-// ) =>
-//   post<GetSceneResponse, PostSceneRequest>(
-//     "http://localhost:3000/scenes",
-//     body,
-//     config
-//   );
+export const postScene = (
+  body: PostSceneRequest,
+  config?: AxiosRequestConfig
+) =>
+  post<GetSceneResponse, PostSceneRequest>(
+    "http://localhost:3000/scenes",
+    body,
+    config
+  );
 
 export type PostFrameRequest = {
   file: File;
@@ -94,9 +94,34 @@ export const postFrame = (
 export const deleteFrame = (id: number, config?: AxiosRequestConfig) =>
   deleteRequest<Frame, void>(`http://localhost:3000/frames/${id}`, config);
 
-// export type PostGetFramesRequest = {
-//   frames: string[];
-// };
+export type PatchFrameRequest = {
+  file?: File;
+  length?: number;
+  index?: number;
+};
 
-// export const getFrames = (frames: string[], config?: AxiosRequestConfig) =>
-//   axios.post("http://localhost:3003/frames", { frames }, config);
+export const patchFrame = (
+  id: number,
+  body: PatchFrameRequest,
+  config?: AxiosRequestConfig
+) => {
+  const formData = new FormData();
+
+  if (body.file) {
+    formData.append("file", body.file);
+  }
+
+  if (typeof body.length === "number") {
+    formData.append("length", body.length.toString());
+  }
+
+  if (typeof body.index === "number") {
+    formData.append("index", body.index.toString());
+  }
+
+  return patch<Frame, FormData>(
+    `http://localhost:3000/frames/${id}`,
+    formData,
+    config
+  );
+};

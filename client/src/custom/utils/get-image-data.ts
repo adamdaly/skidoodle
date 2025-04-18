@@ -47,11 +47,6 @@ export const getImageData = async (
       }
 
       callback(JSON.parse(line));
-
-      // setImages((currentImages) => ({
-      //   ...currentImages,
-      //   [id]: data,
-      // }));
     }
   }
 };

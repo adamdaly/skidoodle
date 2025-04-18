@@ -13,42 +13,48 @@ export type ThumbnailProps = {
 export const Thumbnail = memo(
   ({ frames, width, height, href, label }: ThumbnailProps) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+
+    const getContext = () => {
+      if (contextRef.current) {
+        return contextRef.current;
+      }
+
+      contextRef.current = canvasRef.current?.getContext("2d") ?? null;
+      return contextRef.current;
+    };
+
+    const drawImage = (imgData: string) => {
+      const context = getContext();
+
+      if (context) {
+        const img = new Image();
+        img.src = `data:image/jpeg;base64,${imgData}`;
+        index.current += 1;
+        img.onload = () => {
+          context.clearRect(0, 0, width, height);
+          context.drawImage(img, 0, 0);
+        };
+      }
+    };
 
     useEffect(() => {
       if (frames.length > 0) {
-        const context = canvasRef.current?.getContext("2d");
-
-        if (context) {
-          const img = new Image();
-          img.src = `data:image/jpeg;base64,${frames[0]}`;
-          img.onload = () => {
-            context.drawImage(img, 0, 0);
-          };
-        }
+        drawImage(frames[0]);
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [frames]);
 
     const index = useRef(0);
     const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const render = useCallback(() => {
-      timeout.current = setTimeout(() => {
-        const context = canvasRef.current?.getContext("2d");
-
-        if (context) {
-          const img = new Image();
-          img.src = `data:image/jpeg;base64,${
-            frames[index.current % frames.length]
-          }`;
-          index.current += 1;
-          img.onload = () => {
-            context.clearRect(0, 0, width, height);
-            context.drawImage(img, 0, 0);
-          };
-        }
-
-        render();
-      }, 100);
+      if (frames.length > 0) {
+        timeout.current = setTimeout(() => {
+          drawImage(frames[index.current % frames.length]);
+          render();
+        }, 100);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [frames]);
 

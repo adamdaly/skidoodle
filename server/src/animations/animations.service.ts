@@ -23,11 +23,11 @@ export class AnimationsService {
 
   getAnimationById(
     id: number,
-    sceneTake: number = 0,
-    sceneSkip: number = 0,
+    sceneTake?: number,
+    sceneSkip?: number,
     sceneSortOrder: DMMF.SortOrder = 'asc',
-    frameTake: number = 0,
-    frameSkip: number = 0,
+    frameTake?: number,
+    frameSkip?: number,
     frameSortOrder: DMMF.SortOrder = 'asc',
   ): Promise<Animation | null> {
     return this.prisma.animation.findUnique({

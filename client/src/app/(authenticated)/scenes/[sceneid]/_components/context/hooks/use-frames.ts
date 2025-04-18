@@ -1,29 +1,21 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { produce } from "immer";
-import { Scene, Frame } from "@/custom/types";
-import { getImageData } from "@/custom/utils/get-image-data";
-import { deleteFrame, postFrame } from "@/custom/api/animation.api";
+import { useCallback } from "react";
+import { Frame } from "@/custom/types";
+import { deleteFrame, patchFrame, postFrame } from "@/custom/api/animation.api";
+import { Shared } from "./use-shared";
+import { createFileFromData } from "../../../_utils/create-file-from-data";
 
-export const useFrames = (scene: Scene) => {
-  const [frames, setFrames] = useState<(Frame & { data?: string })[]>(
-    scene.Frame.map((frame) => ({ ...frame, data: undefined }))
-  );
-  const filenames = useMemo(
-    () => scene.Frame.map((frame) => frame.filename),
-    [scene.Frame]
-  );
-
+export const useFrames = ({
+  animation,
+  scene,
+  frames,
+  frame,
+  setFrame,
+  setFramesAtom,
+  setSelected,
+}: Shared) => {
   const onFrameAdd = useCallback(async () => {
-    const canvas = new OffscreenCanvas(1920, 1080);
-    const context = canvas.getContext("2d");
-
-    if (context) {
-      context.fillStyle = "white";
-      context.fillRect(0, 0, 1920, 1080);
-      context.font = "100px sans-serif";
-      context.fillStyle = "black";
-      context.fillText((frames.length + 1).toString(), 100, 100);
-    }
+    const canvas = new OffscreenCanvas(animation.width, animation.height);
+    canvas.getContext("2d");
 
     const blob = await canvas.convertToBlob();
     const file = new File([blob], "image.png", { type: "image/png" });
@@ -36,17 +28,27 @@ export const useFrames = (scene: Scene) => {
         sceneid: scene.id,
       });
 
-      getFrameData(response.data);
+      setFramesAtom((currentFrames) => [
+        ...currentFrames,
+        {
+          ...response.data,
+          layers: [],
+          isDirty: false,
+        },
+      ]);
+
+      setSelected(response.data.id);
     } catch (e) {
       console.log(e);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frames.length]);
 
   const onFrameRemove = useCallback(async (frame: Frame) => {
     try {
       const response = await deleteFrame(frame.id);
 
-      setFrames((currentFrames) => {
+      setFramesAtom((currentFrames) => {
         const frameIndex = currentFrames.findIndex(
           (f) => f.id === response.data.id
         );
@@ -57,50 +59,44 @@ export const useFrames = (scene: Scene) => {
     }
   }, []);
 
-  const getFrameData = useCallback(async (frame: Frame) => {
+  const onFrameSave = useCallback(async () => {
+    if (!(frame && frame.data)) {
+      // TODO - handle this
+      return;
+    }
+
     try {
-      await getImageData([frame.filename], (data) => {
-        setFrames((currentFrames) =>
-          produce(currentFrames, (draft) => {
-            draft.push({
-              ...frame,
-              data: data.data,
-            });
-          })
-        );
+      const file = await createFileFromData(
+        animation.width,
+        animation.height,
+        frame.data,
+        frame.filename
+      );
+
+      const response = await patchFrame(frame.id, {
+        file,
+        index: frame.index,
+        length: 1,
+      });
+
+      setFrame({
+        ...frame,
+        ...response.data,
+        isDirty: false,
       });
     } catch (e) {
       console.log(e);
     }
-  }, []);
+  }, [frame]);
 
-  const getInitialFramesData = useCallback(async () => {
-    try {
-      await getImageData(filenames, (data) => {
-        setFrames((currentFrames) =>
-          produce(currentFrames, (draft) => {
-            const frameIndex = draft.findIndex((f) => f.filename === data.id);
-
-            if (frameIndex > -1) {
-              draft[frameIndex].data = data.data;
-            }
-          })
-        );
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    getInitialFramesData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onFrameSelect = useCallback((id: number) => {
+    setSelected(id);
   }, []);
 
   return {
-    frames,
     onFrameAdd,
     onFrameRemove,
+    onFrameSelect,
+    onFrameSave,
   } as const;
 };

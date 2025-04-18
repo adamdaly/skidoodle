@@ -1,13 +1,14 @@
 "use client";
 
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useMemo } from "react";
 import { useFramesContext } from "@/custom/components/frames";
 import { Thumbnail } from "@/custom/components/thumbnail";
-import { Animation, Scene as Scenetype } from "@/custom/types";
-// import { CreateScene } from "../create-scene";
+import { Animation, Scene as SceneType } from "@/custom/types";
+import { CreateScene } from "../create-scene";
+import { useAnimation } from "../context";
 
 export type SceneProps = {
-  scene: Scenetype;
+  scene: SceneType;
 } & Pick<Animation, "width" | "height">;
 
 export const Scene = memo(({ scene, width, height }: SceneProps) => {
@@ -44,25 +45,23 @@ export const Scene = memo(({ scene, width, height }: SceneProps) => {
 Scene.displayName = "Scene";
 
 export type ScenesProps = {
-  scenes: Scenetype[];
+  animation: Animation;
 };
 
-export const Scenes = memo(({ scenes }: ScenesProps) => {
-  const [localScenes, setLocalScenes] = useState(scenes);
-
-  // const onCreate = useCallback((scene: Scene) => {
-  //   setLocalScenes((currentScenes) => [...currentScenes, scene]);
-  // }, []);
+export const Scenes = memo(() => {
+  const { width, height, scenes } = useAnimation();
 
   return (
-    <>
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {localScenes.map((scene) => (
-          <Scene key={scene.id} {...scene} />
+    <div>
+      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-6">
+        {scenes.map((scene) => (
+          <Scene key={scene.id} {...{ scene, width: width, height: height }} />
         ))}
       </ul>
-      {/* <CreateScene onCreate={onCreate} /> */}
-    </>
+      <div>
+        <CreateScene />
+      </div>
+    </div>
   );
 });
 
