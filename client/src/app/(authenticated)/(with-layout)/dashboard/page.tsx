@@ -7,6 +7,7 @@ import { Animations } from "./_components/animations";
 import { Recents } from "./_components/recents";
 import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
 import { FramesProvider } from "@/custom/components/frames";
+import { CreateAnimation } from "./_components/create-animation";
 
 async function getAnimations() {
   const result = await getAnimationsRequest({
@@ -43,15 +44,13 @@ export default async function Page() {
         .flat()
     ),
   ];
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   []
-  // );
 
   return (
     <FramesProvider {...{ frames }}>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_300px]">
         <div>
           <H1 className="mb-4">Animations</H1>
+
           <Animations animations={animations} />
         </div>
         <div>

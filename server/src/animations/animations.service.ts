@@ -58,8 +58,11 @@ export class AnimationsService {
     });
   }
 
-  async create(data: CreateDto): Promise<Animation> {
-    const response = await this.prisma.animation.create({ data });
+  async create(data: CreateDto & { userid: string }): Promise<Animation> {
+    const response = await this.prisma.animation.create({
+      data,
+      include: { Scene: true },
+    });
     await this.resetAnimationCache(response.userid);
     return response;
   }
