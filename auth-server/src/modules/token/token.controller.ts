@@ -33,11 +33,12 @@ export default class SignInController {
   }
 
   static async refresh(req: Request, res: Response) {
-    const refreshToken =
-      req.signedCookies["refresh_token"] ?? req.cookies["refresh_token"];
+    const { refreshToken } = req.body;
 
     if (!refreshToken) {
-      res.status(401).send("");
+      res.status(401).json({
+        message: "Missing refresh token",
+      });
       return;
     }
 
@@ -49,13 +50,13 @@ export default class SignInController {
       const updatedAccessToken = jwt.sign(
         { userId: payload.userId },
         ACCESS_TOKEN_SECRET,
-        { expiresIn: "1m" } // Short-lived access token
+        { expiresIn: "60m" } // Short-lived access token
       );
 
       const updatedRefreshToken = jwt.sign(
         { userId: payload.userId },
         REFRESH_TOKEN_SECRET,
-        { expiresIn: "5m" } // Long-lived refresh token
+        { expiresIn: "24h" } // Long-lived refresh token
       );
 
       res.json({

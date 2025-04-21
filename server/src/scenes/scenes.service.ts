@@ -21,7 +21,7 @@ export class ScenesService {
     return await this.cacheService.reset(cacheKey);
   }
 
-  async create(data: CreateDto) {
+  async create(data: CreateDto & { userid: string }) {
     const { animationid, ...scene } = data;
     await this.resetCache(animationid);
 
@@ -33,6 +33,9 @@ export class ScenesService {
             id: animationid,
           },
         },
+      },
+      include: {
+        Frame: true,
       },
     });
   }
@@ -53,6 +56,9 @@ export class ScenesService {
       },
       include: {
         Frame: {
+          where: {
+            isDeleted: false,
+          },
           take: 1,
           select: {
             filename: true,
@@ -72,6 +78,9 @@ export class ScenesService {
           where: { id },
           include: {
             Frame: {
+              where: {
+                isDeleted: false,
+              },
               orderBy: {
                 index: 'asc',
               },

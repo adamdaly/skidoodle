@@ -45,15 +45,13 @@ export class FramesController {
   @UseInterceptors(FileInterceptor('file'))
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @UploadedFile() file: Express.Multer.File,
-    @Body('length', ParseIntPipe) length: UpdateDto['length'],
-    @Body('index', ParseIntPipe) index: UpdateDto['index'],
+    @Body() body: UpdateDto,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
-    await this.fileService.overwrite(file);
-    return this.framesService.update(id, {
-      length,
-      index,
-    });
+    if (file) {
+      await this.fileService.overwrite(file);
+    }
+    return this.framesService.update(id, body);
   }
 
   @Delete(':id')

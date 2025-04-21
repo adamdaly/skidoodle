@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
           accessToken: accessToken.value,
         });
 
-        return NextResponse.redirect(new URL("/animations", baseUrl));
+        return NextResponse.redirect(new URL("/dashboard", baseUrl));
       }
     } catch (e) {
       console.log("sign-in error", (e as AxiosError).status);

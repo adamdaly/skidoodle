@@ -11,8 +11,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
+import { Request } from 'express';
 import { Animation, Scene } from '@prisma/client';
 import { DMMF } from '@prisma/client/runtime/library';
+import { User } from 'src/shared/decorators/user.decorator';
 import { ScenesService } from 'src/scenes/scenes.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { AnimationsService } from './animations.service';
@@ -27,22 +29,36 @@ export class AnimationsController {
   ) {}
 
   @Post()
-  create(@Body() data: CreateDto): Promise<Animation> {
-    return this.animationsService.create(data);
+  create(
+    @User() user: Request['user'],
+    @Body() data: CreateDto,
+  ): Promise<Animation> {
+    return this.animationsService.create({ userid: user.userId, ...data });
   }
 
   @Get(':id')
   getAnimationById(
     @Param('id', ParseIntPipe) id: number,
+    @Query('sceneTake', new ParseIntPipe({ optional: true }))
+    sceneTake?: number,
+    @Query('sceneSkip', new ParseIntPipe({ optional: true }))
+    sceneSkip?: number,
+    @Query('sceneSortOrder') sceneSortOrder?: DMMF.SortOrder,
+    @Query('frameTake', new ParseIntPipe({ optional: true }))
+    frameTake?: number,
+    @Query('frameSkip', new ParseIntPipe({ optional: true }))
+    frameSkip?: number,
+    @Query('frameSortOrder') frameSortOrder?: DMMF.SortOrder,
   ): Promise<Animation | null> {
-    return this.animationsService.getAnimationById(id);
-  }
-
-  @Get('')
-  getAnimationsByUserId(
-    @Query('userid') userid: string,
-  ): Promise<Animation[] | null> {
-    return this.animationsService.getAnimationsByUserId(userid);
+    return this.animationsService.getAnimationById(
+      id,
+      sceneTake,
+      sceneSkip,
+      sceneSortOrder,
+      frameTake,
+      frameSkip,
+      frameSortOrder,
+    );
   }
 
   @Get(':id/scenes')

@@ -47,12 +47,11 @@ export default class RegisterController {
           message: "This user already exists",
           error: e,
         });
-      } else {
-        res.status(500).send({
-          message: "Unknown error",
-          error: e,
-        });
       }
+      res.status(500).send({
+        message: "Unknown error",
+        error: e,
+      });
     }
   }
 }

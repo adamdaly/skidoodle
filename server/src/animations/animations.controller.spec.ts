@@ -62,16 +62,21 @@ describe('AnimationsController', () => {
   });
 
   it('should create an animation when the create POST method is called', async () => {
+    const user = {
+      userId: 'asdf-1234',
+      username: '',
+    };
+
     const payload: CreateDto = {
       name: 'Animation',
       width: 1920,
       height: 1024,
       framerate: 24,
-      userid: 'user-1234',
     };
 
     const result: Animation = {
       ...payload,
+      userid: user.userId,
       id: 123,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -82,7 +87,7 @@ describe('AnimationsController', () => {
       .spyOn(service, 'create')
       .mockImplementation(() => Promise.resolve(result));
 
-    expect(await controller.create(payload)).toEqual(result);
+    expect(await controller.create(user, payload)).toEqual(result);
   });
 
   it('should read an animation based on its id', async () => {
@@ -114,8 +119,6 @@ describe('AnimationsController', () => {
 
     const payload: UpdateDto = {
       name: 'Updated Animation',
-      width: 1920,
-      height: 1024,
       framerate: 24,
     };
 

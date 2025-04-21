@@ -10,8 +10,8 @@ WORKDIR /usr/src/app
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node tsconfig*.json ./
 
-# Install app dependencies using the `npm ci` command instead of `npm install`
-RUN npm ci
+RUN npm cache clean --force
+RUN npm install --force 
 
 # Bundle app source
 COPY --chown=node:node . .

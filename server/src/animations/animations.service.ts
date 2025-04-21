@@ -3,6 +3,7 @@ import { Animation } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CacheService } from 'src/cache/cache.service';
 import { CreateDto, UpdateDto } from './animations.dto';
+import { DMMF } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class AnimationsService {
@@ -20,44 +21,48 @@ export class AnimationsService {
     return await this.cacheService.reset(cacheKey);
   }
 
-  getAnimationById(id: number): Promise<Animation | null> {
+  getAnimationById(
+    id: number,
+    sceneTake?: number,
+    sceneSkip?: number,
+    sceneSortOrder: DMMF.SortOrder = 'asc',
+    frameTake?: number,
+    frameSkip?: number,
+    frameSortOrder: DMMF.SortOrder = 'asc',
+  ): Promise<Animation | null> {
     return this.prisma.animation.findUnique({
       where: { id },
       include: {
         Scene: {
-          take: 10,
+          take: sceneTake,
+          skip: sceneSkip,
           orderBy: {
-            updatedAt: 'asc',
+            updatedAt: sceneSortOrder,
           },
-        },
-      },
-    });
-  }
-
-  getAnimationsByUserId(userid: string): Promise<Animation[] | null> {
-    return this.prisma.animation.findMany({
-      where: { userid },
-      include: {
-        Scene: {
-          take: 1,
-          include: {
+          select: {
+            id: true,
+            name: true,
+            userid: true,
+            createdAt: true,
+            updatedAt: true,
             Frame: {
-              take: 1,
-              select: {
-                filename: true,
+              take: frameTake,
+              skip: frameSkip,
+              orderBy: {
+                updatedAt: frameSortOrder,
               },
             },
           },
-          orderBy: {
-            updatedAt: 'asc',
-          },
         },
       },
     });
   }
 
-  async create(data: CreateDto): Promise<Animation> {
-    const response = await this.prisma.animation.create({ data });
+  async create(data: CreateDto & { userid: string }): Promise<Animation> {
+    const response = await this.prisma.animation.create({
+      data,
+      include: { Scene: true },
+    });
     await this.resetAnimationCache(response.userid);
     return response;
   }

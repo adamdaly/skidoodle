@@ -1,9 +1,10 @@
 import express, { Request } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import multer from "multer";
 import { join } from "path";
+import { Readable } from "stream";
 
 const upload = multer();
 
@@ -21,11 +22,47 @@ const directoryName = "frames";
 
 // Ensure the folder exists
 if (!existsSync(join(projectDirectory, directoryName))) {
-  // Creates the folder if it doesn’t exist
   mkdirSync(join(projectDirectory, directoryName));
 }
 
 const directory = join(projectDirectory, directoryName);
+
+server.use("/frames", express.static(directory));
+
+type FramesRequest = Request<{}, {}, { frames: string[] }, {}>;
+
+server.post("/frames", async (req: FramesRequest, res) => {
+  const { frames } = req.body;
+
+  if (!Array.isArray(frames)) {
+    res.status(400).json({ messsage: "'frames' is not an array" });
+    return;
+  }
+
+  const stream = new Readable({
+    async read() {
+      for (const frame of frames) {
+        try {
+          const imageBuffer = readFileSync(`${directory}/${frame}`);
+          const chunk =
+            JSON.stringify({
+              id: frame,
+              length: imageBuffer.length,
+              type: "image/png",
+              data: imageBuffer.toString("base64"),
+            }) + "\n";
+
+          this.push(chunk);
+        } catch {
+          console.log(`file: ${frame} not found`);
+        }
+      }
+      this.push(null);
+    },
+  });
+
+  stream.pipe(res);
+});
 
 server.post("/", upload.single("file"), (req, res) => {
   const file = req.file;
