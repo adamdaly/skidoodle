@@ -38,13 +38,6 @@ export default class SignInController {
       { expiresIn: "20m" } // Long-lived refresh token
     );
 
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-      signed: true,
-    });
-
-    res.status(200).json({ accessToken });
+    res.status(200).json({ accessToken, refreshToken });
   }
 }
