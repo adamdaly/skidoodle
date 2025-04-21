@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { FileService } from 'src/file/file.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FramesController } from './frames.controller';
 import { FramesService } from './frames.service';
-import { FileService } from 'src/file/file.service';
 
 describe('FramesController', () => {
   let controller: FramesController;
@@ -71,10 +71,7 @@ describe('FramesController', () => {
 
     const payload: Parameters<typeof controller.update> = [
       id,
-      {
-        length,
-        index,
-      },
+      { length, index },
       file as unknown as Express.Multer.File,
     ];
 

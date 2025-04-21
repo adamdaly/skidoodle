@@ -86,6 +86,9 @@ export class ScenesService {
               },
             },
           },
+          orderBy: {
+            index: 'asc',
+          },
         }),
     );
   }

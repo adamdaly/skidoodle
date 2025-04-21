@@ -2,7 +2,7 @@
 import { useCallback, useState } from "react";
 import { Animation as AnimationType } from "@/custom/types";
 import { Animation } from "./components/animation";
-import { CreateAnimation } from "../create-animation";
+import { CreateAnimation } from "./components/create-animations";
 
 export type AnimationsProps = {
   animations: AnimationType[];
@@ -17,7 +17,6 @@ export const Animations = (props: AnimationsProps) => {
     },
     [animations]
   );
-
   return (
     <>
       {animations.length > 0 && (
@@ -27,9 +26,8 @@ export const Animations = (props: AnimationsProps) => {
           ))}
         </ul>
       )}
-
       {animations.length === 0 && (
-        <p>
+        <p className="mb-6">
           You haven&apos;t created any Skidoodles yet so click on Create
           Animation to get Skidoodling
         </p>
