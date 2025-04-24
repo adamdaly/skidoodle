@@ -1,4 +1,5 @@
 "use client";
+
 import { useMemo } from "react";
 import { useFramesContext } from "@/custom/components/frames";
 import { Thumbnail } from "@/custom/components/thumbnail";

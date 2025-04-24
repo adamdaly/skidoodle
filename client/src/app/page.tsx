@@ -1,7 +1,7 @@
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Footer } from "@/custom/components/footer";
 import { H1 } from "@/custom/components/typography";
-import Link from "next/link";
 
 export default function Home() {
   return (
