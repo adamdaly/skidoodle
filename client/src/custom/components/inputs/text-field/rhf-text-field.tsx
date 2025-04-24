@@ -9,14 +9,16 @@ import {
   Path,
   UseFormStateReturn,
 } from "react-hook-form";
-import { TextField } from "./text-field";
+import { TextField, TextFieldProps } from "./text-field";
 
-export type RHFTextFieldProps<T extends FieldValues> = {
-  label: string;
-  description?: string;
+export type RHFTextFieldProps<T extends FieldValues> = Omit<
+  TextFieldProps,
+  "InputProps"
+> & {
+  // label: string;
+  // description?: string;
   control: Control<T>;
   name: Path<T>;
-
   InputProps?: Omit<
     InputHTMLAttributes<HTMLInputElement>,
     "value" | "onChange" | "onBlur"
@@ -29,6 +31,7 @@ const RHFTextFieldBase = <T extends FieldValues>({
   control,
   name,
   InputProps,
+  "data-testid": dataTestId,
 }: RHFTextFieldProps<T>) => {
   type RenderProps = {
     field: ControllerRenderProps<T, FieldPath<T>>;
@@ -42,11 +45,16 @@ const RHFTextFieldBase = <T extends FieldValues>({
       ({ field }: RenderProps) => {
         return (
           <TextField
-            {...{ label, description, InputProps: { ...InputProps, ...field } }}
+            {...{
+              label,
+              description,
+              "data-testid": dataTestId,
+              InputProps: { ...InputProps, ...field },
+            }}
           />
         );
       },
-    [description, label, InputProps]
+    [label, description, dataTestId, InputProps]
   );
 
   return (

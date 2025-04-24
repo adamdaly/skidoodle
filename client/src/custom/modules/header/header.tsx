@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SignOut } from "./components/sign-out";
 
 export type HeaderProps = {
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 export const Header = memo(({ children }: HeaderProps) => {

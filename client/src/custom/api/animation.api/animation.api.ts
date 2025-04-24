@@ -17,12 +17,12 @@ interface GetAnimationsConfig extends AxiosRequestConfig {
 }
 
 export const getAnimations = (config?: AxiosRequestConfig) =>
-  get<GetAnimationsResponse>("http://server:3000/", config);
+  get<GetAnimationsResponse>("http://server:3000/user/animations", config);
 
 export type GetAnimationResponse = Animation;
 
 export const getAnimation = (
-  animationid: number | string,
+  animationid: number,
   config?: GetAnimationsConfig
 ) =>
   get<GetAnimationResponse>(
@@ -39,7 +39,7 @@ type WithType<T> = T & {
 export type GetRecentsResponse = (WithType<Animation> | WithType<Scene>)[];
 
 export const getRecents = (config?: AxiosRequestConfig) =>
-  get<GetRecentsResponse>("http://server:3000/recents", config);
+  get<GetRecentsResponse>("http://server:3000/user/recents", config);
 
 export type GetSceneResponse = Scene;
 
@@ -83,6 +83,9 @@ export const postAnimation = (
     body,
     config
   );
+
+export const deleteAnimation = (id: number, config?: AxiosRequestConfig) =>
+  deleteRequest(`http://localhost:3000/animations/${id}`, config);
 
 export type PostFrameResponse = Frame;
 

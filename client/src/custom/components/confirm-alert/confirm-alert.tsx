@@ -13,17 +13,20 @@ import { Button } from "@/components/ui/button";
 
 export type ConfirmAlertProps = {
   triggerText: string;
+  triggerTestId: string;
   title?: string;
   description?: string;
   cancelText?: string;
   confirmText?: string;
   onConfirm?: () => void;
   onCancel?: () => void;
-  TriggerButtonProps?: React.ComponentProps<typeof Button>;
+  TriggerButtonProps?: Omit<React.ComponentProps<typeof Button>, "data-testid">;
+  disabled?: boolean;
 };
 
 export const ConfirmAlert = ({
   triggerText,
+  triggerTestId,
   title = "Are you sure?",
   description,
   cancelText = "Cancel",
@@ -31,11 +34,18 @@ export const ConfirmAlert = ({
   onConfirm,
   onCancel,
   TriggerButtonProps,
+  disabled,
 }: ConfirmAlertProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button {...{ variant: "destructive", ...TriggerButtonProps }}>
+        <Button
+          {...{
+            variant: "destructive",
+            "data-testid": triggerTestId,
+            ...TriggerButtonProps,
+          }}
+        >
           {triggerText}
         </Button>
       </AlertDialogTrigger>
@@ -47,8 +57,10 @@ export const ConfirmAlert = ({
           )}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>{cancelText}</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>
+          <AlertDialogCancel disabled={disabled} onClick={onCancel}>
+            {cancelText}
+          </AlertDialogCancel>
+          <AlertDialogAction disabled={disabled} onClick={onConfirm}>
             {confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>

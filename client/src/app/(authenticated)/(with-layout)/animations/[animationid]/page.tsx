@@ -5,8 +5,9 @@ import { H1, H2 } from "@/custom/components/typography";
 import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
 import { AnimationProvider } from "./_components/context";
 import { Scenes } from "./_components/scenes";
+import { AnimationDelete } from "./_components/animation-delete";
 
-async function getAnimation(animationid: string) {
+async function getAnimation(animationid: number) {
   const result = await getAnimationRequest(animationid, {
     headers: {
       Cookie: await getAccessTokenCookie(),
@@ -24,7 +25,14 @@ export default async function Animation({
 }: {
   params: Promise<{ animationid: string }>;
 }) {
-  const { animationid } = await params;
+  const p = await params;
+
+  const animationid = parseInt(p.animationid, 10);
+
+  if (Number.isNaN(animationid)) {
+    throw new Error(`Unknown Animation Id: ${animationid}`);
+  }
+
   const animation = await getAnimation(animationid);
 
   if (!animation) {
@@ -42,18 +50,26 @@ export default async function Animation({
   return (
     <FramesProvider {...{ frames }}>
       <AnimationProvider animation={animation}>
-        <H1 className="mb-4">{animation.name}</H1>
-        <H2 className="mb-2 text-2xl">Info</H2>
-        <dl className="mb-4">
-          <dt className="inline-block mr-2 font-semibold">Width</dt>
-          <dd className="inline-block mr-4">{animation.width}</dd>
-          <dt className="inline-block mr-2 font-semibold">Height</dt>
-          <dd className="inline-block mr-4">{animation.height}</dd>
-          <dt className="inline-block mr-2 font-semibold">Framerate</dt>
-          <dd className="inline-block mr-4">{animation.framerate}</dd>
-        </dl>
-        <H2 className="mb-4">Scenes</H2>
-        <Scenes />
+        <H1 className="flex items-center mb-4">
+          {animation.name} <AnimationDelete id={animationid} />
+        </H1>
+        <section className="flex">
+          <div className="flex-grow-1">
+            <H2 className="mb-4">Scenes</H2>
+            <Scenes />
+          </div>
+          <aside className="flex-[0_0_200px] ml-6">
+            <H2 className="mb-2 text-2xl">Info</H2>
+            <dl className="mb-4">
+              <dt className="mr-2 font-semibold">Width</dt>
+              <dd className="mr-4">{animation.width}</dd>
+              <dt className="mr-2 font-semibold">Height</dt>
+              <dd className="mr-4">{animation.height}</dd>
+              <dt className="mr-2 font-semibold">Framerate</dt>
+              <dd className="mr-4">{animation.framerate}</dd>
+            </dl>
+          </aside>
+        </section>
       </AnimationProvider>
     </FramesProvider>
   );

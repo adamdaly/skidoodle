@@ -88,12 +88,19 @@ export const CreateAnimation = memo(
           }}
         >
           <DialogTrigger asChild>
-            <Button>Create Animation</Button>
+            <Button data-testid="cta-animation-create">Create Animation</Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent data-testid="dialog-animation-create">
             <DialogHeader>
-              <DialogTitle>Create Animation</DialogTitle>
-              <DialogDescription>test</DialogDescription>
+              <DialogTitle>
+                <span data-testid="title-animation-create">
+                  Create Animation
+                </span>
+              </DialogTitle>
+              <DialogDescription>
+                Width and Height cannot be changed once the animation has been
+                created
+              </DialogDescription>
             </DialogHeader>
             <form {...{ onSubmit }}>
               <Grid container>
@@ -104,6 +111,7 @@ export const CreateAnimation = memo(
                       name: "name",
                       label: "Name",
                       message: form.formState.errors.name?.message,
+                      "data-testid": "input-animation-create-name",
                     }}
                   />
                 </Grid>
@@ -115,6 +123,7 @@ export const CreateAnimation = memo(
                       name: "width",
                       label: "Width",
                       message: form.formState.errors.width?.message,
+                      "data-testid": "input-animation-create-width",
                     }}
                   />
                 </Grid>
@@ -126,6 +135,7 @@ export const CreateAnimation = memo(
                       name: "height",
                       label: "Height",
                       message: form.formState.errors.height?.message,
+                      "data-testid": "input-animation-create-height",
                     }}
                   />
                 </Grid>
@@ -136,6 +146,7 @@ export const CreateAnimation = memo(
                       name: "framerate",
                       label: "Frame Rate",
                       message: form.formState.errors.framerate?.message,
+                      "data-testid": "input-animation-create-framerate",
                     }}
                   />
                 </Grid>
@@ -145,6 +156,7 @@ export const CreateAnimation = memo(
                       {...{
                         onClick: () => setOpen(false),
                         variant: "ghost",
+                        "data-testid": "cta-animation-create-cancel",
                       }}
                     >
                       Cancel
@@ -152,6 +164,7 @@ export const CreateAnimation = memo(
                     <Button
                       {...{
                         type: "submit",
+                        "data-testid": "cta-animation-create-submit",
                       }}
                     >
                       Create

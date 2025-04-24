@@ -53,7 +53,10 @@ export const Scenes = memo(() => {
 
   return (
     <div>
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-6">
+      <ul
+        data-testid="list-scenes"
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-6"
+      >
         {scenes.map((scene) => (
           <Scene key={scene.id} {...{ scene, width: width, height: height }} />
         ))}

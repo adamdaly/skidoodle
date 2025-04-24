@@ -41,12 +41,14 @@ const useTimelineLogic = () => {
     if (frame?.data && contextRef.current) {
       const image = new Image();
       image.onload = () => {
+        contextRef.current?.clearRect(0, 0, 240 * aspectRatio, 240);
         contextRef.current?.drawImage(image, 0, 0, 240 * aspectRatio, 240);
       };
       image.src = `data:image/png;base64,${frame.data}`;
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(render, [selectedIndex]);
 
   return {

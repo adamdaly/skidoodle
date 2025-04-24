@@ -38,7 +38,7 @@ services:
     container_name: skidoodle-server
     build:
       context: ./server
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
@@ -51,11 +51,13 @@ services:
   auth-server:
     build:
       context: ./auth-server
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     ports:
       - "3002:3000"
     volumes:
       - ./auth-server:/usr/src/app
+      - /usr/src/app/dist
+      - /usr/src/app/node_modules
     restart: unless-stopped
     environment:
       - PORT=3000

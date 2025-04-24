@@ -1,12 +1,22 @@
 .DEFAULT_GOAL := help
 
-.PHONY: build-dev
-build-dev:
-	docker compose up --build
+ifneq (,$(wildcard ./.env))
+	include .env
+	export
+endif
+
+
+.PHONY: run
+run:
+	docker compose up -d
+
+.PHONY: run-dev
+run-dev:
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build
 
 .PHONY: build
 build:
-	docker compose up -d
+	docker compose up --build
 
 .PHONY: unbuild
 unbuild:
@@ -22,7 +32,26 @@ restart:
 
 .PHONY: act
 act:
-	./bin/act
+	./bin/act \
+		--var PLAYWRIGHT_BASE_URL=$(PLAYWRIGHT_BASE_URL) \
+		--var PLAYWRIGHT_USER_USERNAME=$(PLAYWRIGHT_USER_USERNAME) \
+		--var PLAYWRIGHT_USER_PASSWORD=$(PLAYWRIGHT_USER_PASSWORD)
+
+.PHONY: act-e2e
+act-e2e:
+	./bin/act \
+		--var PLAYWRIGHT_BASE_URL=$(PLAYWRIGHT_BASE_URL) \
+		--var PLAYWRIGHT_USER_USERNAME=$(PLAYWRIGHT_USER_USERNAME) \
+		--var PLAYWRIGHT_USER_PASSWORD=$(PLAYWRIGHT_USER_PASSWORD) \
+		-j "e2e"          
+
+.PHONY: e2e
+e2e:
+	cd testing/e2e && npx playwright test
+
+.PHONY: e2e
+e2e-dev:
+	cd testing/e2e && npx playwright test --ui
 
 help:
 	@echo "options:"

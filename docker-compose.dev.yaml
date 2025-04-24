@@ -1,0 +1,10 @@
+services:
+  auth-server:
+    build:
+      context: ./auth-server
+      dockerfile: Dockerfile.local
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.local

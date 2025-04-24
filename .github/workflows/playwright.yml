@@ -1,0 +1,53 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  e2e:
+    env:
+      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+
+      PGADMIN_DEFAULT_EMAIL: ${{ vars.PGADMIN_DEFAULT_EMAIL }}
+      PGADMIN_DEFAULT_PASSWORD: ${{ vars.PGADMIN_DEFAULT_PASSWORD }}
+
+      BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL }}
+      TEST_USER_USERNAME: ${{ vars.PLAYWRIGHT_USER_USERNAME }}
+      TEST_USER_PASSWORD: ${{ vars.PLAYWRIGHT_USER_PASSWORD }}
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: Start Docker Compose services
+        run: |
+          make run
+        working-directory: .
+
+      - name: Wait for services
+        run: |
+          timeout 120s bash -c "until curl -s -f http://localhost:3000/health > /dev/null; do sleep 1; done"
+
+      - name: Run e2e tests
+        working-directory: ./testing/e2e
+        run: |
+          npm ci
+          npx playwright install
+          npx playwright install-deps
+          npx playwright test
+
+      - name: Stop Docker Compose services
+        if: always() # Run even if previous steps fail
+        run: |
+          make destroy
+        working-directory: .

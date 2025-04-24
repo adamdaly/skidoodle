@@ -41,6 +41,7 @@ export const RegisterForm = () => {
                   {...{
                     control: form.control,
                     name: "username",
+                    "data-testid": "input-register-username",
                     label: "Email",
                     description: "This will be your username.",
                     InputProps: {
@@ -54,6 +55,7 @@ export const RegisterForm = () => {
                   {...{
                     control: form.control,
                     name: "password",
+                    "data-testid": "input-register-password",
                     label: "Password",
                     InputProps: {
                       type: "password",
@@ -74,7 +76,9 @@ export const RegisterForm = () => {
                 </AlertDescription>
               </Alert>
             )}
-            <Button type="submit">Submit</Button>
+            <Button data-testid="cta-register-submit" type="submit">
+              Submit
+            </Button>
           </CardFooter>
         </Card>
       </form>
