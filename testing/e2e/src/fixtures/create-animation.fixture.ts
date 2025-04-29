@@ -6,7 +6,7 @@ import { test as base } from "./sign-in.fixture";
 export const test = base.extend<CustomFixtures>({
   animation: async ({ page }, use) => {
     const dashboard = new Dashboard(page);
-    await dashboard.goto();
+    await dashboard.goto({ waitUntil: "load" });
 
     const responsePromise = dashboard.page.waitForResponse(
       (res) => res.url().includes("/animations") && res.status() === 201

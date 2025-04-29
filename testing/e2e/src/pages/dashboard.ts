@@ -61,6 +61,8 @@ export class Dashboard extends PageDev {
 
   async completeAnimationCreateForm() {
     await this.ctaAnimationCreate.click();
+    const animationCreateDialog = this.getAnimationCreateDialog();
+    animationCreateDialog.waitFor({ state: "attached" });
     await this.fillAnimationCreateForm();
     await this.submitAnimationCreateForm();
   }
