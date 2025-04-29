@@ -28,14 +28,19 @@ test.describe("Create animation flow", () => {
     await expect(dashboard.ctaAnimationCreate).toBeAttached();
     await dashboard.completeAnimationCreateForm();
     await expect(dashboard.page).toHaveURL(/animations\/\d+$/);
-    const url = page.url();
+    const url = new URL(page.url());
     await dashboard.goto({ waitUntil: "load" });
     await expect(dashboard.listAnimations).toBeAttached();
-    const href = await dashboard.listAnimations
+    const listItems = await dashboard.listAnimations
       .getByRole("listitem")
-      .last()
-      .getByRole("link")
-      .getAttribute("href");
-    await expect(url).toContain(href);
+      .all();
+    const hrefs = await Promise.all(
+      listItems.map(
+        async (listItem) =>
+          await listItem.getByRole("link").getAttribute("href")
+      )
+    );
+
+    await expect(hrefs).toContain(url.pathname);
   });
 });

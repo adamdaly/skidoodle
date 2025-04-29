@@ -80,10 +80,10 @@ export class UserService {
               },
             },
           },
-          orderBy: {
-            updatedAt: 'asc',
-          },
         },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }

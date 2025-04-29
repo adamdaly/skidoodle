@@ -63,6 +63,5 @@ export class Dashboard extends PageDev {
     await this.ctaAnimationCreate.click();
     await this.fillAnimationCreateForm();
     await this.submitAnimationCreateForm();
-    await this.page.waitForURL(/animations\/\d+$/);
   }
 }

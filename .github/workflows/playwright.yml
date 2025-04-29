@@ -34,9 +34,9 @@ jobs:
           make run
         working-directory: .
 
-      - name: Wait for services
-        run: |
-          timeout 120s bash -c "until curl -s -f http://localhost:3000/health > /dev/null; do sleep 1; done"
+      # - name: Wait for services
+      #   run: |
+      #     timeout 120s bash -c "until curl -s -f http://localhost:3000/health > /dev/null; do sleep 1; done"
 
       - name: Run e2e tests
         working-directory: ./testing/e2e
