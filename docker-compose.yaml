@@ -120,10 +120,13 @@ services:
       - server
     networks:
       - app-net
+    environment:
+      - NEXT_PUBLIC_SERVER_URL=${SERVER_URL} # Use the server service name and port
 
 networks:
   app-net:
     driver: bridge
+
 volumes:
   db:
   pgadmin:

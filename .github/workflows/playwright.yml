@@ -17,6 +17,9 @@ jobs:
       PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL }}
       PLAYWRIGHT_USER_USERNAME: ${{ vars.PLAYWRIGHT_USER_USERNAME }}
       PLAYWRIGHT_USER_PASSWORD: ${{ vars.PLAYWRIGHT_USER_PASSWORD }}
+
+      SERVER_URL: ${{ vars.PLAYWRIGHT_SERVER_URL }}
+
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
