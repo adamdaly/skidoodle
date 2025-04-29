@@ -20,6 +20,9 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
+      - name: Debug environment variables
+        run: env
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
