@@ -48,7 +48,7 @@ jobs:
           sleep 30
 
           for i in {1..5}; do
-            HTTP_STATUS=$(curl --silent --fail -o /dev/null --max-time 5 -w "%{http_code}" http://localhost:8080/health 2> /dev/null && echo "success" || echo "failed")
+            HTTP_STATUS=$(curl --silent --fail -o /dev/null --max-time 10 -w "%{http_code}" http://localhost:8080/health 2> /dev/null && echo "success" || echo "failed")
             if [[ "$HTTP_STATUS" == "200" ]]; then
               echo "Health check passed!"
               exit 0
@@ -72,6 +72,9 @@ jobs:
       #     name: playwright-report
       #     path: ./testing/e2e/playwright-report/
       #     retention-days: 30
+
+      - name: Check Docker Compose Logs
+        run: docker-compose logs
 
       - name: Stop Docker Compose services
         if: always() # Run even if previous steps fail
