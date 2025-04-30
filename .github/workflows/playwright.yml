@@ -18,14 +18,12 @@ jobs:
       PLAYWRIGHT_USER_USERNAME: ${{ vars.PLAYWRIGHT_USER_USERNAME }}
       PLAYWRIGHT_USER_PASSWORD: ${{ vars.PLAYWRIGHT_USER_PASSWORD }}
 
-      SERVER_URL: ${{ vars.PLAYWRIGHT_SERVER_URL }}
+      # SERVER_URL: ${{ vars.PLAYWRIGHT_SERVER_URL }}
+      SERVER_URL: 172.20.0.1:3000
 
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - name: Debug environment variables
-        run: env
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -48,12 +46,12 @@ jobs:
           npx playwright install-deps
           npx playwright test
 
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report
-          path: ./testing/e2e/playwright-report/
-          retention-days: 30
+      # - uses: actions/upload-artifact@v4
+      #   if: ${{ !cancelled() }}
+      #   with:
+      #     name: playwright-report
+      #     path: ./testing/e2e/playwright-report/
+      #     retention-days: 30
 
       - name: Stop Docker Compose services
         if: always() # Run even if previous steps fail

@@ -35,7 +35,6 @@ services:
     networks:
       - app-net
   server:
-    container_name: skidoodle-server
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -121,7 +120,7 @@ services:
     networks:
       - app-net
     environment:
-      - NEXT_PUBLIC_SERVER_URL=${SERVER_URL} # Use the server service name and port
+      - NEXT_PUBLIC_SERVER_URL=${SERVER_URL}
 
 networks:
   app-net:
