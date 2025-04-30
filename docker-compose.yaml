@@ -35,9 +35,10 @@ services:
     networks:
       - app-net
   server:
+    container_name: server
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     ports:
       - "3000:3000"
     volumes:
