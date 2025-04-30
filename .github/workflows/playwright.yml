@@ -47,14 +47,14 @@ jobs:
           # Wait for the service to be ready (adjust sleep time as needed)
           sleep 30
 
-          for i in {1..5}; do
+          for i in {1..10}; do
             HTTP_STATUS=$(curl --silent --fail -o /dev/null --max-time 10 -w "%{http_code}" http://localhost:8080/health 2> /dev/null && echo "success" || echo "failed")
             if [[ "$HTTP_STATUS" == "200" ]]; then
               echo "Health check passed!"
               exit 0
             fi
             echo "Attempt $i failed, retrying..."
-            sleep 5
+            sleep 10
           done
           echo "Health check failed after retries: HTTP status $HTTP_STATUS"
           exit 1
@@ -74,6 +74,7 @@ jobs:
       #     retention-days: 30
 
       - name: Check Docker Compose Logs
+        if: always() # Run even if previous steps fail
         run: docker-compose logs
 
       - name: Stop Docker Compose services
