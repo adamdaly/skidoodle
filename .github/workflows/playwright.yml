@@ -19,7 +19,7 @@ jobs:
       PLAYWRIGHT_USER_PASSWORD: ${{ vars.PLAYWRIGHT_USER_PASSWORD }}
 
       # SERVER_URL: ${{ vars.PLAYWRIGHT_SERVER_URL }}
-      SERVER_URL: 172.20.0.1:3000
+      SERVER_URL: http://172.18.0.1:3000
 
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -38,6 +38,25 @@ jobs:
           make run
         working-directory: .
 
+      - name: Get Docker Compose Network
+        run: |
+          docker network inspect skidoodle_app-net
+
+      - name: Health Check Endpoint
+        run: |
+          # Wait for the service to be ready (adjust sleep time as needed)
+          sleep 10
+
+          # Curl the health check endpoint and capture the HTTP status code
+          HTTP_STATUS=$(curl --silent --fail -o /dev/null --max-time 5 -w "%{http_code}" http://172.18.0.1:3000/health)
+
+          # Check if the status code is 200
+          if [[ "$HTTP_STATUS" == "200" ]]; then
+            echo "Health check passed!"
+          else
+            echo "Health check failed: HTTP status $HTTP_STATUS"
+            exit 1
+          fi
       - name: Run e2e tests
         working-directory: ./testing/e2e
         run: |
