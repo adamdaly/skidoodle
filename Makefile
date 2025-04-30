@@ -10,6 +10,10 @@ endif
 run:
 	docker compose up -d
 
+.PHONY: run-build
+run-build:
+	docker compose up -d --build
+
 .PHONY: run-dev
 run-dev:
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build

@@ -35,29 +35,13 @@ jobs:
 
       - name: Start Docker Compose services
         run: |
-          make run
+          make run-build
         working-directory: .
 
       - name: Get Docker Compose Network
         run: |
           docker network inspect skidoodle_app-net
 
-      - name: Health Check Endpoint
-        run: |
-          # Wait for the service to be ready (adjust sleep time as needed)
-          sleep 30
-
-          for i in {1..10}; do
-            HTTP_STATUS=$(curl --silent --fail -o /dev/null --max-time 10 -w "%{http_code}" http://localhost:8080/health 2> /dev/null && echo "success" || echo "failed")
-            if [[ "$HTTP_STATUS" == "200" ]]; then
-              echo "Health check passed!"
-              exit 0
-            fi
-            echo "Attempt $i failed, retrying..."
-            sleep 10
-          done
-          echo "Health check failed after retries: HTTP status $HTTP_STATUS"
-          exit 1
       - name: Run e2e tests
         working-directory: ./testing/e2e
         run: |

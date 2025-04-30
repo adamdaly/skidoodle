@@ -38,7 +38,7 @@ services:
     container_name: server
     build:
       context: ./server
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
