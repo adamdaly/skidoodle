@@ -48,14 +48,13 @@ jobs:
           docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
           docker inspect server --format='{{.State.Status}}'
 
-      - name: Server Logs
-        run: |
-          docker compose logs server
+      # - name: Server Logs
+      #   run: |
+      #     docker compose logs server
 
       - name: Verify server
         run: |
-          docker exec server env || echo "env failed with exit code $?"
-          docker inspect server --format='{{.State.Status}} {{.State.ExitCode}}'
+          docker exec server ls -la dist
 
       - name: Run e2e tests
         working-directory: ./testing/e2e
@@ -72,9 +71,9 @@ jobs:
           path: ./testing/e2e/playwright-report/
           retention-days: 30
 
-      # - name: Check Docker Compose Logs
-      #   if: always() # Run even if previous steps fail
-      #   run: docker-compose logs
+      - name: Check Docker Compose Logs
+        if: always() # Run even if previous steps fail
+        run: docker-compose logs
 
       - name: Stop Docker Compose services
         if: always() # Run even if previous steps fail
