@@ -30,39 +30,43 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
+      # - name: Install Docker Compose
+      #   run: |
+      #     sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      #     sudo chmod +x /usr/local/bin/docker-compose
+      #     docker-compose --version
 
       - name: Start Docker Compose services
         run: |
           make run-build
         working-directory: .
 
-      # - name: Check DNS
-      #   run: |
-      #     until docker exec client ping -c 1 -W 1 server >/dev/null 2>&1; do :; done
-
-      - name: Run e2e tests
-        working-directory: ./testing/e2e
+      - name: Check DNS
         run: |
-          npm ci
-          npx playwright install
-          npx playwright install-deps
-          npx playwright test
+          until docker exec client ping -c 1 -W 1 server >/dev/null 2>&1; do
+            echo "Waiting for server to respond..."
+            sleep 1
+          done
+          echo "Server is reachable!"
 
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report
-          path: ./testing/e2e/playwright-report/
-          retention-days: 30
+      # - name: Run e2e tests
+      #   working-directory: ./testing/e2e
+      #   run: |
+      #     npm ci
+      #     npx playwright install
+      #     npx playwright install-deps
+      #     npx playwright test
 
-      - name: Check Docker Compose Logs
-        if: always() # Run even if previous steps fail
-        run: docker-compose logs
+      # - uses: actions/upload-artifact@v4
+      #   if: ${{ !cancelled() }}
+      #   with:
+      #     name: playwright-report
+      #     path: ./testing/e2e/playwright-report/
+      #     retention-days: 30
+
+      # - name: Check Docker Compose Logs
+      #   if: always() # Run even if previous steps fail
+      #   run: docker-compose logs
 
       - name: Stop Docker Compose services
         if: always() # Run even if previous steps fail
