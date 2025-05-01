@@ -4,11 +4,11 @@ FROM node:lts-alpine3.21
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-COPY --chown=node:node package*.json ./
+COPY --chown=node:node package.json ./
 COPY --chown=node:node tsconfig*.json ./
 
 # Install the application dependencies
-RUN npm ci
+RUN npm install
 
 # Copy the rest of the application files
 COPY . .

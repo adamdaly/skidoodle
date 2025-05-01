@@ -24,6 +24,10 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
+      - name: Dump all data types
+        run: |
+          echo "vars ${{ toJson(vars) }}"
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -37,10 +41,6 @@ jobs:
         run: |
           make run-build
         working-directory: .
-
-      - name: Get Docker Compose Network
-        run: |
-          docker network inspect skidoodle_app-net
 
       - name: Run e2e tests
         working-directory: ./testing/e2e
