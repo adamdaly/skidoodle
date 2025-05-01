@@ -21,5 +21,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Command to run the application
-# CMD ["node", "dist/main"]
-CMD ["npm", "start"]
+CMD ["node", "dist/main"]
