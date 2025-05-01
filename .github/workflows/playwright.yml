@@ -36,11 +36,9 @@ jobs:
           make run-build
         working-directory: .
 
-      - name: Verify server
+      - name: Inspect Server Container
         run: |
-          docker run -it server sh
-          ls -la /usr/src/app/src
-          ls -la /usr/src/app/tsconfig.json
+          docker run -i server sh -c "ls -la /usr/src/app/src && ls -la /usr/src/app/tsconfig.json"
 
       - name: Sleep
         run: |
