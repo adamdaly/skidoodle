@@ -7,6 +7,7 @@ import { AuthMiddleware } from './auth/auth.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.use(cookieParser('secret'));
 
   app.enableCors({
