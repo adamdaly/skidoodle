@@ -36,21 +36,23 @@ jobs:
           make run-build
         working-directory: .
 
-      - name: Verify server
-        run: |
-          docker exec server ls -la dist
+      # - name: Verify server
+      #   run: |
+      #     docker run -it server sh
+      #     ls -la /usr/src/app/src
+      #     ls -la /usr/src/app/tsconfig.json
 
       - name: Sleep
         run: |
           sleep 60s
 
-      - name: Check Server Port
-        run: |
-          docker exec server which netstat || echo "netstat not found"
-          docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
-          docker exec server ps -ef || echo "ps failed with exit code $?"
-          docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
-          docker inspect server --format='{{.State.Status}}'
+      # - name: Check Server Port
+      #   run: |
+      #     docker exec server which netstat || echo "netstat not found"
+      #     docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
+      #     docker exec server ps -ef || echo "ps failed with exit code $?"
+      #     docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
+      #     docker inspect server --format='{{.State.Status}}'
 
       # - name: Server Logs
       #   run: |
