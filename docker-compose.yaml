@@ -59,6 +59,8 @@ services:
       - "3000:3000"
     volumes:
       - ./server:/usr/src/app
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
     # healthcheck:
     #   test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
     #   interval: 10s
