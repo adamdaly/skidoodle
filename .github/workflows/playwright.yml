@@ -36,6 +36,10 @@ jobs:
           make run-build
         working-directory: .
 
+      - name: Verify server
+        run: |
+          docker exec server ls -la dist
+
       - name: Sleep
         run: |
           sleep 60s
@@ -51,10 +55,6 @@ jobs:
       # - name: Server Logs
       #   run: |
       #     docker compose logs server
-
-      - name: Verify server
-        run: |
-          docker exec server ls -la dist
 
       - name: Run e2e tests
         working-directory: ./testing/e2e
@@ -73,7 +73,7 @@ jobs:
 
       - name: Check Docker Compose Logs
         if: always() # Run even if previous steps fail
-        run: docker-compose logs
+        run: docker compose logs
 
       - name: Stop Docker Compose services
         if: always() # Run even if previous steps fail
