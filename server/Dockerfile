@@ -4,15 +4,15 @@ FROM node:lts-alpine3.21
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-COPY --chown=node:node package.json ./
-COPY --chown=node:node tsconfig*.json ./
-COPY --chown=node:node prisma ./prisma
-
-# Install the application dependencies
-RUN npm install
+# COPY --chown=node:node package.json ./
+# COPY --chown=node:node tsconfig*.json ./
+# COPY --chown=node:node prisma ./prisma
 
 # Copy the rest of the application files
 COPY --chown=node:node . .
+
+# Install the application dependencies
+RUN npm install
 
 # Build the NestJS application
 # RUN npx prisma generate || (echo "Prisma generate failed" && exit 1)
