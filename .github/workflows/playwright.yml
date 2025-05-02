@@ -38,22 +38,19 @@ jobs:
 
       - name: Inspect Server Container
         run: |
-          docker exec server npx prisma generate
-          docker exec server npm install
-          docker exec server npm run build
-          docker exec server npm run start:prod
+          docker exec server ls -la ./node_modules/.prisma/client
 
       - name: Sleep
         run: |
           sleep 60s
 
-      - name: Check Server Port
-        run: |
-          docker exec server which netstat || echo "netstat not found"
-          docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
-          docker exec server ps -ef || echo "ps failed with exit code $?"
-          docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
-          docker inspect server --format='{{.State.Status}}'
+      # - name: Check Server Port
+      #   run: |
+      #     docker exec server which netstat || echo "netstat not found"
+      #     docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
+      #     docker exec server ps -ef || echo "ps failed with exit code $?"
+      #     docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
+      #     docker inspect server --format='{{.State.Status}}'
 
       # - name: Server Logs
       #   run: |
@@ -74,9 +71,9 @@ jobs:
           path: ./testing/e2e/playwright-report/
           retention-days: 30
 
-      - name: Check Docker Compose Logs
-        if: always() # Run even if previous steps fail
-        run: docker compose logs
+      # - name: Check Docker Compose Logs
+      #   if: always() # Run even if previous steps fail
+      #   run: docker compose logs
 
       - name: Stop Docker Compose services
         if: always() # Run even if previous steps fail

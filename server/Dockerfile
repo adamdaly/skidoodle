@@ -13,10 +13,15 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install the application dependencies
-# RUN npm install
+RUN npm install
+
+# docker exec server npx prisma generate
+# docker exec server npm install
+# docker exec server npm run build
+# docker exec server npm run start:prod
 
 # Build the NestJS application
-# RUN npx prisma generate || (echo "Prisma generate failed" && exit 1)
+RUN npx prisma generate --schema=./prisma/schema.prisma || (echo "Prisma generate failed" && exit 1)
 # RUN npm run build && [ -f dist/main.js ] || (echo "Build failed: dist/main.js not found" && exit 1)
 
 # Ensure permissions
@@ -28,5 +33,5 @@ EXPOSE 3000
 # USER node
 
 # Command to run the application
-# CMD ["npm", "run", "start:prod"]
-CMD ["tail", "-f", "/dev/null"]
+CMD ["npm", "run", "start:prod"]
+# CMD ["tail", "-f", "/dev/null"]
