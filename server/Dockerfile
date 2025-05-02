@@ -28,5 +28,5 @@ EXPOSE 3000
 # USER node
 
 # Command to run the application
-# CMD ["npm", "run", "start:prod"]
-CMD ["tail", "-f", "/dev/null"]
+CMD ["npm", "run", "start:prod"]
+# CMD ["tail", "-f", "/dev/null"]
