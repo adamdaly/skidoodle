@@ -42,7 +42,8 @@ jobs:
 
       - name: Start Docker Compose services
         run: |
-          docker exec server find /usr/src/app -type d -name "node_modules"
+          docker exec server ls -la
+          docker exec server find / -type d -name "node_modules"
           # docker exec server npm run build
           # docker exec server ls -la
           # docker exec server ls -la ./dist
