@@ -20,15 +20,21 @@ export type TextFieldProps = {
     onChange(e: ChangeEvent<HTMLInputElement>): void;
     onBlur(e: FocusEvent<HTMLInputElement>): void;
   };
+  "data-testid": string;
 };
 
 export const TextField = memo(
-  ({ label, description, InputProps }: TextFieldProps) => {
+  ({
+    label,
+    description,
+    InputProps,
+    "data-testid": dataTestId,
+  }: TextFieldProps) => {
     return (
       <FormItem>
         <FormLabel>{label}</FormLabel>
         <FormControl>
-          <Input {...InputProps} />
+          <Input data-testid={dataTestId} {...InputProps} />
         </FormControl>
         {description && <FormDescription>{description}</FormDescription>}
         <FormMessage />

@@ -1,0 +1,54 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  e2e:
+    env:
+      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+      POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+
+      PGADMIN_DEFAULT_EMAIL: ${{ vars.PGADMIN_DEFAULT_EMAIL }}
+      PGADMIN_DEFAULT_PASSWORD: ${{ vars.PGADMIN_DEFAULT_PASSWORD }}
+
+      SERVER_URL: ${{ vars.SERVER_URL }}
+      DATABASE_URL: ${{ vars.DATABASE_URL }}
+
+      PLAYWRIGHT_BASE_URL: ${{ vars.PLAYWRIGHT_BASE_URL }}
+      PLAYWRIGHT_USER_USERNAME: ${{ vars.PLAYWRIGHT_USER_USERNAME }}
+      PLAYWRIGHT_USER_PASSWORD: ${{ vars.PLAYWRIGHT_USER_PASSWORD }}
+
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start Docker Compose services
+        run: |
+          make run-build
+        working-directory: .
+
+      - name: Run e2e tests
+        working-directory: ./testing/e2e
+        run: |
+          npm ci
+          npx playwright install
+          npx playwright install-deps
+          npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: ./testing/e2e/playwright-report/
+          retention-days: 30
+
+      - name: Stop Docker Compose services
+        if: always() # Run even if previous steps fail
+        run: |
+          make destroy
+        working-directory: .

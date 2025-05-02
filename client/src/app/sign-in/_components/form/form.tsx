@@ -42,6 +42,7 @@ export const SignInForm = () => {
                     control: form.control,
                     name: "username",
                     label: "Email",
+                    "data-testid": "input-username",
                     InputProps: {
                       disabled: form.formState.isSubmitting,
                     },
@@ -54,6 +55,7 @@ export const SignInForm = () => {
                     control: form.control,
                     name: "password",
                     label: "Password",
+                    "data-testid": "input-password",
                     InputProps: {
                       type: "password",
                       disabled: form.formState.isSubmitting,
@@ -65,7 +67,11 @@ export const SignInForm = () => {
           </CardContent>
           <CardFooter className="flex flex-col">
             {form.formState.errors.root && (
-              <Alert variant="destructive" className="mb-4 w-full">
+              <Alert
+                data-testid="alert-signin"
+                variant="destructive"
+                className="mb-4 w-full"
+              >
                 <AlertCircleIcon />
                 <AlertTitle>Sign in failed</AlertTitle>
                 <AlertDescription>
@@ -78,6 +84,7 @@ export const SignInForm = () => {
                 {...{
                   type: "submit",
                   disabled: form.formState.isSubmitting,
+                  "data-testid": "cta-submit",
                 }}
               >
                 Submit

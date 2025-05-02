@@ -1,12 +1,26 @@
 .DEFAULT_GOAL := help
 
-.PHONY: build-dev
-build-dev:
-	docker compose up --build
+ifneq (,$(wildcard ./.env))
+	include .env
+	export
+endif
+
+
+.PHONY: run
+run:
+	docker compose up -d
+
+.PHONY: run-build
+run-build:
+	docker compose up -d --build
+
+.PHONY: run-dev
+run-dev:
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build
 
 .PHONY: build
 build:
-	docker compose up -d
+	docker compose up --build
 
 .PHONY: unbuild
 unbuild:
@@ -22,7 +36,42 @@ restart:
 
 .PHONY: act
 act:
-	./bin/act
+	./bin/act \
+		--var CI=true \
+		--var POSTGRES_DB=$(POSTGRES_DB) \
+		--var POSTGRES_USER=$(POSTGRES_USER) \
+		--var POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
+		--var PGADMIN_DEFAULT_EMAIL=$(PGADMIN_DEFAULT_EMAIL) \
+		--var PGADMIN_DEFAULT_PASSWORD=$(PGADMIN_DEFAULT_PASSWORD) \
+		--var SERVER_URL=$(SERVER_URL) \
+		--var DATABASE_URL=$(DATABASE_URL) \
+		--var PLAYWRIGHT_BASE_URL=$(PLAYWRIGHT_BASE_URL) \
+		--var PLAYWRIGHT_USER_USERNAME=$(PLAYWRIGHT_USER_USERNAME) \
+		--var PLAYWRIGHT_USER_PASSWORD=$(PLAYWRIGHT_USER_PASSWORD)
+
+.PHONY: act-e2e
+act-e2e:
+	./bin/act \
+		-j "e2e" \
+		--var CI=true \
+		--var POSTGRES_DB=$(POSTGRES_DB) \
+		--var POSTGRES_USER=$(POSTGRES_USER) \
+		--var POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
+		--var PGADMIN_DEFAULT_EMAIL=$(PGADMIN_DEFAULT_EMAIL) \
+		--var PGADMIN_DEFAULT_PASSWORD=$(PGADMIN_DEFAULT_PASSWORD) \
+		--var SERVER_URL=$(SERVER_URL) \
+		--var DATABASE_URL=$(DATABASE_URL) \
+		--var PLAYWRIGHT_BASE_URL=$(PLAYWRIGHT_BASE_URL) \
+		--var PLAYWRIGHT_USER_USERNAME=$(PLAYWRIGHT_USER_USERNAME) \
+		--var PLAYWRIGHT_USER_PASSWORD=$(PLAYWRIGHT_USER_PASSWORD)
+
+.PHONY: e2e
+e2e:
+	cd testing/e2e && npx playwright test
+
+.PHONY: e2e
+e2e-dev:
+	cd testing/e2e && npx playwright test --ui
 
 help:
 	@echo "options:"

@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "axios";
+import { SERVER_URL } from "@/custom/constants";
 import { Animation, Frame, Scene } from "@/custom/types";
 import { get, post, deleteRequest, patch } from "../api";
 
@@ -17,12 +18,12 @@ interface GetAnimationsConfig extends AxiosRequestConfig {
 }
 
 export const getAnimations = (config?: AxiosRequestConfig) =>
-  get<GetAnimationsResponse>("http://server:3000/", config);
+  get<GetAnimationsResponse>("http://server:3000/user/animations", config);
 
 export type GetAnimationResponse = Animation;
 
 export const getAnimation = (
-  animationid: number | string,
+  animationid: number,
   config?: GetAnimationsConfig
 ) =>
   get<GetAnimationResponse>(
@@ -39,7 +40,7 @@ type WithType<T> = T & {
 export type GetRecentsResponse = (WithType<Animation> | WithType<Scene>)[];
 
 export const getRecents = (config?: AxiosRequestConfig) =>
-  get<GetRecentsResponse>("http://server:3000/recents", config);
+  get<GetRecentsResponse>("http://server:3000/user/recents", config);
 
 export type GetSceneResponse = Scene;
 
@@ -53,7 +54,7 @@ export const postScene = (
   config?: AxiosRequestConfig
 ) =>
   post<GetSceneResponse, PostSceneRequest>(
-    "http://localhost:3000/scenes",
+    `${SERVER_URL}/scenes`,
     body,
     config
   );
@@ -79,10 +80,13 @@ export const postAnimation = (
   config?: AxiosRequestConfig
 ) =>
   post<PostAnimationResponse, PostAnimationRequest>(
-    "http://localhost:3000/animations",
+    `${SERVER_URL}/animations`,
     body,
     config
   );
+
+export const deleteAnimation = (id: number, config?: AxiosRequestConfig) =>
+  deleteRequest(`${SERVER_URL}/animations/${id}`, config);
 
 export type PostFrameResponse = Frame;
 
@@ -97,21 +101,17 @@ export const postFrame = (
   formData.append("index", body.index.toString());
   formData.append("sceneid", body.sceneid.toString());
 
-  return post<PostFrameResponse, FormData>(
-    "http://localhost:3000/frames",
-    formData,
-    {
-      ...config,
-      headers: {
-        ...config?.headers,
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  return post<PostFrameResponse, FormData>(`${SERVER_URL}/frames`, formData, {
+    ...config,
+    headers: {
+      ...config?.headers,
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 export const deleteFrame = (id: number, config?: AxiosRequestConfig) =>
-  deleteRequest<Frame, void>(`http://localhost:3000/frames/${id}`, config);
+  deleteRequest<Frame, void>(`${SERVER_URL}/frames/${id}`, config);
 
 export type PatchFrameRequest = {
   file?: File;
@@ -138,9 +138,5 @@ export const patchFrame = (
     formData.append("index", body.index.toString());
   }
 
-  return patch<Frame, FormData>(
-    `http://localhost:3000/frames/${id}`,
-    formData,
-    config
-  );
+  return patch<Frame, FormData>(`${SERVER_URL}/frames/${id}`, formData, config);
 };

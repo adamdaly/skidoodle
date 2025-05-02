@@ -93,7 +93,7 @@ describe('AnimationsService', () => {
     await service.getAnimationById(id);
 
     expect(mockPrismaService.animation.findUnique).toHaveBeenCalledWith({
-      where: { id },
+      where: { id, isDeleted: false },
       include: {
         Scene: {
           orderBy: {
@@ -137,7 +137,7 @@ describe('AnimationsService', () => {
     );
 
     expect(mockPrismaService.animation.findUnique).toHaveBeenCalledWith({
-      where: { id },
+      where: { id, isDeleted: false },
       include: {
         Scene: {
           take: sceneTake,

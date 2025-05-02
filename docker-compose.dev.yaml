@@ -1,0 +1,21 @@
+services:
+  auth-server:
+    build:
+      context: ./auth-server
+      dockerfile: Dockerfile.local
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.local
+    volumes:
+      - ./server:/usr/src/app
+
+  file-store:
+    build:
+      context: ./file-store
+      dockerfile: Dockerfile.local
+    volumes:
+      - ./file-store:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./file-store/frames:/usr/src/app/frames

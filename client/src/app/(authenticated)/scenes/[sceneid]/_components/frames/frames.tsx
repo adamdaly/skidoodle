@@ -37,15 +37,19 @@ const Frame = memo(({ id, width, height }: FrameProps) => {
   }, [frame?.data]);
 
   const onConfirm = useCallback(() => {
-    onFrameRemove(frame);
+    if (frame) {
+      onFrameRemove(frame);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onClick = useCallback(() => {
     onFrameSelect(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="relative aspect-16/9 flex-none flex-s border-r border-border last:border-0">
+    <li className="relative aspect-16/9 flex-none flex-s border-r border-border last:border-0">
       <button className="block w-full h-full cursor-pointer" onClick={onClick}>
         <canvas
           ref={canvasRef}
@@ -60,10 +64,11 @@ const Frame = memo(({ id, width, height }: FrameProps) => {
             <Ellipsis />
           </button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent className="w-auto">
           <ConfirmAlert
             {...{
               triggerText: "Remove Frame",
+              triggerTestId: "cta-frame-delete",
               description: "This frame will be permanently deleted!",
               onConfirm,
               onCancel: () => {},
@@ -71,7 +76,7 @@ const Frame = memo(({ id, width, height }: FrameProps) => {
           />
         </PopoverContent>
       </Popover>
-    </div>
+    </li>
   );
 });
 
@@ -86,15 +91,22 @@ export const Frames = memo(() => {
 
   return (
     <div className="relative overflow-hidden border-t border-border h-full">
-      <div className="flex flex-nowrap overflow-x-scroll h-full">
+      <ul
+        data-testid="list-frames"
+        className="flex flex-nowrap overflow-x-scroll h-full"
+      >
         {frames.map((frame, index) => (
           <Frame
             key={frame.filename}
             {...{ id: frame.id, index, width, height }}
           />
         ))}
-      </div>
-      <Button className="absolute top-4 left-4" onClick={onFrameAdd}>
+      </ul>
+      <Button
+        data-testid="cta-frame-create"
+        className="absolute top-4 left-4"
+        onClick={onFrameAdd}
+      >
         Add Frame
       </Button>
     </div>

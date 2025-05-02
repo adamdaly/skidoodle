@@ -82,12 +82,15 @@ export function CreateScene() {
     <FormProvider {...form}>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button onClick={() => setOpen(true)}>
+          <Button data-testid="cta-scene-create" onClick={() => setOpen(true)}>
             <Plus className="h-4 w-4" />
             <span>Add Scene</span>
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent
+          data-testid="dialog-scene-create"
+          className="sm:max-w-[425px]"
+        >
           <form {...{ onSubmit }}>
             <DialogHeader className="mb-4">
               <DialogTitle>Add Scene</DialogTitle>
@@ -102,6 +105,7 @@ export function CreateScene() {
                     control: form.control,
                     name: "name",
                     label: "Name",
+                    "data-testid": "input-scene-create-name",
                   }}
                 />
               </div>
@@ -111,6 +115,7 @@ export function CreateScene() {
                     control: form.control,
                     name: "index",
                     label: "Index",
+                    "data-testid": "input-scene-create-index",
                     InputProps: {
                       type: "number",
                       min: 1,
@@ -123,10 +128,17 @@ export function CreateScene() {
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={close}>
+              <Button
+                data-testid="cta-scene-create-cancel"
+                type="button"
+                variant="outline"
+                onClick={close}
+              >
                 Cancel
               </Button>
-              <Button type="submit">Save</Button>
+              <Button data-testid="cta-scene-create-submit" type="submit">
+                Save
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

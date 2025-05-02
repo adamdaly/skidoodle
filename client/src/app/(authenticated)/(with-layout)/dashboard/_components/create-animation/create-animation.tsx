@@ -88,9 +88,11 @@ export const CreateAnimation = memo(
           }}
         >
           <DialogTrigger asChild>
-            <Button>Create Animation</Button>
+            <Button data-testid="cta-create-animation">
+              <span className="font-heading">Create Animation</span>
+            </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent data-testid="dialog-animation-create">
             <DialogHeader>
               <DialogTitle>Create Animation</DialogTitle>
               <DialogDescription>test</DialogDescription>
@@ -102,6 +104,7 @@ export const CreateAnimation = memo(
                     {...{
                       control: form.control,
                       name: "name",
+                      "data-testid": "input-create-animation-name",
                       label: "Name",
                       message: form.formState.errors.name?.message,
                     }}
@@ -113,6 +116,7 @@ export const CreateAnimation = memo(
                       control: form.control,
                       type: "number",
                       name: "width",
+                      "data-testid": "input-create-animation-width",
                       label: "Width",
                       message: form.formState.errors.width?.message,
                     }}
@@ -124,6 +128,7 @@ export const CreateAnimation = memo(
                       control: form.control,
                       type: "number",
                       name: "height",
+                      "data-testid": "input-create-animation-height",
                       label: "Height",
                       message: form.formState.errors.height?.message,
                     }}
@@ -134,6 +139,7 @@ export const CreateAnimation = memo(
                     {...{
                       control: form.control,
                       name: "framerate",
+                      "data-testid": "input-create-animation-framerate",
                       label: "Frame Rate",
                       message: form.formState.errors.framerate?.message,
                     }}
@@ -145,6 +151,7 @@ export const CreateAnimation = memo(
                       {...{
                         onClick: () => setOpen(false),
                         variant: "ghost",
+                        "data-testid": "cta-create-animation-cancel",
                       }}
                     >
                       Cancel
@@ -152,6 +159,7 @@ export const CreateAnimation = memo(
                     <Button
                       {...{
                         type: "submit",
+                        "data-testid": "cta-create-animation-submit",
                       }}
                     >
                       Create

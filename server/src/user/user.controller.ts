@@ -4,16 +4,16 @@ import { Animation } from '@prisma/client';
 import { User } from 'src/shared/decorators/user.decorator';
 import { UserService } from './user.service';
 
-@Controller('')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('/recents')
+  @Get('recents')
   getRecents(@User() user: Request['user']) {
     return this.userService.getRecents(user.userId);
   }
 
-  @Get('/')
+  @Get('animations')
   async getAnimationsByUserId(
     @User() user: Request['user'],
   ): Promise<Animation[] | null> {

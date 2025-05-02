@@ -25,14 +25,16 @@ export const Animation = (animation: AnimationProps) => {
   }, [frames]);
 
   return (
-    <Thumbnail
-      {...{
-        frames: animationFrames,
-        width: animation.width,
-        height: animation.height,
-        href: `/animations/${animation.id}`,
-        label: animation.name,
-      }}
-    />
+    <li>
+      <Thumbnail
+        {...{
+          frames: animationFrames,
+          width: animation.width,
+          height: animation.height,
+          href: `/animations/${animation.id}`,
+          label: animation.name,
+        }}
+      />
+    </li>
   );
 };

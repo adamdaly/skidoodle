@@ -9,7 +9,7 @@ export class UserService {
   async getRecents(userid: string) {
     const [animations, scenes] = await Promise.all([
       this.prisma.animation.findMany({
-        where: { userid },
+        where: { userid, isDeleted: false },
         include: {
           Scene: {
             take: 1,
@@ -29,7 +29,7 @@ export class UserService {
         },
       }),
       this.prisma.scene.findMany({
-        where: { userid },
+        where: { userid, isDeleted: false },
         include: {
           Frame: {
             take: 1,
@@ -69,7 +69,7 @@ export class UserService {
 
   getAnimationsByUserId(userid: string): Promise<Animation[] | null> {
     return this.prisma.animation.findMany({
-      where: { userid },
+      where: { userid, isDeleted: false },
       include: {
         Scene: {
           take: 1,
@@ -80,10 +80,10 @@ export class UserService {
               },
             },
           },
-          orderBy: {
-            updatedAt: 'asc',
-          },
         },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }

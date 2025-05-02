@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: db
     image: postgres:latest
     restart: always
     ports:
@@ -12,13 +13,25 @@ services:
       - db:/var/lib/postgresql/data
     networks:
       - app-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
   flyway:
+    container_name: flyway
     image: flyway/flyway
-    command: -url=jdbc:postgresql://db/skidoodle -schemas=public -user=postgres -password=password -connectRetries=5 migrate
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    command: -url=jdbc:postgresql://db/${POSTGRES_DB} -schemas=public -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -connectRetries=5 migrate
     volumes:
       - ./database:/flyway/sql
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - app-net
   pgadmin:
@@ -32,40 +45,33 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     volumes:
       - pgadmin:/var/lib/pgadmin
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - app-net
   server:
-    container_name: skidoodle-server
+    container_name: server
     build:
       context: ./server
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    volumes:
-      - ./server:/usr/src/app
-    depends_on:
-      - db
-      - auth-server
-    networks:
-      - app-net
-  auth-server:
-    build:
-      context: ./auth-server
-      dockerfile: Dockerfile.local
-    ports:
-      - "3002:3000"
-    volumes:
-      - ./auth-server:/usr/src/app
-    restart: unless-stopped
     environment:
-      - PORT=3000
-      - MONGO_URI=mongodb://admin:secretpassword@mongodb:27017/authdb?authSource=admin
+      - DATABASE_URL=${DATABASE_URL}
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
-      - mongodb
+      db:
+        condition: service_healthy
     networks:
       - app-net
   mongodb:
-    image: mongo:latest
+    container_name: mongodb
     build:
       context: ./auth-database
       dockerfile: Dockerfile
@@ -76,7 +82,18 @@ services:
       - mongodb-data:/data/db
     networks:
       - app-net
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "echo 'db.runCommand({ping:1}).ok' | mongosh --username admin --password secretpassword --authenticationDatabase admin --quiet",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
   mongoadmin:
+    container_name: mongoadmin
     image: mongo-express
     environment:
       ME_CONFIG_MONGODB_URL: "mongodb://admin:secretpassword@mongodb:27017/authdb?authSource=admin"
@@ -85,28 +102,48 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: secretpassword
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     ports:
       - "3001:8081"
     networks:
       - app-net
+  auth-server:
+    container_name: auth-server
+    build:
+      context: ./auth-server
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./auth-server:/usr/src/app
+      - /usr/src/app/dist
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb://admin:secretpassword@mongodb:27017/authdb?authSource=admin
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - app-net
   file-store:
+    container_name: file-store
     build:
       context: ./file-store
       dockerfile: Dockerfile
     ports:
       - "3003:3000"
-    volumes:
-      - ./file-store:/usr/src/app
-      - /usr/src/app/node_modules
-      - ./file-store/frames:/usr/src/app/frames
     depends_on:
-      - server
+      server:
+        condition: service_healthy
     networks:
       - app-net
     environment:
       - PORT=3000
   client:
+    container_name: client
     build:
       context: ./client
       dockerfile: Dockerfile.local
@@ -115,13 +152,17 @@ services:
     volumes:
       - ./client/src:/usr/src/app/src
     depends_on:
-      - server
+      server:
+        condition: service_healthy
     networks:
       - app-net
+    environment:
+      - NEXT_PUBLIC_SERVER_URL=${SERVER_URL}
 
 networks:
   app-net:
     driver: bridge
+
 volumes:
   db:
   pgadmin:

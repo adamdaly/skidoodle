@@ -10,16 +10,19 @@ WORKDIR /usr/src/app
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node tsconfig*.json ./
 
-RUN npm cache clean --force
-RUN npm install --force 
+RUN npm install
 
 # Bundle app source
 COPY --chown=node:node . .
+
+# Create the frames directory and set ownership
+RUN mkdir -p /usr/src/app/frames && chown node:node /usr/src/app/frames
+
+RUN npm run build
 
 # Use the node user from the image (instead of the root user)
 USER node
 
 EXPOSE 3000
 
-# RUN npm run start:dev
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "start"]

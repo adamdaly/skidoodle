@@ -31,7 +31,7 @@ export class AnimationsService {
     frameSortOrder: DMMF.SortOrder = 'asc',
   ): Promise<Animation | null> {
     return this.prisma.animation.findUnique({
-      where: { id },
+      where: { id, isDeleted: false },
       include: {
         Scene: {
           take: sceneTake,

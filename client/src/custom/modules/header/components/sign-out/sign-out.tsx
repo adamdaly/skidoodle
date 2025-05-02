@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export const SignOut = memo(() => {
   return (
-    <Button asChild>
+    <Button asChild data-testid="cta-sign-out">
       <Link href="/signed-out" className="flex items-center gap-2">
         <LogOut className="h-4 w-4" />
         <span>Sign out</span>

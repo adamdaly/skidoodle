@@ -16,13 +16,14 @@ jobs:
       - name: Download Diff
         id: download_diff
         run: |
-          wget -qO - ${{ github.event.pull_request.diff_url }} > diff.txt
+          wget -qO - ${{ github.event.pull_request.diff_url }} > diff.txt || echo "Failed to download diff"
           cat diff.txt
           cat <<EOF >> "$GITHUB_OUTPUT"
           diff<<DELIMITER
           $(cat diff.txt)
           DELIMITER
           EOF
+        continue-on-error: true
       - uses: rubensflinco/gemini-code-review-action@1.0.5
         name: "Code Review by Gemini AI"
         id: review
@@ -32,3 +33,4 @@ jobs:
           pull_request_diff: ${{ steps.download_diff.outputs.diff }}
           model: "gemini-1.5-pro-latest"
           extra_prompt: "Provide a concise and technical review of the code changes."
+        continue-on-error: true

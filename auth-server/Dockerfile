@@ -6,18 +6,19 @@ WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
+COPY tsconfig*.json ./
 
-# Install the application dependencies
-RUN npm install
+# Install app dependencies using the `npm ci` command
+RUN npm ci
 
-# Copy the rest of the application files
+# Copy source files
 COPY . .
 
-# Build the NestJS application
+# Build the app and log output
 RUN npm run build
 
-# Expose the application port
+# Expose port
 EXPOSE 3000
 
 # Command to run the application
-CMD ["node", "dist/main"]
+CMD ["node", "dist/index.js"]
