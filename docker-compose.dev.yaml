@@ -8,3 +8,5 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile.local
+    volumes:
+      - ./server:/usr/src/app
