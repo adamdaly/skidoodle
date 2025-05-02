@@ -135,10 +135,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3003:3000"
-    volumes:
-      - ./file-store:/usr/src/app
-      - /usr/src/app/node_modules
-      - ./file-store/frames:/usr/src/app/frames
     # depends_on:
     #   server:
     #     condition: service_healthy

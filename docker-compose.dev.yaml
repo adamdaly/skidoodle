@@ -10,3 +10,12 @@ services:
       dockerfile: Dockerfile.local
     volumes:
       - ./server:/usr/src/app
+
+  file-store:
+    build:
+      context: ./file-store
+      dockerfile: Dockerfile.local
+    volumes:
+      - ./file-store:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./file-store/frames:/usr/src/app/frames

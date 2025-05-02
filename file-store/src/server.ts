@@ -29,10 +29,15 @@ server.get("/", (req, res) => {
 const projectDirectory = process.cwd();
 const directoryName = "frames";
 
-// Ensure the folder exists
-if (!existsSync(join(projectDirectory, directoryName))) {
-  mkdirSync(join(projectDirectory, directoryName));
-}
+// // Ensure the folder exists
+// try {
+//   if (!existsSync(join(projectDirectory, directoryName))) {
+//     mkdirSync(join(projectDirectory, directoryName));
+//   }
+// } catch (e) {
+//   console.log(e);
+//   console.log("Unable to make directories");
+// }
 
 const directory = join(projectDirectory, directoryName);
 
@@ -83,6 +88,7 @@ server.post("/", upload.single("file"), (req, res) => {
       writeFileSync(`${directory}/${file.originalname}`, file.buffer, {});
     } catch (e) {
       res.status(400).send("writeFileSync failed");
+      return;
     }
     res.status(201).send("ok");
   }
@@ -108,6 +114,7 @@ server.patch(
         }
       } catch (e) {
         res.status(400).send("writeFileSync failed");
+        return;
       }
       res.status(201).send("ok");
     }

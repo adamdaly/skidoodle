@@ -49,13 +49,13 @@ jobs:
       #     # docker exec server ls -la ./dist
       #   working-directory: .
 
-      - name: Check Server Port
-        run: |
-          docker exec server which netstat || echo "netstat not found"
-          docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
-          docker exec server ps -ef || echo "ps failed with exit code $?"
-          docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
-          docker inspect server --format='{{.State.Status}}'
+      # - name: Check Server Port
+      #   run: |
+      #     docker exec server which netstat || echo "netstat not found"
+      #     docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
+      #     docker exec server ps -ef || echo "ps failed with exit code $?"
+      #     docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
+      #     docker inspect server --format='{{.State.Status}}'
 
       - name: Run e2e tests
         working-directory: ./testing/e2e
@@ -74,7 +74,9 @@ jobs:
 
       - name: Check Docker Compose Logs
         if: always() # Run even if previous steps fail
-        run: docker compose logs
+        run: |
+          docker compose logs server
+          docker compose logs file-store
 
       - name: Stop Docker Compose services
         if: always() # Run even if previous steps fail
