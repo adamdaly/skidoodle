@@ -12,7 +12,7 @@ WORKDIR /usr/src/app
 COPY --chown=node:node . .
 
 # Install the application dependencies
-RUN npm install
+# RUN npm install
 
 # Build the NestJS application
 # RUN npx prisma generate || (echo "Prisma generate failed" && exit 1)

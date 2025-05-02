@@ -38,13 +38,10 @@ jobs:
 
       - name: Inspect Server Container
         run: |
-
-          echo "BEFORE"
           docker exec server ls -la /usr/src/app
           # docker exec server npx prisma generate
+          docker exec server npm install
           docker exec server npm run build
-          echo "AFTER"
-          docker exec server ls -la /usr/src/app
           docker exec server npm run start:prod
 
       - name: Sleep
