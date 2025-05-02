@@ -59,12 +59,12 @@ services:
       - "3000:3000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
-    # healthcheck:
-    #   test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
-    #   start_period: 30s
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     depends_on:
       db:
         condition: service_healthy
@@ -135,9 +135,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3003:3000"
-    # depends_on:
-    #   server:
-    #     condition: service_healthy
+    depends_on:
+      server:
+        condition: service_healthy
     networks:
       - app-net
     environment:
@@ -151,9 +151,9 @@ services:
       - "3004:3000"
     volumes:
       - ./client/src:/usr/src/app/src
-    # depends_on:
-    #   server:
-    #     condition: service_healthy
+    depends_on:
+      server:
+        condition: service_healthy
     networks:
       - app-net
     environment:
