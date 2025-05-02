@@ -42,9 +42,9 @@ jobs:
 
       - name: Start Docker Compose services
         run: |
-          docker exec server npm run build
+          # docker exec server npm run build
           docker exec server ls -la
-          docker exec server ls -la ./dist
+          # docker exec server ls -la ./dist
         working-directory: .
 
       # - name: Check Server Port
