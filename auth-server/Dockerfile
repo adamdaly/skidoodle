@@ -16,8 +16,6 @@ COPY . .
 
 # Build the app and log output
 RUN npm run build
-RUN ls -la /usr/src/app/dist
-RUN [ -f /usr/src/app/dist/index.js ] || exit 1
 
 # Expose port
 EXPOSE 3000

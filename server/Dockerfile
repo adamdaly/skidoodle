@@ -25,7 +25,7 @@ COPY . .
 # Expose the application port
 EXPOSE 3000
 
-USER node
+# USER node
 
 # Command to run the application
 # CMD ["npm", "run", "start:prod"]
