@@ -36,9 +36,9 @@ jobs:
           make run-build
         working-directory: .
 
-      # - name: Sleep
-      #   run: |
-      #     sleep 60s
+      - name: Sleep
+        run: |
+          sleep 60s
 
       - name: Start Docker Compose services
         run: |
@@ -49,28 +49,28 @@ jobs:
           # docker exec server ls -la ./dist
         working-directory: .
 
-      # - name: Check Server Port
-      #   run: |
-      #     docker exec server which netstat || echo "netstat not found"
-      #     docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
-      #     docker exec server ps -ef || echo "ps failed with exit code $?"
-      #     docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
-      #     docker inspect server --format='{{.State.Status}}'
+      - name: Check Server Port
+        run: |
+          docker exec server which netstat || echo "netstat not found"
+          docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
+          docker exec server ps -ef || echo "ps failed with exit code $?"
+          docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
+          docker inspect server --format='{{.State.Status}}'
 
-      # - name: Run e2e tests
-      #   working-directory: ./testing/e2e
-      #   run: |
-      #     npm ci
-      #     npx playwright install
-      #     npx playwright install-deps
-      #     npx playwright test
+      - name: Run e2e tests
+        working-directory: ./testing/e2e
+        run: |
+          npm ci
+          npx playwright install
+          npx playwright install-deps
+          npx playwright test
 
-      # - uses: actions/upload-artifact@v4
-      #   if: ${{ !cancelled() }}
-      #   with:
-      #     name: playwright-report
-      #     path: ./testing/e2e/playwright-report/
-      #     retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: ./testing/e2e/playwright-report/
+          retention-days: 30
 
       - name: Check Docker Compose Logs
         if: always() # Run even if previous steps fail
