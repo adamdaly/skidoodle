@@ -29,16 +29,6 @@ server.get("/", (req, res) => {
 const projectDirectory = process.cwd();
 const directoryName = "frames";
 
-// // Ensure the folder exists
-// try {
-//   if (!existsSync(join(projectDirectory, directoryName))) {
-//     mkdirSync(join(projectDirectory, directoryName));
-//   }
-// } catch (e) {
-//   console.log(e);
-//   console.log("Unable to make directories");
-// }
-
 const directory = join(projectDirectory, directoryName);
 
 server.use("/frames", express.static(directory));

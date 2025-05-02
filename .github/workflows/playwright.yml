@@ -32,10 +32,6 @@ jobs:
           make run-build
         working-directory: .
 
-      # - name: Sleep
-      #   run: |
-      #     sleep 60s
-
       - name: Run e2e tests
         working-directory: ./testing/e2e
         run: |
@@ -50,12 +46,6 @@ jobs:
           name: playwright-report
           path: ./testing/e2e/playwright-report/
           retention-days: 30
-
-      - name: Check Docker Compose Logs
-        if: always() # Run even if previous steps fail
-        run: |
-          docker compose logs server
-          docker compose logs file-store
 
       - name: Stop Docker Compose services
         if: always() # Run even if previous steps fail
