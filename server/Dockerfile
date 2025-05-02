@@ -9,7 +9,8 @@ WORKDIR /usr/src/app
 # COPY --chown=node:node prisma ./prisma
 
 # Copy the rest of the application files
-COPY --chown=node:node . .
+# COPY --chown=node:node . .
+COPY . .
 
 # Install the application dependencies
 # RUN npm install
