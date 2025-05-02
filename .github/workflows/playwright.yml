@@ -41,7 +41,7 @@ jobs:
           docker exec server ls -la /usr/src/app
           docker exec server ls -la /usr/src/app/tsconfig.json
           docker exec server env | grep DATABASE_URL
-          docker exec server npx prisma generate
+          # docker exec server npx prisma generate
           docker exec server npm run build
           docker exec server ls -la /usr/src/app
           docker exec server npm run start:prod
