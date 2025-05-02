@@ -40,13 +40,20 @@ jobs:
       #   run: |
       #     sleep 60s
 
-      - name: Check Server Port
+      - name: Start Docker Compose services
         run: |
-          docker exec server which netstat || echo "netstat not found"
-          docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
-          docker exec server ps -ef || echo "ps failed with exit code $?"
-          docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
-          docker inspect server --format='{{.State.Status}}'
+          docker exec server npm run build
+          docker exec server ls -la
+          docker exec server ls -la ./dist
+        working-directory: .
+
+      # - name: Check Server Port
+      #   run: |
+      #     docker exec server which netstat || echo "netstat not found"
+      #     docker exec server netstat -tuln | grep 3000 || echo "netstat failed with exit code $?"
+      #     docker exec server ps -ef || echo "ps failed with exit code $?"
+      #     docker exec server ss -tuln | grep ':3000' || echo "ss failed with exit code $?"
+      #     docker inspect server --format='{{.State.Status}}'
 
       # - name: Run e2e tests
       #   working-directory: ./testing/e2e

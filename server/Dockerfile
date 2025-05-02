@@ -22,7 +22,7 @@ RUN npm install
 
 # Build the NestJS application
 RUN npx prisma generate --schema=./prisma/schema.prisma || (echo "Prisma generate failed" && exit 1)
-RUN npm run build && [ -f dist/main.js ] || (echo "Build failed: dist/main.js not found" && exit 1)
+# RUN npm run build && [ -f dist/main.js ] || (echo "Build failed: dist/main.js not found" && exit 1)
 
 # Ensure permissions
 # RUN chown -R node:node /usr/src/app/dist
