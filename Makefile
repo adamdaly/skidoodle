@@ -12,11 +12,11 @@ run:
 
 .PHONY: run-build
 run-build:
-	docker compose up -d --build
+	docker compose up -d --build --no-cache
 
 .PHONY: run-dev
 run-dev:
-	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --no-cache --build
 
 .PHONY: build
 build:
