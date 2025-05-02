@@ -68,14 +68,40 @@ export default defineConfig({
       },
       dependencies: ["setup"],
     },
-    // {
-    //   name: "firefox",
-    //   use: {
-    //     ...devices["Desktop Firefox"],
-    //     storageState: ".state/session.json",
-    //   },
-    //   dependencies: ["setup"],
-    // },
+    {
+      name: "authorised-firefox",
+      testMatch: /\/(un){0}authorised\/.*\.spec\.ts$/,
+      use: {
+        ...devices["Desktop Firefox"],
+        storageState: ".state/session.json",
+      },
+      dependencies: ["setup"],
+    },
+    {
+      name: "unauthorised-firefox",
+      testMatch: /unauthorised\/.*\.spec\.ts/,
+      use: {
+        ...devices["Desktop Firefox"],
+      },
+      dependencies: ["setup"],
+    },
+    {
+      name: "authorised-webkit",
+      testMatch: /\/(un){0}authorised\/.*\.spec\.ts$/,
+      use: {
+        ...devices["Desktop Safari"],
+        storageState: ".state/session.json",
+      },
+      dependencies: ["setup"],
+    },
+    {
+      name: "unauthorised-webkit",
+      testMatch: /unauthorised\/.*\.spec\.ts/,
+      use: {
+        ...devices["Desktop Safari"],
+      },
+      dependencies: ["setup"],
+    },
 
     // {
     //   name: "webkit",
