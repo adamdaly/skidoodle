@@ -36,10 +36,6 @@ jobs:
           make run-build
         working-directory: .
 
-      - name: Inspect Server Container
-        run: |
-          docker exec server ls -la ./node_modules/.prisma/client
-
       - name: Sleep
         run: |
           sleep 60s
