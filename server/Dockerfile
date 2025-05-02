@@ -15,11 +15,6 @@ COPY . .
 # Install the application dependencies
 RUN npm install
 
-# docker exec server npx prisma generate
-# docker exec server npm install
-# docker exec server npm run build
-# docker exec server npm run start:prod
-
 # Build the NestJS application
 RUN npx prisma generate --schema=./prisma/schema.prisma || (echo "Prisma generate failed" && exit 1)
 # RUN npm run build && [ -f dist/main.js ] || (echo "Build failed: dist/main.js not found" && exit 1)
