@@ -38,8 +38,7 @@ jobs:
 
       - name: Inspect Server Container
         run: |
-          docker exec server ls -la /usr/src/app
-          # docker exec server npx prisma generate
+          docker exec server npx prisma generate
           docker exec server npm install
           docker exec server npm run build
           docker exec server npm run start:prod
