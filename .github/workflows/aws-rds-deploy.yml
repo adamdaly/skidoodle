@@ -38,11 +38,9 @@ name: Deploy Database
 on:
   push:
     branches:
-      - master
-    paths:
-      - "database/**"
-
-  workflow_dispatch:
+      - feature/rds
+    # paths:
+    #   - "database/**"
 
 jobs:
   migrate:
