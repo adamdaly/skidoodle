@@ -31,7 +31,7 @@ jobs:
       - name: Build and push image to Lightsail
         id: build-image
         run: |
-          docker build --build-arg API_DB_URL="${{ secrets.AWS_DB_URL }}" -t skidoodle-server:latest .
+          docker build --build-arg AWS_DB_URL="${{ secrets.AWS_DB_URL }}" -t skidoodle-server:latest .
           aws lightsail push-container-image --region us-east-1 --service-name skidoodle-service-1 --label skidoodle-server --image skidoodle-server:latest
       - name: Deploy Service
         run: |
