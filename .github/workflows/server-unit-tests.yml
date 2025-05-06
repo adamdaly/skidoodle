@@ -5,9 +5,8 @@ on:
     paths:
       - "server/**"
 
-defaults:
-  run:
-    working-directory: ./server
+env:
+  AWS_REGION: us-east-1
 
 jobs:
   execute:

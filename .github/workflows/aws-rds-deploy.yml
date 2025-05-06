@@ -1,0 +1,57 @@
+# name: AWS Deploy Database
+
+# on:
+#   pull_request:
+#     branches:
+#       - master
+#     paths:
+#       - "database/**"
+
+# env:
+#   AWS_REGION: ${{ vars.AWS_REGION }}
+#   AWS_ROLE_GITHUB: ${{ vars.AWS_ROLE_GITHUB }}
+
+# permissions:
+#   id-token: write # This is required for requesting the JWT
+#   contents: read # This is required for actions/checkout
+
+# jobs:
+#   migrate:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: 🛎 Checkout
+#         uses: actions/checkout@v4
+
+#       - name: configure aws credentials
+#         uses: aws-actions/configure-aws-credentials@v1.7.0
+#         with:
+#           role-to-assume: ${{ env.AWS_ROLE_GITHUB }}
+#           role-session-name: GitHub_to_AWS_via_FederatedOIDC
+#           aws-region: ${{ env.AWS_REGION }}
+
+#       - name: Sts GetCallerIdentity
+#         run: |
+#           aws sts get-caller-identity
+
+name: Deploy Database
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "database/**"
+
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: download flyway
+        run: wget https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/7.8.2/flyway-commandline-7.8.2-linux-x64.tar.gz
+      - name: extract and link flyway
+        run: tar -xvf flyway-commandline-7.8.2-linux-x64.tar.gz && sudo ln -s `pwd`/flyway-7.8.2/flyway /usr/local/bin
+      - name: migrate main
+        run: flyway -url='${{ secrets.AWS_DB_URL }}' -user=${{ secrets.AWS_DB_USERNAME }} -password=${{ secrets.AWS_DB_PASSWORD }} -locations=filesystem:./database/migrations -outOfOrder=true -baselineOnMigrate=true migrate

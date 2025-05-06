@@ -24,6 +24,10 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
+      - name: Dump all data types
+        run: |
+          echo "vars ${{ toJson(vars) }}"
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
