@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "express-requests-logger": "^4.0.2"
+    "express-requests-logger": "^4.0.2",
+    "next-auth": "^4.24.11"
   }
 }

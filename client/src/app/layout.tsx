@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bangers, Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
+import { Providers } from "./providers";
 
 const heading = Bangers({
   variable: "--font-heading",
@@ -34,7 +35,7 @@ export default function RootLayout({
       <body
         className={`${heading.variable} ${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

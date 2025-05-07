@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Footer } from "@/custom/components/footer";
+import { SignInCta } from "@/custom/components/sign-in-cta";
 import { H1 } from "@/custom/components/typography";
 
 export default function Home() {
@@ -12,13 +13,7 @@ export default function Home() {
             Skidoodle
           </H1>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/sign-in"
-              data-testid="cta-sign-in"
-              className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            >
-              Sign In
-            </Link>
+            <SignInCta />
             <Link
               href="/register"
               data-testid="cta-register"

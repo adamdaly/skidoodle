@@ -9,6 +9,7 @@ import {
   createSignInSchema,
   SignInSchema,
 } from "../../_utils/create-sign-up-schema";
+import { signIn } from "next-auth/react";
 
 export const useSignInFormLogic = () => {
   const schema = useRef(createSignInSchema());
@@ -17,30 +18,42 @@ export const useSignInFormLogic = () => {
   const form = useForm<SignInSchema>({
     resolver: zodResolver(schema.current),
     defaultValues: {
-      username: "",
-      password: "",
+      username: "adam.daly@unosquare.com",
+      password: "asdfASDF1234!",
     } satisfies SignInSchema,
   });
 
   const submit = useCallback(
     async (values: SignInSchema) => {
       try {
-        await postSignIn({
+        const response = await signIn("credentials", {
           username: values.username,
           password: values.password,
+          callbackUrl: "http://localhost:3004/dashboard",
+          redirect: false,
         });
-        router.push("/dashboard");
+
+        console.log(response);
       } catch (e) {
-        if (isAxiosError(e)) {
-          form.setError("root", {
-            message: e.message,
-          });
-        } else {
-          form.setError("root", {
-            message: "Unknown error",
-          });
-        }
+        console.log(e);
       }
+      // try {
+      //   await postSignIn({
+      //     username: values.username,
+      //     password: values.password,
+      //   });
+      //   router.push("/dashboard");
+      // } catch (e) {
+      //   if (isAxiosError(e)) {
+      //     form.setError("root", {
+      //       message: e.message,
+      //     });
+      //   } else {
+      //     form.setError("root", {
+      //       message: "Unknown error",
+      //     });
+      //   }
+      // }
     },
     [form, router]
   );
