@@ -1,3 +1,7 @@
+import {
+  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+  CognitoJwtPayload,
+} from '@nestjs-cognito/core';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ScenesController } from './scenes.controller';
@@ -7,9 +11,16 @@ import { ScenesService } from './scenes.service';
 describe('ScenesController', () => {
   let controller: ScenesController;
 
-  const user = {
-    username: 'Some Name',
-    userId: 'asdf-1234',
+  const user: CognitoJwtPayload = {
+    username: 'asdf-1234',
+    token_use: 'access',
+    sub: 'sub',
+    iss: 'iss',
+    exp: 1234,
+    iat: 1234,
+    auth_time: 1234,
+    jti: 'jti',
+    origin_jti: 'origin_jti',
   };
 
   const mockScenesService = {
@@ -25,6 +36,10 @@ describe('ScenesController', () => {
         {
           provide: ScenesService,
           useValue: mockScenesService,
+        },
+        {
+          provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+          useValue: {},
         },
         PrismaService,
       ],
@@ -47,7 +62,7 @@ describe('ScenesController', () => {
     await controller.create(user, payload);
     expect(mockScenesService.create).toHaveBeenCalledWith({
       ...payload,
-      userid: user.userId,
+      userid: user.username,
     });
   });
 

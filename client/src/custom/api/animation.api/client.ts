@@ -1,51 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import { SERVER_URL } from "@/custom/constants";
 import { Animation, Frame, Scene } from "@/custom/types";
-import { get, post, deleteRequest, patch } from "../api";
-
-export type GetAnimationsResponse = Animation[];
-export type GetAnimationsParams = {
-  sceneTake?: number;
-  sceneSkip?: number;
-  sceneSortOrder?: "asc" | "desc";
-  frameTake?: number;
-  frameSkip?: number;
-  frameSortOrder?: "asc" | "desc";
-};
-
-interface GetAnimationsConfig extends AxiosRequestConfig {
-  params?: GetAnimationsParams;
-}
-
-export const getAnimations = (config?: AxiosRequestConfig) =>
-  get<GetAnimationsResponse>("http://server:3000/user/animations", config);
-
-export type GetAnimationResponse = Animation;
-
-export const getAnimation = (
-  animationid: number,
-  config?: GetAnimationsConfig
-) =>
-  get<GetAnimationResponse>(
-    `http://server:3000/animations/${animationid}`,
-    config
-  );
-
-type WithType<T> = T & {
-  metadata: {
-    type: "Animation" | "Scene";
-  };
-};
-
-export type GetRecentsResponse = (WithType<Animation> | WithType<Scene>)[];
-
-export const getRecents = (config?: AxiosRequestConfig) =>
-  get<GetRecentsResponse>("http://server:3000/user/recents", config);
-
-export type GetSceneResponse = Scene;
-
-export const getScene = (sceneid: number, config?: AxiosRequestConfig) =>
-  get<GetSceneResponse>(`http://server:3000/scenes/${sceneid}`, config);
+import { clientInstance } from "../client-api";
 
 export type PostSceneRequest = Pick<Scene, "animationid" | "name" | "index">;
 
@@ -53,7 +9,7 @@ export const postScene = (
   body: PostSceneRequest,
   config?: AxiosRequestConfig
 ) =>
-  post<GetSceneResponse, PostSceneRequest>(
+  clientInstance.post<Scene, PostSceneRequest>(
     `${SERVER_URL}/scenes`,
     body,
     config
@@ -79,14 +35,14 @@ export const postAnimation = (
   body: PostAnimationRequest,
   config?: AxiosRequestConfig
 ) =>
-  post<PostAnimationResponse, PostAnimationRequest>(
+  clientInstance.post<PostAnimationResponse, PostAnimationRequest>(
     `${SERVER_URL}/animations`,
     body,
     config
   );
 
 export const deleteAnimation = (id: number, config?: AxiosRequestConfig) =>
-  deleteRequest(`${SERVER_URL}/animations/${id}`, config);
+  clientInstance.deleteRequest(`${SERVER_URL}/animations/${id}`, config);
 
 export type PostFrameResponse = Frame;
 
@@ -101,17 +57,24 @@ export const postFrame = (
   formData.append("index", body.index.toString());
   formData.append("sceneid", body.sceneid.toString());
 
-  return post<PostFrameResponse, FormData>(`${SERVER_URL}/frames`, formData, {
-    ...config,
-    headers: {
-      ...config?.headers,
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return clientInstance.post<PostFrameResponse, FormData>(
+    `${SERVER_URL}/frames`,
+    formData,
+    {
+      ...config,
+      headers: {
+        ...config?.headers,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
 };
 
 export const deleteFrame = (id: number, config?: AxiosRequestConfig) =>
-  deleteRequest<Frame, void>(`${SERVER_URL}/frames/${id}`, config);
+  clientInstance.deleteRequest<Frame, void>(
+    `${SERVER_URL}/frames/${id}`,
+    config
+  );
 
 export type PatchFrameRequest = {
   file?: File;
@@ -138,5 +101,9 @@ export const patchFrame = (
     formData.append("index", body.index.toString());
   }
 
-  return patch<Frame, FormData>(`${SERVER_URL}/frames/${id}`, formData, config);
+  return clientInstance.patch<Frame, FormData>(
+    `${SERVER_URL}/frames/${id}`,
+    formData,
+    config
+  );
 };

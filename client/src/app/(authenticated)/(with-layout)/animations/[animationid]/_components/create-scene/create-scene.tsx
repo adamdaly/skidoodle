@@ -18,10 +18,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import { postScene } from "@/custom/api/animation.api/client";
 import { Scene } from "@/custom/types";
 import { RHFTextField } from "@/custom/components/inputs/text-field";
 import { useAnimation } from "../context";
-import { postScene } from "@/custom/api/animation.api";
 
 const createCreateSceneSchema = (maxIndex: number) =>
   z.object({

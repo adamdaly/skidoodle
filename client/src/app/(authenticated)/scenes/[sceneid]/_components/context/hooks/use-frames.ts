@@ -1,6 +1,10 @@
 import { useCallback } from "react";
 import { Frame } from "@/custom/types";
-import { deleteFrame, patchFrame, postFrame } from "@/custom/api/animation.api";
+import {
+  deleteFrame,
+  patchFrame,
+  postFrame,
+} from "@/custom/api/animation.api/client";
 import { Shared } from "./use-shared";
 import { createFileFromData } from "../../../_utils/create-file-from-data";
 

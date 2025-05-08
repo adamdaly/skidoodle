@@ -3,8 +3,7 @@ import Link from "next/link";
 import {
   getAnimation as getAnimationRequest,
   getScene as getSceneRequest,
-} from "@/custom/api/animation.api";
-import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
+} from "@/custom/api/animation.api/server";
 import { Header } from "@/custom/modules/header";
 import { Footer } from "@/custom/components/footer";
 import { Canvas } from "./_components/canvas";
@@ -16,21 +15,13 @@ import { Tools } from "./_components/tools";
 import { Info } from "./_components/info";
 
 async function getScene(sceneid: number) {
-  const result = await getSceneRequest(sceneid, {
-    headers: {
-      Cookie: await getAccessTokenCookie(),
-    },
-  });
+  const result = await getSceneRequest(sceneid);
 
   return result.data;
 }
 
 async function getAnimation(animationid: number) {
-  const result = await getAnimationRequest(animationid, {
-    headers: {
-      Cookie: await getAccessTokenCookie(),
-    },
-  });
+  const result = await getAnimationRequest(animationid);
 
   return result.data;
 }

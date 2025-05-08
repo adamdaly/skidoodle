@@ -1,3 +1,4 @@
+import { COGNITO_JWT_VERIFIER_INSTANCE_TOKEN } from '@nestjs-cognito/core';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FileService } from 'src/file/file.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -37,6 +38,10 @@ describe('FramesController', () => {
         {
           provide: FileService,
           useValue: mockFileService,
+        },
+        {
+          provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
+          useValue: {},
         },
       ],
     }).compile();

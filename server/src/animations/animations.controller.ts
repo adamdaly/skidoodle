@@ -8,20 +8,18 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
+import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
+import { CognitoJwtPayload } from '@nestjs-cognito/core';
 
-import { Request } from 'express';
 import { Animation, Scene } from '@prisma/client';
 import { DMMF } from '@prisma/client/runtime/library';
-import { User } from 'src/shared/decorators/user.decorator';
 import { ScenesService } from 'src/scenes/scenes.service';
-import { AuthGuard } from '../auth/auth.guard';
 import { AnimationsService } from './animations.service';
 import { CreateDto, UpdateDto } from './animations.dto';
 
 @Controller('animations')
-@UseGuards(AuthGuard)
+@Authentication()
 export class AnimationsController {
   constructor(
     private readonly animationsService: AnimationsService,
@@ -30,10 +28,13 @@ export class AnimationsController {
 
   @Post()
   create(
-    @User() user: Request['user'],
+    @CognitoUser() user: CognitoJwtPayload,
     @Body() data: CreateDto,
   ): Promise<Animation> {
-    return this.animationsService.create({ userid: user.userId, ...data });
+    return this.animationsService.create({
+      userid: user.username as string,
+      ...data,
+    });
   }
 
   @Get(':id')

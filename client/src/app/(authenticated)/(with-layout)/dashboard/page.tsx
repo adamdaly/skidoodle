@@ -1,29 +1,20 @@
 import {
   getAnimations as getAnimationsRequest,
   getRecents as getRecentsRequest,
-} from "@/custom/api/animation.api";
-import { H1, H2 } from "@/custom/components/typography";
-import { FramesProvider } from "@/custom/components/frames";
+} from "@/custom/api/animation.api/server";
 import { Animations } from "@/custom/components/animations";
-import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
+import { FramesProvider } from "@/custom/components/frames";
+import { H1, H2 } from "@/custom/components/typography";
 import { Recents } from "./_components/recents";
 
 async function getAnimations() {
-  const result = await getAnimationsRequest({
-    headers: {
-      Cookie: await getAccessTokenCookie(),
-    },
-  });
+  const result = await getAnimationsRequest();
 
   return result.data;
 }
 
 async function getRecents() {
-  const result = await getRecentsRequest({
-    headers: {
-      Cookie: await getAccessTokenCookie(),
-    },
-  });
+  const result = await getRecentsRequest();
 
   return result.data;
 }

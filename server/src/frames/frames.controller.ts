@@ -5,19 +5,18 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   UseInterceptors,
   UploadedFile,
   ParseIntPipe,
 } from '@nestjs/common';
+import { Authentication } from '@nestjs-cognito/auth';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { FileService } from 'src/file/file.service';
 import { FramesService } from './frames.service';
 import { CreateDto, UpdateDto } from './frames.dto';
 
 @Controller('frames')
-@UseGuards(AuthGuard)
+@Authentication()
 export class FramesController {
   constructor(
     private readonly framesService: FramesService,

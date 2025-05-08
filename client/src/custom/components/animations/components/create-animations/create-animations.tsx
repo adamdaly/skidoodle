@@ -12,9 +12,9 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { postAnimation } from "@/custom/api/animation.api/client";
 import { Grid } from "@/custom/components/grid";
 import { RHFTextField } from "@/custom/components/inputs/text-field";
-import { postAnimation } from "@/custom/api/animation.api";
 import { Animation } from "@/custom/types";
 
 const createCreateAnimationSchema = () =>

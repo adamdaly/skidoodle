@@ -1,14 +1,13 @@
 import { useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { isAxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
-import { postSignIn } from "@/custom/api/auth.api";
 import {
   createSignInSchema,
   SignInSchema,
 } from "../../_utils/create-sign-up-schema";
+import { signIn } from "aws-amplify/auth";
 
 export const useSignInFormLogic = () => {
   const schema = useRef(createSignInSchema());
@@ -25,24 +24,19 @@ export const useSignInFormLogic = () => {
   const submit = useCallback(
     async (values: SignInSchema) => {
       try {
-        await postSignIn({
+        const response = await signIn({
           username: values.username,
           password: values.password,
         });
-        router.push("/dashboard");
-      } catch (e) {
-        if (isAxiosError(e)) {
-          form.setError("root", {
-            message: e.message,
-          });
-        } else {
-          form.setError("root", {
-            message: "Unknown error",
-          });
+
+        if (response.isSignedIn) {
+          router.push("/dashboard");
         }
+      } catch (e) {
+        console.log(e);
       }
     },
-    [form, router]
+    [router]
   );
 
   const onSubmit = useMemo(

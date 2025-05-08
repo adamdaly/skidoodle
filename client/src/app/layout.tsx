@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bangers, Geist, Geist_Mono } from "next/font/google";
 
+import ConfigureAmplifyClientSide from "../custom/utils/amplify-cognito-config-client";
 import "./globals.css";
 
 const heading = Bangers({
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body
         className={`${heading.variable} ${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
+        <ConfigureAmplifyClientSide />
         {children}
       </body>
     </html>

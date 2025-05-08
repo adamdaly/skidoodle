@@ -1,7 +1,7 @@
 "use client";
 import { memo, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { deleteAnimation } from "@/custom/api/animation.api";
+import { deleteAnimation } from "@/custom/api/animation.api/client";
 import { ConfirmAlert } from "@/custom/components/confirm-alert";
 import {
   NetworkStatus,
@@ -20,7 +20,7 @@ export const useAnimationDelete = (id: number) => {
     } catch {
       setError();
     }
-  }, []);
+  }, [id, router, setError, setInFlight]);
 
   return {
     status,

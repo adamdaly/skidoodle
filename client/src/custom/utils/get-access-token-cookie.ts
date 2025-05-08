@@ -1,8 +1,10 @@
 import { cookies } from "next/headers";
 
 export const getAccessTokenCookie = async () => {
-  const cookieJar = await cookies();
-  const accessToken = cookieJar.get("access_token");
+  const cookieStore = await cookies();
 
-  return `${accessToken?.name}=${accessToken?.value}`;
-};
+  return cookieStore
+    .getAll()
+    .filter(({ name }) => name.startsWith("CognitoIdentityServiceProvider"))
+    .map(({ name, value }) => `${name}=${value}`)
+    .join("; "); 
