@@ -5,6 +5,9 @@ FROM node:lts-alpine3.21
 # Create app directory
 WORKDIR /usr/src/app
 
+ARG AWS_DB_URL
+ENV DATABASE_URL=$AWS_DB_URL
+
 COPY --chown=node:node . .
 RUN npm install
 
