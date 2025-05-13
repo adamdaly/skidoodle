@@ -2,10 +2,9 @@ name: Deploy API
 
 on:
   push:
-    branches:
-      - feature/lightsail
-    # paths:
-    #   - "server/**"
+    branches: [master]
+    paths:
+      - "server/**"
 
 defaults:
   run:

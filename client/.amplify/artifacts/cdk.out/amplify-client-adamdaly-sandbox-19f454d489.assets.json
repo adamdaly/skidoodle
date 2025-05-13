@@ -1,0 +1,34 @@
+{
+  "version": "41.0.0",
+  "files": {
+    "0b4b77e104fcffd3b307f7c24a283e8a6c8e498e10710d4d5a5e73697aab25d6": {
+      "displayName": "auth Nested Stack Template",
+      "source": {
+        "path": "amplifyclientadamdalysandbox19f454d489auth8BE11391.nested.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "0b4b77e104fcffd3b307f7c24a283e8a6c8e498e10710d4d5a5e73697aab25d6.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "26afc5fb0ddd21cc3238b467b53ec0a80045fbf81fa8b9ac62dd715ace5b1660": {
+      "displayName": "amplify-client-adamdaly-sandbox-19f454d489 Template",
+      "source": {
+        "path": "amplify-client-adamdaly-sandbox-19f454d489.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "26afc5fb0ddd21cc3238b467b53ec0a80045fbf81fa8b9ac62dd715ace5b1660.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
