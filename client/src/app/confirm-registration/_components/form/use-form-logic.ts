@@ -2,36 +2,36 @@
 
 import { useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
-
-import { signUp } from "aws-amplify/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { confirmSignUp } from "aws-amplify/auth";
 import { useRouter } from "next/navigation";
-import {
-  createRegisterSchema,
-  RegisterSchema,
-} from "../../_utils/create-register-schema";
 
-export const useRegisterFormLogic = () => {
-  const schema = useRef(createRegisterSchema());
+import {
+  createRegisterConfirmSchema,
+  RegisterConfirmSchema,
+} from "../../_utils/create-register-confirm-schema";
+
+export const useRegisterConfirmFormLogic = () => {
+  const schema = useRef(createRegisterConfirmSchema());
   const router = useRouter();
 
-  const form = useForm<RegisterSchema>({
+  const form = useForm<RegisterConfirmSchema>({
     resolver: zodResolver(schema.current),
     defaultValues: {
       username: "",
-      password: "",
-    } satisfies RegisterSchema,
+      confirmationCode: "",
+    } satisfies RegisterConfirmSchema,
   });
 
   const submit = useCallback(
-    async (values: RegisterSchema) => {
+    async (values: RegisterConfirmSchema) => {
       try {
-        await signUp({
+        await confirmSignUp({
           username: values.username,
-          password: values.password,
+          confirmationCode: values.confirmationCode,
         });
 
-        router.push("/confirm-registration");
+        router.push("/sign-in");
       } catch (e) {
         console.log(e);
       }

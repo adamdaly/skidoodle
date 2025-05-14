@@ -1,17 +1,13 @@
 import { notFound } from "next/navigation";
-import { getAnimation as getAnimationRequest } from "@/custom/api/animation.api";
+import { getAnimation as getAnimationRequest } from "@/custom/api/animation.api/server";
 import { FramesProvider } from "@/custom/components/frames";
 import { H1, H2 } from "@/custom/components/typography";
-import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
 import { AnimationProvider } from "./_components/context";
 import { Scenes } from "./_components/scenes";
 import { AnimationDelete } from "./_components/animation-delete";
 
 async function getAnimation(animationid: number) {
   const result = await getAnimationRequest(animationid, {
-    headers: {
-      Cookie: await getAccessTokenCookie(),
-    },
     params: {
       frameTake: 10,
     },

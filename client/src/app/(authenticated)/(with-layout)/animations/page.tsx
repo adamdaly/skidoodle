@@ -1,14 +1,10 @@
-import { getAnimations as getAnimationsRequest } from "@/custom/api/animation.api";
+import { getAnimations as getAnimationsRequest } from "@/custom/api/animation.api/server";
 import { Animations } from "@/custom/components/animations";
 import { FramesProvider } from "@/custom/components/frames";
 import { H1 } from "@/custom/components/typography";
-import { getAccessTokenCookie } from "@/custom/utils/get-access-token-cookie";
 
 async function getAnimations() {
   const result = await getAnimationsRequest({
-    headers: {
-      Cookie: await getAccessTokenCookie(),
-    },
     params: {
       frameTake: 10,
     },

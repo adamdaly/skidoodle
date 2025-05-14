@@ -7,22 +7,23 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
+import { CognitoJwtPayload } from '@nestjs-cognito/core';
 import { CreateDto, UpdateDto } from './scenes.dto';
 import { ScenesService } from './scenes.service';
-import { User } from 'src/shared/decorators/user.decorator';
-import { Request } from 'express';
 
 @Controller('scenes')
-@UseGuards(AuthGuard)
+@Authentication()
 export class ScenesController {
   constructor(private readonly scenesService: ScenesService) {}
 
   @Post()
-  create(@User() user: Request['user'], @Body() data: CreateDto) {
-    return this.scenesService.create({ ...data, userid: user.userId });
+  create(@CognitoUser() user: CognitoJwtPayload, @Body() data: CreateDto) {
+    return this.scenesService.create({
+      ...data,
+      userid: user.username as string,
+    });
   }
 
   @Get(':id')

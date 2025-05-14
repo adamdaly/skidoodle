@@ -59,6 +59,8 @@ services:
       - "3000:3000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
+      - COGNITO_CLIENT_ID=${COGNITO_CLIENT_ID}
+      - COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
     healthcheck:
       test: ["CMD", "wget", "--spider", "http://localhost:3000/health"]
       interval: 10s
@@ -157,7 +159,10 @@ services:
     networks:
       - app-net
     environment:
-      - NEXT_PUBLIC_SERVER_URL=${SERVER_URL}
+      AMPLIFY_APP_ORIGIN: ${AMPLIFY_APP_ORIGIN}
+      NEXT_PUBLIC_SERVER_URL: ${SERVER_URL}
+      NEXT_PUBLIC_COGNITO_CLIENT_ID: ${COGNITO_CLIENT_ID}
+      NEXT_PUBLIC_COGNITO_USER_POOL_ID: ${COGNITO_USER_POOL_ID}
 
 networks:
   app-net:

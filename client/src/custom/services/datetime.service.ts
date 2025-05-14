@@ -16,8 +16,8 @@ export default class DateTimeService {
   }
 
   static format_DateTimeFull(date: DateTime | string) {
-    return this.convertToDateTime(date).toLocaleString(
-      DateTime.DATETIME_MED_WITH_WEEKDAY
-    );
+    return this.convertToDateTime(date)
+      .setLocale("en-gb")
+      .toLocaleString(DateTime.DATETIME_MED_WITH_WEEKDAY);
   }
 }

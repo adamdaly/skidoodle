@@ -69,28 +69,22 @@ export class ScenesService {
   }
 
   getSceneById(id: number): Promise<Scene | null> {
-    const cacheKey = this.createCacheKey(id);
-
-    return this.cacheService.cacheFromResponse<Scene | null>(
-      cacheKey,
-      async () =>
-        await this.prisma.scene.findFirst({
-          where: { id },
-          include: {
-            Frame: {
-              where: {
-                isDeleted: false,
-              },
-              orderBy: {
-                index: 'asc',
-              },
-            },
+    return this.prisma.scene.findFirst({
+      where: { id },
+      include: {
+        Frame: {
+          where: {
+            isDeleted: false,
           },
           orderBy: {
             index: 'asc',
           },
-        }),
-    );
+        },
+      },
+      orderBy: {
+        index: 'asc',
+      },
+    });
   }
 
   async update(id: number, data: UpdateDto) {

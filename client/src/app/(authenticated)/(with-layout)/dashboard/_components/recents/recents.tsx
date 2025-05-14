@@ -1,20 +1,10 @@
-import { Animation, Scene } from "@/custom/types";
-import DateTimeService from "@/custom/services/datetime.service";
+"use client";
+
 import Link from "next/link";
+import DateTimeService from "@/custom/services/datetime.service";
+import { GetRecentsResponse } from "@/custom/api/animation.api/server";
 
-type RecentAnimation = Animation & {
-  metadata: {
-    type: "Animation";
-  };
-};
-type RecentScene = Scene & {
-  metadata: {
-    type: "Scene";
-  };
-};
-
-export type RecentsProps = { recents: (RecentAnimation | RecentScene)[] };
-
+export type RecentsProps = { recents: GetRecentsResponse };
 export const Recents = ({ recents }: RecentsProps) => {
   return (
     <ul data-testid="list-recents">
@@ -25,7 +15,7 @@ export const Recents = ({ recents }: RecentsProps) => {
   );
 };
 
-export const Recent = (recent: RecentAnimation | RecentScene) => {
+export const Recent = (recent: GetRecentsResponse[number]) => {
   return (
     <li key={`${recent.metadata.type}-${recent.id}`}>
       <Link

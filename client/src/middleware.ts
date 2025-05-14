@@ -1,36 +1,43 @@
-import axios, { AxiosError } from "axios";
+import { fetchAuthSession } from "aws-amplify/auth/server";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { MiddlewareConfig, NextRequest } from "next/server";
-import { cookies } from "next/headers";
+import { runWithAmplifyServerContext } from "./custom/utils/amplify-server-utils";
+import { configureAmplifyServer } from "./custom/utils/amplify-cognito-config-server";
+
+configureAmplifyServer();
 
 export async function middleware(request: NextRequest) {
-  const host = request.headers.get("host") ?? "localhost:3000";
+  const response = NextResponse.next();
+
+  const host = request.headers.get("host") ?? "localhost:3004";
   const protocol = request.headers.get("x-forwarded-proto") ?? "http";
   const baseUrl = `${protocol}://${host}`;
 
+  const isAuthenticated = await runWithAmplifyServerContext({
+    nextServerContext: { cookies, request },
+    operation: async (contextSpec) => {
+      try {
+        const session = await fetchAuthSession(contextSpec);
+
+        return (
+          session.tokens?.accessToken !== undefined &&
+          session.tokens?.idToken !== undefined
+        );
+      } catch {
+        return false;
+      }
+    },
+  });
+
   if (
     request.nextUrl.pathname.startsWith("/sign-in") ||
-    request.nextUrl.pathname.startsWith("/register")
+    request.nextUrl.pathname.startsWith("/register") ||
+    request.nextUrl.pathname.startsWith("/signed-out")
   ) {
-    const accessToken = request.cookies.get("access_token");
-
-    try {
-      if (accessToken) {
-        await axios.post("http://auth-server:3000/token/verify", {
-          accessToken: accessToken.value,
-        });
-
-        return NextResponse.redirect(new URL("/dashboard", baseUrl));
-      }
-    } catch (e) {
-      console.log("sign-in error", (e as AxiosError).status);
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL("/dashboard", baseUrl));
     }
-  }
-
-  if (request.nextUrl.pathname.startsWith("/signed-out")) {
-    const cookieJar = await cookies();
-    cookieJar.delete("access_token");
-    cookieJar.delete("refresh_token");
   }
 
   if (
@@ -38,59 +45,22 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/animations") ||
     request.nextUrl.pathname.startsWith("/scenes")
   ) {
-    const accessToken = request.cookies.get("access_token");
-    const refreshToken = request.cookies.get("refresh_token");
-
-    try {
-      if (accessToken) {
-        await axios.post("http://auth-server:3000/token/verify", {
-          accessToken: accessToken.value,
-        });
-      } else {
-        throw new Error();
-      }
-    } catch {
-      if (refreshToken) {
-        try {
-          const response = await axios.post(
-            "http://auth-server:3000/token/refresh",
-            { refreshToken: refreshToken.value }
-          );
-
-          const cookieJar = await cookies();
-
-          cookieJar.set("access_token", response.data.accessToken, {
-            httpOnly: true,
-            secure: false, // process.env.NODE_ENV === "production",
-            // path: "/", // Cookie scope
-            maxAge: 60 * 60 * 24, // 1 day in seconds
-            sameSite: "lax",
-          });
-
-          cookieJar.set("refresh_token", response.data.refreshToken, {
-            httpOnly: true,
-            secure: false, // process.env.NODE_ENV === "production",
-            // path: "/", // Cookie scope
-            maxAge: 60 * 60 * 24, // 1 day in seconds
-            sameSite: "lax",
-          });
-        } catch {
-          return NextResponse.redirect(new URL("/sign-in", request.url));
-        }
-      } else {
-        return NextResponse.redirect(new URL("/sign-in", request.url));
-      }
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL("/sign-in", baseUrl));
     }
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config: MiddlewareConfig = {
   matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+
     "/sign-in",
     "/register",
     "/signed-out",
+
     "/dashboard",
     "/animations",
     "/animations/:path*",

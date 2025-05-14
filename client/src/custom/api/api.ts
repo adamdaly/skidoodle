@@ -1,3 +1,4 @@
+import { AuthSession } from "aws-amplify/auth";
 import axios, { AxiosRequestConfig } from "axios";
 
 export const axiosInstance = axios.create({
@@ -5,30 +6,70 @@ export const axiosInstance = axios.create({
   baseURL: "http://server:3000",
 });
 
-export const get = <Response = unknown>(
-  url: string,
-  config: AxiosRequestConfig<void> = {}
-) => axiosInstance.get<Response>(url, config);
+export abstract class API {
+  private readonly axiosInstance = axios.create({
+    withCredentials: true,
+    baseURL: "http://server:3000",
+  });
 
-export const post = <Response = unknown, Body = unknown>(
-  url: string,
-  body: Body,
-  config: AxiosRequestConfig<Body> = {}
-) => axiosInstance.post<Response>(url, body, config);
+  private accessToken?: string;
 
-export const put = <Response = unknown, Body = unknown>(
-  url: string,
-  body: Body,
-  config: AxiosRequestConfig<Body> = {}
-) => axiosInstance.put<Response>(url, body, config);
+  constructor() {
+    this.axiosInstance.interceptors.request.use(async (config) => {
+      const accessToken = await this.getAccessToken();
 
-export const patch = <Response = unknown, Body = unknown>(
-  url: string,
-  body: Body,
-  config: AxiosRequestConfig<Body> = {}
-) => axiosInstance.patch<Response>(url, body, config);
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
 
-export const deleteRequest = <Response = unknown, Body = unknown>(
-  url: string,
-  config: AxiosRequestConfig<Body> = {}
-) => axiosInstance.delete<Response>(url, config);
+      return config;
+    });
+  }
+
+  abstract fetchAccessToken(): Promise<AuthSession>;
+
+  async getAccessToken() {
+    if (this.accessToken) {
+      return this.accessToken;
+    }
+
+    const session = await this.fetchAccessToken();
+    this.accessToken = session.tokens?.accessToken.toString();
+    return this.accessToken;
+  }
+
+  get<Response = unknown>(url: string, config: AxiosRequestConfig<void> = {}) {
+    return this.axiosInstance.get<Response>(url, config);
+  }
+
+  post<Response = unknown, Body = unknown>(
+    url: string,
+    body: Body,
+    config: AxiosRequestConfig<Body> = {}
+  ) {
+    return this.axiosInstance.post<Response>(url, body, config);
+  }
+
+  put<Response = unknown, Body = unknown>(
+    url: string,
+    body: Body,
+    config: AxiosRequestConfig<Body> = {}
+  ) {
+    return this.axiosInstance.put<Response>(url, body, config);
+  }
+
+  patch<Response = unknown, Body = unknown>(
+    url: string,
+    body: Body,
+    config: AxiosRequestConfig<Body> = {}
+  ) {
+    return this.axiosInstance.patch<Response>(url, body, config);
+  }
+
+  deleteRequest<Response = unknown, Body = unknown>(
+    url: string,
+    config: AxiosRequestConfig<Body> = {}
+  ) {
+    return this.axiosInstance.delete<Response>(url, config);
+  }
+}
