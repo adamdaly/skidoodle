@@ -1,3 +1,5 @@
+import { FRAMES_RETRIEVE_URL } from "../constants";
+
 type Data = {
   id: string;
   type: string;
@@ -12,7 +14,7 @@ export const getImageData = async (
     return;
   }
 
-  const response = await fetch("http://localhost:3003/frames", {
+  const response = await fetch(`${FRAMES_RETRIEVE_URL}/frames`, {
     method: "post",
     body: JSON.stringify({
       frames,

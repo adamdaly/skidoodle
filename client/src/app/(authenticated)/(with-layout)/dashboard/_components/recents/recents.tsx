@@ -1,8 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
-import DateTimeService from "@/custom/services/datetime.service";
 import { GetRecentsResponse } from "@/custom/api/animation.api/server";
+import { SERVER_URL } from "@/custom/constants";
+import DateTimeService from "@/custom/services/datetime.service";
+import { Animation, Scene } from "@/custom/types";
 
 export type RecentsProps = { recents: GetRecentsResponse };
 export const Recents = ({ recents }: RecentsProps) => {
@@ -16,8 +19,15 @@ export const Recents = ({ recents }: RecentsProps) => {
 };
 
 export const Recent = (recent: GetRecentsResponse[number]) => {
+  const filename = useMemo(
+    () =>
+      recent.metadata.type === "Animation"
+        ? (recent as Animation).Scene[0]?.Frame[0]?.filename
+        : (recent as Scene).Frame[0]?.filename,
+    [recent]
+  );
   return (
-    <li key={`${recent.metadata.type}-${recent.id}`}>
+    <li>
       <Link
         {...{
           className: "flex mb-4",
@@ -27,9 +37,9 @@ export const Recent = (recent: GetRecentsResponse[number]) => {
         }}
       >
         <img
-          src={`http://localhost:3003/frames/bbb1.png`}
+          src={`${SERVER_URL}/files/${filename}`}
           className="block mr-4 w-20"
-          alt="bbb1"
+          alt={`${recent.name}`}
         />
         <div>
           <div className="font-heading text-md">{recent.name}</div>

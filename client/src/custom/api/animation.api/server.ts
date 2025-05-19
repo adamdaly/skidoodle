@@ -30,13 +30,19 @@ export const getAnimation = (
     config
   );
 
-type WithType<T> = T & {
+type AnimationWithMetadata = Animation & {
   metadata: {
-    type: "Animation" | "Scene";
+    type: "Animation";
   };
 };
 
-export type GetRecentsResponse = (WithType<Animation> | WithType<Scene>)[];
+type SceneWithMetadata = Scene & {
+  metadata: {
+    type: "Scene";
+  };
+};
+
+export type GetRecentsResponse = (AnimationWithMetadata | SceneWithMetadata)[];
 
 export const getRecents = (config?: AxiosRequestConfig) =>
   serverInstance.get<GetRecentsResponse>("/user/recents", config);

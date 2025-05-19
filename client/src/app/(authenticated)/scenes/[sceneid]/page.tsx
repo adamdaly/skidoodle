@@ -16,7 +16,6 @@ import { Info } from "./_components/info";
 
 async function getScene(sceneid: number) {
   const result = await getSceneRequest(sceneid);
-
   return result.data;
 }
 

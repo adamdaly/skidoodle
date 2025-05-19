@@ -5,12 +5,12 @@ import { JwtService } from '@nestjs/jwt';
 import { CognitoAuthModule } from '@nestjs-cognito/auth';
 import { AnimationsModule } from './animations/animations.module';
 import { AppController } from './app.controller';
-import { FileService } from './file/file.service';
 import { FramesModule } from './frames/frames.module';
 import { ScenesModule } from './scenes/scenes.module';
 import { PrismaService } from './prisma/prisma.service';
 import { CacheService } from './cache/cache.service';
 import { UserModule } from './user/user.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -31,8 +31,9 @@ import { UserModule } from './user/user.module';
     ScenesModule,
     FramesModule,
     UserModule,
+    FileModule,
   ],
   controllers: [AppController],
-  providers: [PrismaService, FileService, CacheService, JwtService],
+  providers: [PrismaService, CacheService, JwtService],
 })
 export class AppModule {}
