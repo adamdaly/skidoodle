@@ -1,12 +1,11 @@
 "use client";
-import { Animation } from "@/custom/types";
+import { FRAMES_RETRIEVE_URL } from "@/custom/constants";
 import {
   createContext,
   ReactNode,
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 
@@ -30,7 +29,7 @@ export const FramesProvider = ({ children, frames }: FramesProviderProps) => {
     }
 
     try {
-      const response = await fetch("http://localhost:3003/frames", {
+      const response = await fetch(`${FRAMES_RETRIEVE_URL}/frames`, {
         method: "post",
         body: JSON.stringify({
           frames,

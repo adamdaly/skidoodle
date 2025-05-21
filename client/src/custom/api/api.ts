@@ -12,8 +12,6 @@ export abstract class API {
     baseURL: "http://server:3000",
   });
 
-  private accessToken?: string;
-
   constructor() {
     this.axiosInstance.interceptors.request.use(async (config) => {
       const accessToken = await this.getAccessToken();
@@ -29,13 +27,8 @@ export abstract class API {
   abstract fetchAccessToken(): Promise<AuthSession>;
 
   async getAccessToken() {
-    if (this.accessToken) {
-      return this.accessToken;
-    }
-
     const session = await this.fetchAccessToken();
-    this.accessToken = session.tokens?.accessToken.toString();
-    return this.accessToken;
+    return session.tokens?.accessToken.toString();
   }
 
   get<Response = unknown>(url: string, config: AxiosRequestConfig<void> = {}) {

@@ -32,6 +32,7 @@ export class FramesController {
     @Body('sceneid', ParseIntPipe) sceneid: number,
   ) {
     const filename = await this.fileService.write(file);
+
     return this.framesService.create({
       filename,
       index,

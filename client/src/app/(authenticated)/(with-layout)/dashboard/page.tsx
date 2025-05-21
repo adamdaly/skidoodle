@@ -9,13 +9,11 @@ import { Recents } from "./_components/recents";
 
 async function getAnimations() {
   const result = await getAnimationsRequest();
-
   return result.data;
 }
 
 async function getRecents() {
   const result = await getRecentsRequest();
-
   return result.data;
 }
 

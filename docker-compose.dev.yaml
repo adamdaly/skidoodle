@@ -10,6 +10,8 @@ services:
       dockerfile: Dockerfile.local
     volumes:
       - ./server:/usr/src/app
+    environment:
+      # - NODE_ENV=development
 
   file-store:
     build:
@@ -19,3 +21,8 @@ services:
       - ./file-store:/usr/src/app
       - /usr/src/app/node_modules
       - ./file-store/frames:/usr/src/app/frames
+
+  client:
+    environment:
+      # NEXT_PUBLIC_SERVER_URL: ${SERVER_URL}
+      # NEXT_PUBLIC_FRAMES_RETRIEVE_URL: ${FRAMES_RETRIEVE_URL}
