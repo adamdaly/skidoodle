@@ -1,8 +1,8 @@
 import S3, { GetObjectOutput } from 'aws-sdk/clients/s3';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { FileServiceBase } from './file.service.base';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class FileService implements FileServiceBase {
