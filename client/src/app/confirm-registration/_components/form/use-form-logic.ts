@@ -3,9 +3,9 @@
 import { useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { confirmSignUp } from "aws-amplify/auth";
 import { useRouter } from "next/navigation";
 
+import { AuthServiceClient } from "@/custom/services/auth/client";
 import {
   createRegisterConfirmSchema,
   RegisterConfirmSchema,
@@ -14,6 +14,8 @@ import {
 export const useRegisterConfirmFormLogic = () => {
   const schema = useRef(createRegisterConfirmSchema());
   const router = useRouter();
+
+  const authServiceClient = useRef(new AuthServiceClient());
 
   const form = useForm<RegisterConfirmSchema>({
     resolver: zodResolver(schema.current),
@@ -26,7 +28,7 @@ export const useRegisterConfirmFormLogic = () => {
   const submit = useCallback(
     async (values: RegisterConfirmSchema) => {
       try {
-        await confirmSignUp({
+        await authServiceClient.current.confirmSignUp({
           username: values.username,
           confirmationCode: values.confirmationCode,
         });

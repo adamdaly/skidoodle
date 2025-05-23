@@ -1,22 +1,16 @@
-import { fetchAuthSession } from "aws-amplify/auth/server";
 import { AuthSession } from "aws-amplify/auth";
-import { cookies } from "next/headers";
-
-import { runWithAmplifyServerContext } from "../utils/amplify-server-utils";
+import { AuthServiceServer as AuthService } from "@/custom/services/auth/server";
 import { API } from "./api";
 
 export class ServerAPI extends API {
+  authService: AuthService;
   constructor() {
     super();
+    this.authService = new AuthService();
   }
 
   async fetchAccessToken(): Promise<AuthSession> {
-    return await runWithAmplifyServerContext({
-      nextServerContext: { cookies },
-      operation: async (contextSpec) => {
-        return await fetchAuthSession(contextSpec);
-      },
-    });
+    return this.authService.fetchAuthSession();
   }
 }
 

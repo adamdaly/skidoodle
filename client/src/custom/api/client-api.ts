@@ -1,12 +1,15 @@
-import { AuthSession, fetchAuthSession } from "aws-amplify/auth";
+import { AuthSession } from "aws-amplify/auth";
+import { AuthServiceClient as AuthService } from "@/custom/services/auth/client";
 import { API } from "./api";
 
 export class ClientAPI extends API {
+  authService: AuthService;
   constructor() {
     super();
+    this.authService = new AuthService();
   }
   async fetchAccessToken(): Promise<AuthSession> {
-    return await fetchAuthSession();
+    return await this.authService.fetchAuthSession();
   }
 }
 
