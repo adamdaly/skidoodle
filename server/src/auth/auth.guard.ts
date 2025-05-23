@@ -9,15 +9,13 @@ export class AuthGuard implements CanActivate {
 
     const accessToken = request.headers.authorization?.split(' ')?.[1];
 
-    if (!accessToken) {
-      return false;
-    }
-
-    try {
-      jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET ?? '');
-      return true;
-    } catch {
-      /* empty */
+    if (accessToken) {
+      try {
+        jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET ?? '');
+        return true;
+      } catch {
+        /* empty */
+      }
     }
 
     return false;

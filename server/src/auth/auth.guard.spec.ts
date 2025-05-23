@@ -1,12 +1,13 @@
 import jwt from 'jsonwebtoken';
 import { ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
-import { verify } from 'src/api/auth.api';
-
-jest.mock('src/api/auth.api');
 
 describe('AuthGuard', () => {
   const guard = new AuthGuard();
+
+  process.env = {
+    ACCESS_TOKEN_SECRET: 'ACCESS_TOKEN_SECRET',
+  };
 
   it('should be defined', () => {
     expect(guard).toBeDefined();
@@ -29,8 +30,13 @@ describe('AuthGuard', () => {
     expect(guard.canActivate(context)).toBe(false);
   });
 
-  it('should return false if the verify api request throws an error and there is no refresh token', () => {
-    const accessToken = jwt.sign({}, process.env.ACCESS_TOKEN_SECRET ?? '');
+  it('should return false if the verification fails', () => {
+    const accessToken = jwt.sign(
+      {
+        sub: 'asdf-1234',
+      },
+      'someSecretKey',
+    );
 
     const context = {
       switchToHttp: () => ({
@@ -46,10 +52,31 @@ describe('AuthGuard', () => {
       getHandler: () => {},
     } as ExecutionContext;
 
-    jest
-      .mocked(verify)
-      .mockImplementation(() => Promise.reject(new Error('error')));
-
     expect(guard.canActivate(context)).toBe(false);
+  });
+
+  it('should return true if the verification is successful', () => {
+    const accessToken = jwt.sign(
+      {
+        sub: 'asdf-1234',
+      },
+      process.env.ACCESS_TOKEN_SECRET ?? '',
+    );
+
+    const context = {
+      switchToHttp: () => ({
+        getRequest: () => ({
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+          cookies: {},
+        }),
+
+        getResponse: () => ({}),
+      }),
+      getHandler: () => {},
+    } as ExecutionContext;
+
+    expect(guard.canActivate(context)).toBe(true);
   });
 });

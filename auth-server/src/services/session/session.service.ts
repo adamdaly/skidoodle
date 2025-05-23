@@ -19,6 +19,7 @@ export default class SessionService {
   static create(session: JwtPayload) {
     return mongoService.db().collection("sessions").insertOne(session);
   }
+
   static read(session: ReadSessionPayload) {
     return mongoService
       .db()

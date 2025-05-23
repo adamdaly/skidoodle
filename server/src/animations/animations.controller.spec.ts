@@ -1,7 +1,4 @@
-import {
-  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
-  CognitoJwtPayload,
-} from '@nestjs-cognito/core';
+import { JwtPayload } from 'jsonwebtoken';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Animation, Scene } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -52,10 +49,6 @@ describe('AnimationsController', () => {
           provide: ScenesService,
           useValue: mockSceneService,
         },
-        {
-          provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
-          useValue: {},
-        },
       ],
     }).compile();
 
@@ -69,16 +62,10 @@ describe('AnimationsController', () => {
   });
 
   it('should create an animation when the create POST method is called', async () => {
-    const user: CognitoJwtPayload = {
-      username: 'asdf-1234',
-      token_use: 'access',
+    const user: JwtPayload = {
       sub: 'sub',
-      iss: 'iss',
       exp: 1234,
       iat: 1234,
-      auth_time: 1234,
-      jti: 'jti',
-      origin_jti: 'origin_jti',
     };
 
     const payload: CreateDto = {
