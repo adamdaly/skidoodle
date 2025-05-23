@@ -8,15 +8,17 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { Authentication } from '@nestjs-cognito/auth';
+
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { FileService } from 'src/file/file.service';
 import { FramesService } from './frames.service';
 import { CreateDto, UpdateDto } from './frames.dto';
 
 @Controller('frames')
-@Authentication()
+@UseGuards(AuthGuard)
 export class FramesController {
   constructor(
     private readonly framesService: FramesService,

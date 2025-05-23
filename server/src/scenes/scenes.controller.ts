@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 import {
   Controller,
   Get,
@@ -7,22 +8,23 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
-import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
-import { CognitoJwtPayload } from '@nestjs-cognito/core';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { User } from 'src/auth/auth.decorator';
 import { CreateDto, UpdateDto } from './scenes.dto';
 import { ScenesService } from './scenes.service';
 
 @Controller('scenes')
-@Authentication()
+@UseGuards(AuthGuard)
 export class ScenesController {
   constructor(private readonly scenesService: ScenesService) {}
 
   @Post()
-  create(@CognitoUser() user: CognitoJwtPayload, @Body() data: CreateDto) {
+  create(@User() user: JwtPayload, @Body() data: CreateDto) {
     return this.scenesService.create({
       ...data,
-      userid: user.username as string,
+      userid: user.sub as string,
     });
   }
 

@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 import {
   Body,
   Controller,
@@ -8,18 +9,19 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
-import { CognitoJwtPayload } from '@nestjs-cognito/core';
 
 import { Animation, Scene } from '@prisma/client';
 import { DMMF } from '@prisma/client/runtime/library';
 import { ScenesService } from 'src/scenes/scenes.service';
+import { User } from 'src/auth/auth.decorator';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { AnimationsService } from './animations.service';
 import { CreateDto, UpdateDto } from './animations.dto';
 
 @Controller('animations')
-@Authentication()
+@UseGuards(AuthGuard)
 export class AnimationsController {
   constructor(
     private readonly animationsService: AnimationsService,
@@ -28,11 +30,11 @@ export class AnimationsController {
 
   @Post()
   create(
-    @CognitoUser() user: CognitoJwtPayload,
+    @User() user: JwtPayload,
     @Body() data: CreateDto,
   ): Promise<Animation> {
     return this.animationsService.create({
-      userid: user.username as string,
+      userid: user.sub as string,
       ...data,
     });
   }

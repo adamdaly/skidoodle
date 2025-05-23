@@ -14,3 +14,5 @@ export const COGNITO_ISSUER = process.env.NEXT_PUBLIC_COGNITO_ISSUER ?? "";
 
 export const FRAMES_RETRIEVE_URL =
   process.env.NEXT_PUBLIC_FRAMES_RETRIEVE_URL ?? "";
+
+export const NODE_ENV = process.env.NEXT_PUBLIC_NODE_ENV;

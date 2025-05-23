@@ -1,9 +1,7 @@
-import { fetchAuthSession } from "aws-amplify/auth/server";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { MiddlewareConfig, NextRequest } from "next/server";
-import { runWithAmplifyServerContext } from "./custom/utils/amplify-server-utils";
 import { configureAmplifyServer } from "./custom/utils/amplify-cognito-config-server";
+import { authServiceServer } from "@/custom/services/auth/server";
 
 configureAmplifyServer();
 
@@ -14,21 +12,7 @@ export async function middleware(request: NextRequest) {
   const protocol = request.headers.get("x-forwarded-proto") ?? "http";
   const baseUrl = `${protocol}://${host}`;
 
-  const isAuthenticated = await runWithAmplifyServerContext({
-    nextServerContext: { cookies, request },
-    operation: async (contextSpec) => {
-      try {
-        const session = await fetchAuthSession(contextSpec);
-
-        return (
-          session.tokens?.accessToken !== undefined &&
-          session.tokens?.idToken !== undefined
-        );
-      } catch {
-        return false;
-      }
-    },
-  });
+  const isAuthenticated = await authServiceServer.getIsAuthenticated();
 
   if (
     request.nextUrl.pathname.startsWith("/sign-in") ||

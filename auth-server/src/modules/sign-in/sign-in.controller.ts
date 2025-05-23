@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-
 import { UserService } from "../../services/user/user.service";
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "../../constants";
+import { ONE_DAY, ONE_HOUR } from "../../constants";
+import SessionService from "../../services/session/session.service";
 
 type SignInRequest = Request<
   {},
@@ -26,18 +25,17 @@ export default class SignInController {
       return;
     }
 
-    const accessToken = jwt.sign(
-      { userId: user._id, username },
-      ACCESS_TOKEN_SECRET,
-      { expiresIn: "10m" } // Short-lived access token
+    const { accessToken, refreshToken } = await SessionService.generateTokens(
+      user._id as unknown as string
     );
 
-    const refreshToken = jwt.sign(
-      { userId: user._id },
-      REFRESH_TOKEN_SECRET,
-      { expiresIn: "20m" } // Long-lived refresh token
-    );
+    res.cookie("skidoodle.access_token", accessToken, {
+      maxAge: ONE_HOUR * 1000,
+    });
+    res.cookie("skidoodle.refresh_token", refreshToken, {
+      maxAge: ONE_DAY * 1000,
+    });
 
-    res.status(200).json({ accessToken, refreshToken });
+    res.status(200).send();
   }
 }
