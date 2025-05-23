@@ -5,50 +5,39 @@ import {
   SignUpArgs,
   SignInArgs,
 } from "../auth.service.types";
-import AuthServiceClientProd from "./auth.service.client.prod";
-import AuthServiceClientLocal from "./auth.service.client.local";
+import type AuthServiceClientProd from "./auth.service.client.prod";
+import type AuthServiceClientLocal from "./auth.service.client.local";
 
-export class AuthServiceClient implements AuthServiceClientBase {
-  Service!: AuthServiceClientLocal | AuthServiceClientProd;
-
-  private async getService() {
-    if (this.Service) {
-      return this.Service;
-    }
-
-    const Service =
-      NODE_ENV === "development"
-        ? await import("./auth.service.client.local").then(
-            (Service) => Service.default
-          )
-        : await import("./auth.service.client.prod").then(
-            (Service) => Service.default
-          );
-
-    this.Service = new Service();
-
-    return this.Service;
-  }
+class AuthServiceClient implements AuthServiceClientBase {
+  constructor(
+    private readonly service: AuthServiceClientLocal | AuthServiceClientProd
+  ) {}
 
   async signUp(args: SignUpArgs) {
-    const service = await this.getService();
-    return service.signUp(args);
+    return this.service.signUp(args);
   }
 
   async confirmSignUp(args: ConfirmationRegistrationArgs) {
-    const service = await this.getService();
-    return service.confirmSignUp(args);
+    return this.service.confirmSignUp(args);
   }
   async signIn(args: SignInArgs) {
-    const service = await this.getService();
-    return service.signIn(args);
+    return this.service.signIn(args);
   }
   async signOut() {
-    const service = await this.getService();
-    return service.signOut();
+    return this.service.signOut();
   }
   async fetchAuthSession() {
-    const service = await this.getService();
-    return service.fetchAuthSession();
+    return this.service.fetchAuthSession();
   }
 }
+
+const Service =
+  NODE_ENV === "development"
+    ? await import("./auth.service.client.local").then(
+        (module) => module.default
+      )
+    : await import("./auth.service.client.prod").then(
+        (module) => module.default
+      );
+
+export const authServiceClient = new AuthServiceClient(new Service());

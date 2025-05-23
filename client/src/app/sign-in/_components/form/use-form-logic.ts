@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
-import { AuthServiceClient } from "@/custom/services/auth/client";
+import { authServiceClient } from "@/custom/services/auth/client";
 import {
   createSignInSchema,
   SignInSchema,
@@ -12,8 +12,6 @@ import {
 export const useSignInFormLogic = () => {
   const schema = useRef(createSignInSchema());
   const router = useRouter();
-
-  const authServiceClient = useRef(new AuthServiceClient());
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(schema.current),
@@ -26,7 +24,7 @@ export const useSignInFormLogic = () => {
   const submit = useCallback(
     async (values: SignInSchema) => {
       try {
-        const response = await authServiceClient.current.signIn({
+        const response = await authServiceClient.signIn({
           username: values.username,
           password: values.password,
         });

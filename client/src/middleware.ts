@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 import type { MiddlewareConfig, NextRequest } from "next/server";
 import { configureAmplifyServer } from "./custom/utils/amplify-cognito-config-server";
-import { AuthServiceServer } from "@/custom/services/auth/server";
+import { authServiceServer } from "@/custom/services/auth/server";
 
 configureAmplifyServer();
-
-const authServiceServer = new AuthServiceServer();
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();

@@ -99,6 +99,6 @@ export default class AuthServiceClientLocal implements AuthServiceClientBase {
         },
       };
     }
-    return session;
+    return session satisfies AuthSession;
   }
 }

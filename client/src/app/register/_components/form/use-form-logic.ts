@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { AuthServiceClient } from "@/custom/services/auth/client";
+import { authServiceClient } from "@/custom/services/auth/client";
 import {
   createRegisterSchema,
   RegisterSchema,
@@ -14,8 +14,6 @@ import {
 export const useRegisterFormLogic = () => {
   const schema = useRef(createRegisterSchema());
   const router = useRouter();
-
-  const authServiceClient = useRef(new AuthServiceClient());
 
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(schema.current),
@@ -28,7 +26,7 @@ export const useRegisterFormLogic = () => {
   const submit = useCallback(
     async (values: RegisterSchema) => {
       try {
-        await authServiceClient.current.signUp({
+        await authServiceClient.signUp({
           username: values.username,
           password: values.password,
         });
