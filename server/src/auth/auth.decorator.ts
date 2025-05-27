@@ -1,15 +1,13 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import authDecoratorLocal from './auth.decorator.local';
+import authDecoratorProd from './auth.decorator.prod';
 
 export const User = createParamDecorator(
   async (data: unknown, ctx: ExecutionContext) => {
     const userDecoratorFn =
       process.env.NODE_ENV === 'development'
-        ? await import('./auth.decorator.local').then(
-            (module) => module.default,
-          )
-        : await import('./auth.decorator.prod').then(
-            (module) => module.default,
-          );
+        ? authDecoratorLocal
+        : authDecoratorProd;
 
     return await userDecoratorFn(data, ctx);
   },

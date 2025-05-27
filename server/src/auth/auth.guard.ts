@@ -1,17 +1,17 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
-import jwt from 'jsonwebtoken';
+import { authService } from './auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
     const accessToken = request.headers.authorization?.split(' ')?.[1];
 
     if (accessToken) {
       try {
-        jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET ?? '');
+        await authService.verify(accessToken);
         return true;
       } catch {
         /* empty */
