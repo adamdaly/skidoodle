@@ -5,6 +5,20 @@ import { ScenesController } from './scenes.controller';
 import { CreateDto, UpdateDto } from './scenes.dto';
 import { ScenesService } from './scenes.service';
 
+jest.mock('src/auth/auth.guard', () => ({
+  AuthGuard: class AuthGuard {
+    async canActivate() {
+      return Promise.resolve(true);
+    }
+  },
+}));
+
+jest.mock('src/auth/auth.decorator', () => ({
+  User: () => () => ({
+    sub: '1234',
+  }),
+}));
+
 describe('ScenesController', () => {
   let controller: ScenesController;
 

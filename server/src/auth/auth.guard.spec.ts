@@ -13,7 +13,7 @@ describe('AuthGuard', () => {
     expect(guard).toBeDefined();
   });
 
-  it('should return false if no access token is provided', () => {
+  it('should return false if no access token is provided', async () => {
     const context = {
       switchToHttp: () => ({
         getRequest: () => ({
@@ -27,10 +27,10 @@ describe('AuthGuard', () => {
       getHandler: () => {},
     } as ExecutionContext;
 
-    expect(guard.canActivate(context)).toBe(false);
+    expect(await guard.canActivate(context)).toBe(false);
   });
 
-  it('should return false if the verification fails', () => {
+  it('should return false if the verification fails', async () => {
     const accessToken = jwt.sign(
       {
         sub: 'asdf-1234',
@@ -52,10 +52,10 @@ describe('AuthGuard', () => {
       getHandler: () => {},
     } as ExecutionContext;
 
-    expect(guard.canActivate(context)).toBe(false);
+    expect(await guard.canActivate(context)).toBe(false);
   });
 
-  it('should return true if the verification is successful', () => {
+  it('should return true if the verification is successful', async () => {
     const accessToken = jwt.sign(
       {
         sub: 'asdf-1234',
@@ -77,6 +77,6 @@ describe('AuthGuard', () => {
       getHandler: () => {},
     } as ExecutionContext;
 
-    expect(guard.canActivate(context)).toBe(true);
+    expect(await guard.canActivate(context)).toBe(true);
   });
 });

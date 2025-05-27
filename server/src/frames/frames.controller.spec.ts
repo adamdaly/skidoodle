@@ -4,6 +4,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { FramesController } from './frames.controller';
 import { FramesService } from './frames.service';
 
+jest.mock('src/auth/auth.guard', () => ({
+  AuthGuard: class AuthGuard {
+    async canActivate() {
+      return Promise.resolve(true);
+    }
+  },
+}));
+
 describe('FramesController', () => {
   let controller: FramesController;
 

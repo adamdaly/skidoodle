@@ -4,6 +4,20 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
+jest.mock('src/auth/auth.guard', () => ({
+  AuthGuard: class AuthGuard {
+    async canActivate() {
+      return Promise.resolve(true);
+    }
+  },
+}));
+
+jest.mock('src/auth/auth.decorator', () => ({
+  User: () => () => ({
+    sub: '1234',
+  }),
+}));
+
 describe('UserController', () => {
   let controller: UserController;
 

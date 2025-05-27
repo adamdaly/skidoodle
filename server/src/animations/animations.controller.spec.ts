@@ -7,6 +7,20 @@ import { AnimationsController } from './animations.controller';
 import { AnimationsService } from './animations.service';
 import { CreateDto, UpdateDto } from './animations.dto';
 
+jest.mock('src/auth/auth.guard', () => ({
+  AuthGuard: class AuthGuard {
+    async canActivate() {
+      return Promise.resolve(true);
+    }
+  },
+}));
+
+jest.mock('src/auth/auth.decorator', () => ({
+  User: () => () => ({
+    sub: '1234',
+  }),
+}));
+
 describe('AnimationsController', () => {
   let controller: AnimationsController;
   let service: AnimationsService;
