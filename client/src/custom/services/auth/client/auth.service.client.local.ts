@@ -81,8 +81,10 @@ export default class AuthServiceClientLocal implements AuthServiceClientBase {
       },
     } satisfies SignInOutput;
   }
+
   async signOut() {
-    return;
+    Cookies.remove("skidoodle.access_token");
+    Cookies.remove("skidoodle.refresh_token");
   }
 
   async fetchAuthSession() {

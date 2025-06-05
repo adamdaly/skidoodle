@@ -1,5 +1,5 @@
 "use client";
-import { FRAMES_RETRIEVE_URL } from "@/custom/constants";
+import { getImageData } from "@/custom/utils/get-image-data";
 import {
   createContext,
   ReactNode,
@@ -29,48 +29,12 @@ export const FramesProvider = ({ children, frames }: FramesProviderProps) => {
     }
 
     try {
-      const response = await fetch(`${FRAMES_RETRIEVE_URL}/frames`, {
-        method: "post",
-        body: JSON.stringify({
-          frames,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      getImageData(frames, ({ id, data }) => {
+        setImages((currentImages) => ({
+          ...currentImages,
+          [id]: data,
+        }));
       });
-
-      const reader = response.body?.getReader();
-      if (!reader) {
-        return;
-      }
-
-      const decoder = new TextDecoder();
-      let buffer = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-
-        if (done || value === undefined) {
-          break;
-        }
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-
-        for (const line of lines) {
-          if (!line) {
-            continue;
-          }
-
-          const { id, data } = JSON.parse(line);
-
-          setImages((currentImages) => ({
-            ...currentImages,
-            [id]: data,
-          }));
-        }
-      }
     } catch (e) {
       console.log(e);
     }

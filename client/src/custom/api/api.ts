@@ -1,18 +1,15 @@
 import { AuthSession } from "aws-amplify/auth";
 import axios, { AxiosRequestConfig } from "axios";
 
-export const axiosInstance = axios.create({
-  withCredentials: true,
-  baseURL: "http://server:3000",
-});
-
 export abstract class API {
-  private readonly axiosInstance = axios.create({
-    withCredentials: true,
-    baseURL: "http://server:3000",
-  });
+  private readonly axiosInstance;
 
-  constructor() {
+  constructor(baseURL: string) {
+    this.axiosInstance = axios.create({
+      withCredentials: true,
+      baseURL,
+    });
+
     this.axiosInstance.interceptors.request.use(async (config) => {
       const accessToken = await this.getAccessToken();
 

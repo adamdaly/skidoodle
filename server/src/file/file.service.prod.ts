@@ -16,7 +16,7 @@ export class FileService implements FileServiceBase {
       secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
     });
 
-    this.bucket = configService.get('AWS_BUCKET') ?? 'skidoodle';
+    this.bucket = configService.get('AWS_BUCKET') ?? '';
   }
 
   private upload(Key: string, Body: Buffer<ArrayBufferLike>) {

@@ -164,3 +164,6 @@ dist
 .DS_Store
 file-store/frames
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,node
+
+# sst
+.sst

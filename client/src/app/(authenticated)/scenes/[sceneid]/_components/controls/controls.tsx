@@ -15,6 +15,7 @@ export const Controls = memo(() => {
           className: "cursor-pointer",
           size: "icon",
           onClick: undo,
+          "data-testid": "scene-controls-undo",
         }}
       >
         <Undo />
@@ -25,6 +26,7 @@ export const Controls = memo(() => {
           className: "cursor-pointer",
           size: "icon",
           onClick: redo,
+          "data-testid": "scene-controls-redo",
         }}
       >
         <Redo />
@@ -36,6 +38,7 @@ export const Controls = memo(() => {
             className: "cursor-pointer",
             size: "icon",
             onClick: onFrameSave,
+            "data-testid": "scene-controls-save",
             disabled: !frame?.isDirty,
           }}
         >

@@ -1,5 +1,8 @@
 export const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL ?? "http://localhost:3000";
+  process.env.NEXT_PUBLIC_SERVER_URL ?? "http://server:3000";
+
+export const CLIENT_SERVER_URL =
+  process.env.NEXT_PUBLIC_CLIENT_SERVER_URL ?? "http://localhost:3000";
 
 export const COGNITO_CLIENT_ID =
   process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID ?? "";

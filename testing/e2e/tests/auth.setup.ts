@@ -1,9 +1,11 @@
+import { faker } from "@faker-js/faker";
+import { writeFile } from "fs/promises";
 import { test as setup } from "@playwright/test";
 import { Home } from "../src/pages/home";
 import { SignIn } from "../src/pages/sign-in";
 import { Register } from "../src/pages/register";
-import { faker } from "@faker-js/faker";
-import { writeFile } from "fs/promises";
+import { ConfirmRegistration } from "../src/pages/confirm-registration";
+import { Dashboard } from "../src/pages/dashboard";
 
 setup("Setup - Register and Sign-in new user", async ({ page }) => {
   const username = faker.internet.email();
@@ -14,17 +16,20 @@ setup("Setup - Register and Sign-in new user", async ({ page }) => {
   await home.ctaRegister.isVisible();
 
   await home.navToRegister();
-  await page.waitForURL("/register");
+  await page.waitForURL(Register.URL);
 
   const register = new Register(page);
   await register.completeForm(username, password);
 
-  await page.waitForURL("/sign-in");
+  await page.waitForURL(ConfirmRegistration.URL);
+  const confirmRegistration = new ConfirmRegistration(page);
+  await confirmRegistration.completeForm(username);
 
+  await page.waitForURL(SignIn.URL);
   const signIn = new SignIn(page);
   await signIn.completeForm(username, password);
 
-  await page.waitForURL("/dashboard");
+  await page.waitForURL(Dashboard.URL);
 
   await writeFile(".state/user.json", JSON.stringify({ username, password }));
 

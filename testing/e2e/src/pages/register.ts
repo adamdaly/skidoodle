@@ -1,13 +1,15 @@
 import { Locator, Page } from "@playwright/test";
 import { PageDev } from "./base-page";
 
+const URL = "/register";
 export class Register extends PageDev {
+  static readonly URL = URL;
   readonly inputUsername: Locator;
   readonly inputPassword: Locator;
   readonly ctaSubmit: Locator;
 
   constructor(page: Page) {
-    super(page, "/register");
+    super(page, URL);
 
     this.inputUsername = page.getByTestId("input-register-username");
     this.inputPassword = page.getByTestId("input-register-password");
@@ -24,7 +26,7 @@ export class Register extends PageDev {
   }
 
   async submitForm() {
-    this.ctaSubmit.click();
+    await this.ctaSubmit.click();
   }
 
   async completeForm(username: string, password: string) {

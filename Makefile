@@ -81,6 +81,18 @@ e2e:
 e2e-dev:
 	cd testing/e2e && npx playwright test --ui
 
+.PHONY: deploy
+deploy:
+	@echo "Are you sure you want to deploy? [y/N] "; \
+	read answer; \
+	if [ "$$answer" != "y" ] && [ "$$answer" != "Y" ]; then \
+		echo "Aborted by user"; \
+		exit 0; \
+	else \
+		echo "Proceeding with the task..."; \
+		npx sst deploy --stage production; \
+	fi
+
 help:
 	@echo "options:"
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | xargs

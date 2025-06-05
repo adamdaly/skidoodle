@@ -1,13 +1,15 @@
 import { Locator, Page } from "@playwright/test";
 import { PageDev } from "./base-page";
 
+const URL = "/sign-in";
 export class SignIn extends PageDev {
+  static readonly URL = URL;
   readonly inputUsername: Locator;
   readonly inputPassword: Locator;
   readonly ctaSubmit: Locator;
 
   constructor(page: Page) {
-    super(page, "/sign-in");
+    super(page, URL);
 
     this.inputUsername = page.getByTestId("input-username");
     this.inputPassword = page.getByTestId("input-password");

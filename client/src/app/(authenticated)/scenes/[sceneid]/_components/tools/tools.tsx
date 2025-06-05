@@ -20,6 +20,7 @@ export const Tools = memo(() => {
             className: "cursor-pointer",
             size: "icon",
             onClick: onToolChange(AvailableTools.brush),
+            "data-testid": "scene-tools-brush",
           }}
         >
           <Brush />
@@ -31,6 +32,7 @@ export const Tools = memo(() => {
             className: "cursor-pointer",
             size: "icon",
             onClick: onToolChange(AvailableTools.eraser),
+            "data-testid": "scene-tools-eraser",
           }}
         >
           <Eraser />
