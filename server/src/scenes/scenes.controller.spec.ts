@@ -1,26 +1,31 @@
-import {
-  COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
-  CognitoJwtPayload,
-} from '@nestjs-cognito/core';
+import { JwtPayload } from 'jsonwebtoken';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ScenesController } from './scenes.controller';
 import { CreateDto, UpdateDto } from './scenes.dto';
 import { ScenesService } from './scenes.service';
 
+jest.mock('src/auth/auth.guard', () => ({
+  AuthGuard: class AuthGuard {
+    async canActivate() {
+      return Promise.resolve(true);
+    }
+  },
+}));
+
+jest.mock('src/auth/auth.decorator', () => ({
+  User: () => () => ({
+    sub: '1234',
+  }),
+}));
+
 describe('ScenesController', () => {
   let controller: ScenesController;
 
-  const user: CognitoJwtPayload = {
-    username: 'asdf-1234',
-    token_use: 'access',
+  const user: JwtPayload = {
     sub: 'sub',
-    iss: 'iss',
     exp: 1234,
     iat: 1234,
-    auth_time: 1234,
-    jti: 'jti',
-    origin_jti: 'origin_jti',
   };
 
   const mockScenesService = {
@@ -36,10 +41,6 @@ describe('ScenesController', () => {
         {
           provide: ScenesService,
           useValue: mockScenesService,
-        },
-        {
-          provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
-          useValue: {},
         },
         PrismaService,
       ],
@@ -62,7 +63,7 @@ describe('ScenesController', () => {
     await controller.create(user, payload);
     expect(mockScenesService.create).toHaveBeenCalledWith({
       ...payload,
-      userid: user.username,
+      userid: user.sub,
     });
   });
 

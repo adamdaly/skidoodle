@@ -1,9 +1,16 @@
-import { COGNITO_JWT_VERIFIER_INSTANCE_TOKEN } from '@nestjs-cognito/core';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FileService } from 'src/file/file.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FramesController } from './frames.controller';
 import { FramesService } from './frames.service';
+
+jest.mock('src/auth/auth.guard', () => ({
+  AuthGuard: class AuthGuard {
+    async canActivate() {
+      return Promise.resolve(true);
+    }
+  },
+}));
 
 describe('FramesController', () => {
   let controller: FramesController;
@@ -38,10 +45,6 @@ describe('FramesController', () => {
         {
           provide: FileService,
           useValue: mockFileService,
-        },
-        {
-          provide: COGNITO_JWT_VERIFIER_INSTANCE_TOKEN,
-          useValue: {},
         },
       ],
     }).compile();
