@@ -20,7 +20,7 @@ run-dev:
 
 .PHONY: run-testing
 run-testing:
-	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build --debug
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build
 
 .PHONY: build
 build:
