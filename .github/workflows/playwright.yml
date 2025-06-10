@@ -38,28 +38,6 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - name: Echo all variables
-        run: |
-          echo "All variables: ${{ toJSON(vars) }}"
-        env:
-          VARS_CONTEXT: ${{ toJSON(vars) }}
-
-      - name: Echo all secrets
-        run: |
-          echo "All secrets: ${{ toJSON(secrets) }}"
-        env:
-          SECRETS_CONTEXT: ${{ toJSON(secrets) }}
-
-      - name: Export variables to environment
-        run: |
-          echo "$VARS_CONTEXT" | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
-        env:
-          VARS_CONTEXT: ${{ toJSON(vars) }}
-
-      - name: Verify exported variables
-        run: |
-          printenv | grep -v GITHUB_ | sort
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
