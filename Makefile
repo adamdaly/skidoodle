@@ -18,6 +18,10 @@ run-build:
 run-dev:
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build
 
+.PHONY: run-testing
+run-testing:
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build
+
 .PHONY: build
 build:
 	docker compose up --build
@@ -44,7 +48,9 @@ act:
 		--var PGADMIN_DEFAULT_EMAIL=$(PGADMIN_DEFAULT_EMAIL) \
 		--var PGADMIN_DEFAULT_PASSWORD=$(PGADMIN_DEFAULT_PASSWORD) \
 		--var SERVER_URL=$(SERVER_URL) \
-		--var DATABASE_URL=$(AWS_DB_URL) \
+		--var CLIENT_SERVER_URL=$(CLIENT_SERVER_URL) \
+		--var FRAMES_RETRIEVE_URL=$(FRAMES_RETRIEVE_URL) \
+		--var DATABASE_URL=$(DATABASE_URL) \
 		--var PLAYWRIGHT_BASE_URL=$(PLAYWRIGHT_BASE_URL) \
 		--var PLAYWRIGHT_USER_USERNAME=$(PLAYWRIGHT_USER_USERNAME) \
 		--var PLAYWRIGHT_USER_PASSWORD=$(PLAYWRIGHT_USER_PASSWORD) \
@@ -64,7 +70,9 @@ act-e2e:
 		--var PGADMIN_DEFAULT_EMAIL=$(PGADMIN_DEFAULT_EMAIL) \
 		--var PGADMIN_DEFAULT_PASSWORD=$(PGADMIN_DEFAULT_PASSWORD) \
 		--var SERVER_URL=$(SERVER_URL) \
-		--var DATABASE_URL=$(AWS_DB_URL) \
+		--var CLIENT_SERVER_URL=$(CLIENT_SERVER_URL) \
+		--var AWS_FRAMES_RETRIEVE_URL=$(AWS_FRAMES_RETRIEVE_URL) \
+		--var DATABASE_URL=$(DATABASE_URL) \
 		--var PLAYWRIGHT_BASE_URL=$(PLAYWRIGHT_BASE_URL) \
 		--var PLAYWRIGHT_USER_USERNAME=$(PLAYWRIGHT_USER_USERNAME) \
 		--var PLAYWRIGHT_USER_PASSWORD=$(PLAYWRIGHT_USER_PASSWORD) \

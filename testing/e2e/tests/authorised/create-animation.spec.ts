@@ -41,6 +41,6 @@ test.describe("Create animation flow", () => {
       )
     );
 
-    await expect(hrefs).toContain(url.pathname);
+    expect(hrefs).toContain(url.pathname);
   });
 });
