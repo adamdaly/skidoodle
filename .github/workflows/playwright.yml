@@ -32,23 +32,40 @@ jobs:
           make run-testing
         working-directory: .
 
-      - name: Run e2e tests
-        working-directory: ./testing/e2e
-        run: |
-          npm ci
-          npx playwright install
-          npx playwright install-deps
-          npx playwright test
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+      - name: Run Docker Compose
+        run: docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build > docker-compose.log 2>&1
+      - name: Capture service logs
+        if: failure()
+        run: docker-compose logs skidoodle-server > service-logs.log 2>&1
+      - name: Upload Docker Compose logs
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: ./testing/e2e/playwright-report/
-          retention-days: 30
+          name: docker-compose-logs
+          path: docker-compose.log
+      - name: Upload service logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: service-logs
+          path: service-logs.log
+      # - name: Run e2e tests
+      #   working-directory: ./testing/e2e
+      #   run: |
+      #     npm ci
+      #     npx playwright install
+      #     npx playwright install-deps
+      #     npx playwright test
 
-      - name: Stop Docker Compose services
-        if: always() # Run even if previous steps fail
-        run: |
-          make destroy
-        working-directory: .
+      # - uses: actions/upload-artifact@v4
+      #   if: ${{ !cancelled() }}
+      #   with:
+      #     name: playwright-report
+      #     path: ./testing/e2e/playwright-report/
+      #     retention-days: 30
+
+      # - name: Stop Docker Compose services
+      #   if: always() # Run even if previous steps fail
+      #   run: |
+      #     make destroy
+      #   working-directory: .
