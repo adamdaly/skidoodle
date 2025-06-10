@@ -42,6 +42,7 @@ restart:
 act:
 	./bin/act \
 		--var CI=true \
+		--var NODE_ENV=development \
 		--var POSTGRES_DB=$(POSTGRES_DB) \
 		--var POSTGRES_USER=$(POSTGRES_USER) \
 		--var POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
@@ -64,6 +65,7 @@ act-e2e:
 	./bin/act \
 		-j "e2e" \
 		--var CI=true \
+		--var NODE_ENV=development \
 		--var POSTGRES_DB=$(POSTGRES_DB) \
 		--var POSTGRES_USER=$(POSTGRES_USER) \
 		--var POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
@@ -71,7 +73,7 @@ act-e2e:
 		--var PGADMIN_DEFAULT_PASSWORD=$(PGADMIN_DEFAULT_PASSWORD) \
 		--var SERVER_URL=$(SERVER_URL) \
 		--var CLIENT_SERVER_URL=$(CLIENT_SERVER_URL) \
-		--var AWS_FRAMES_RETRIEVE_URL=$(AWS_FRAMES_RETRIEVE_URL) \
+		--var FRAMES_RETRIEVE_URL=$(FRAMES_RETRIEVE_URL) \
 		--var DATABASE_URL=$(DATABASE_URL) \
 		--var PLAYWRIGHT_BASE_URL=$(PLAYWRIGHT_BASE_URL) \
 		--var PLAYWRIGHT_USER_USERNAME=$(PLAYWRIGHT_USER_USERNAME) \

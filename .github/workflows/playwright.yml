@@ -23,7 +23,6 @@ jobs:
       PLAYWRIGHT_USER_PASSWORD: ${{ vars.PLAYWRIGHT_USER_PASSWORD }}
 
       AMPLIFY_APP_ORIGIN: ${{ vars.AMPLIFY_APP_ORIGIN }}
-      AWS_SERVER_URL: ${{ vars.AWS_SERVER_URL }}
       AWS_FRAMES_RETRIEVE_URL: ${{ vars.AWS_FRAMES_RETRIEVE_URL }}
       AWS_REGION: ${{ vars.AWS_REGION }}
       AWS_BUCKET: ${{ vars.AWS_BUCKET }}
@@ -44,7 +43,7 @@ jobs:
 
       - name: Start Docker Compose services
         run: |
-          make run-build
+          make run-testing
         working-directory: .
 
       - name: Collect docker logs on failure
