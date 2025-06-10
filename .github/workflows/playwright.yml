@@ -27,10 +27,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Start Docker Compose services
-        run: |
-          make run-testing
-        working-directory: .
+      # - name: Start Docker Compose services
+      #   run: |
+      #     make run-testing
+      #   working-directory: .
 
       - name: Run Docker Compose
         run: docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d --build > docker-compose.log 2>&1
