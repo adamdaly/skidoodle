@@ -43,7 +43,7 @@ jobs:
 
       - name: Start Docker Compose services
         run: |
-          make run-testing
+          make run
         working-directory: .
 
       - name: Collect docker logs on failure
