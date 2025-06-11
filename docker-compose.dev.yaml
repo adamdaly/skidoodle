@@ -8,8 +8,8 @@ services:
     # build:
     #   context: ./server
     #   dockerfile: Dockerfile.local
-    # volumes:
-    #   - ./server:/usr/src/app
+    volumes:
+      - ./server:/usr/src/app
     environment:
       NODE_ENV: development
 
