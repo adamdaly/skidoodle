@@ -29,7 +29,14 @@ setup("Setup - Register and Sign-in new user", async ({ page }) => {
   const signIn = new SignIn(page);
   await signIn.completeForm(username, password);
 
-  await page.waitForURL(Dashboard.URL);
+  // const responsePromise = page.waitForResponse((res) =>
+  //   res.url().includes("/sign-in")
+  // );
+
+  // const response = await responsePromise;
+  // console.log(response.status(), response.statusText());
+
+  await page.waitForURL(Dashboard.URL, { waitUntil: "load" });
 
   await writeFile(".state/user.json", JSON.stringify({ username, password }));
 

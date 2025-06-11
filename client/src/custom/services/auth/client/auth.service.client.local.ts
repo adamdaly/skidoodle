@@ -33,12 +33,11 @@ const axiosInstance = axios.create({
 });
 
 export default class AuthServiceClientLocal implements AuthServiceClientBase {
-  accessToken?: string;
-  refreshToken?: string;
-
-  constructor() {
-    this.accessToken = Cookies.get("skidoodle.access_token");
-    this.refreshToken = Cookies.get("skidoodle.refresh_token");
+  getTokens() {
+    return {
+      accessToken: Cookies.get("skidoodle.access_token"),
+      refreshToken: Cookies.get("skidoodle.refresh_token"),
+    };
   }
 
   async signUp(args: SignUpArgs) {
@@ -69,10 +68,7 @@ export default class AuthServiceClientLocal implements AuthServiceClientBase {
   }
 
   async signIn(args: SignInArgs) {
-    const response = await axiosInstance.post<SignInResponse>("/sign-in", args);
-
-    this.accessToken = response.data.accessToken;
-    this.refreshToken = response.data.refreshToken;
+    await axiosInstance.post<SignInResponse>("/sign-in", args);
 
     return {
       isSignedIn: true,
@@ -90,13 +86,14 @@ export default class AuthServiceClientLocal implements AuthServiceClientBase {
   async fetchAuthSession() {
     const session = {} as AuthSession;
 
-    if (this.accessToken) {
-      const cachedAccessToken = this.accessToken;
+    const { accessToken } = this.getTokens();
+    if (accessToken) {
+      const cachedAccessToken = accessToken;
       const toString = () => cachedAccessToken;
 
       session.tokens = {
         accessToken: {
-          payload: jwt.decode(this.accessToken) as JwtPayload,
+          payload: jwt.decode(accessToken) as JwtPayload,
           toString,
         },
       };
