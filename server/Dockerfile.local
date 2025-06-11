@@ -10,7 +10,14 @@ WORKDIR /usr/src/app
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node tsconfig*.json ./
 
+# Debug: Verify package.json exists
+RUN ls -la && cat package.json
+
 RUN npm install
+
+# Debug: Verify node_modules exists
+RUN ls -la node_modules
+RUN ls -la node_modules | grep jsonwebtoken
 
 # Bundle app source
 COPY --chown=node:node . .
