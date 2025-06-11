@@ -1,0 +1,28 @@
+services:
+  auth-server:
+    build:
+      context: ./auth-server
+      dockerfile: Dockerfile.local
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.testing
+    environment:
+      NODE_ENV: development
+
+  file-store:
+    build:
+      context: ./file-store
+      dockerfile: Dockerfile.local
+    volumes:
+      - ./file-store:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./file-store/frames:/usr/src/app/frames
+
+  client:
+    environment:
+      NEXT_PUBLIC_SERVER_URL: ${SERVER_URL}
+      NEXT_PUBLIC_CLIENT_SERVER_URL: ${CLIENT_SERVER_URL}
+      NEXT_PUBLIC_FRAMES_RETRIEVE_URL: ${FRAMES_RETRIEVE_URL}
+      NEXT_PUBLIC_NODE_ENV: development
