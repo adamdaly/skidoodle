@@ -4,14 +4,14 @@ services:
       context: ./auth-server
       dockerfile: Dockerfile.local
 
-  server:
-    # build:
-    #   context: ./server
-    #   dockerfile: Dockerfile.local
-    volumes:
-      - ./server:/usr/src/app
-    environment:
-      NODE_ENV: development
+  # server:
+  # build:
+  #   context: ./server
+  #   dockerfile: Dockerfile.local
+  # volumes:
+  #   - ./server:/usr/src/app
+  # environment:
+  #   NODE_ENV: development
 
   file-store:
     build:
