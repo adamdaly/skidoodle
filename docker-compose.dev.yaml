@@ -5,11 +5,11 @@ services:
       dockerfile: Dockerfile.local
 
   server:
-    # build:
-    #   context: ./server
-    #   dockerfile: Dockerfile.local
-    volumes:
-      - ./server:/usr/src/app
+    build:
+      context: ./server
+      dockerfile: Dockerfile.local
+    # volumes:
+    #   - ./server:/usr/src/app
     environment:
       NODE_ENV: development
 
