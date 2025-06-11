@@ -5,9 +5,9 @@ services:
       dockerfile: Dockerfile.local
 
   server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.local
+    # build:
+    #   context: ./server
+    #   dockerfile: Dockerfile.local
     volumes:
       - ./server:/usr/src/app
     environment:
