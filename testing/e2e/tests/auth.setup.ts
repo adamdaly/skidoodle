@@ -5,7 +5,6 @@ import { Home } from "../src/pages/home";
 import { SignIn } from "../src/pages/sign-in";
 import { Register } from "../src/pages/register";
 import { ConfirmRegistration } from "../src/pages/confirm-registration";
-import { Dashboard } from "../src/pages/dashboard";
 
 setup("Setup - Register and Sign-in new user", async ({ page }) => {
   const username = faker.internet.email();
@@ -29,14 +28,11 @@ setup("Setup - Register and Sign-in new user", async ({ page }) => {
   const signIn = new SignIn(page);
   await signIn.completeForm(username, password);
 
-  // const responsePromise = page.waitForResponse((res) =>
-  //   res.url().includes("/sign-in")
-  // );
+  const responsePromise = page.waitForResponse((res) =>
+    res.url().includes("/sign-in")
+  );
 
-  // const response = await responsePromise;
-  // console.log(response.status(), response.statusText());
-
-  await page.waitForURL(Dashboard.URL, { waitUntil: "load" });
+  await responsePromise;
 
   await writeFile(".state/user.json", JSON.stringify({ username, password }));
 
