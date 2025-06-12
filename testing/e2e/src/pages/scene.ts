@@ -30,7 +30,10 @@ export class Scene extends PageDev {
     });
 
     const responsePromise = this.page.waitForResponse(
-      (res) => res.url().includes("/frames") && res.status() === 201
+      (res) =>
+        res.request().method.toString().toLowerCase() === "post" &&
+        res.url().includes("/frames") &&
+        res.status() === 201
     );
 
     await this.ctaFrameCreate.click();
