@@ -18,20 +18,13 @@ export class Scene extends PageDev {
   }
 
   async frameCreate() {
-    // Listen for failed requests
-    this.page.on("requestfailed", (request) => {
-      // Filter for fetch/XHR requests
-      if (["xhr", "fetch"].includes(request.resourceType())) {
-        console.log("Failed fetch request:");
-        console.log("URL:", request.url());
-        console.log("Method:", request.method());
-        console.log("Error:", request.failure().errorText);
-      }
+    const responsePromise = this.page.waitForResponse((res) => {
+      console.log("res.url()", res.url());
+      return (
+        res.url().includes("http://localhost:3000/frames") &&
+        res.status() === 201
+      );
     });
-
-    const responsePromise = this.page.waitForResponse(
-      (res) => res.url().includes("/frames") && res.status() === 201
-    );
 
     await this.ctaFrameCreate.click();
 
