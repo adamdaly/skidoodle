@@ -76,7 +76,7 @@ server.post("/", upload.single("file"), (req, res) => {
   } else {
     try {
       writeFileSync(`${directory}/${file.originalname}`, file.buffer, {});
-    } catch (e) {
+    } catch {
       res.status(400).send("writeFileSync failed");
       return;
     }

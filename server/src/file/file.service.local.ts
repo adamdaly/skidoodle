@@ -11,7 +11,9 @@ export class FileService implements FileServiceBase {
   }
   async write(file: Express.Multer.File) {
     const fileName = `${crypto.randomUUID()}.${file.originalname.split('.')[1]}`;
+
     await saveFile(fileName, file);
+
     return fileName;
   }
   async overwrite(file: Express.Multer.File) {

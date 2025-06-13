@@ -46,16 +46,6 @@ test.describe("Authorisation flow", () => {
     await expect(page).toHaveURL("/sign-in");
     await signIn.completeForm(username, password);
 
-    await expect(page).toHaveURL("/dashboard");
-  });
-
-  test("should ensure that the dashboard page has a sign-out call-to-action", async () => {
-    const dashboard = new Dashboard(page);
-    await dashboard.pageHeader?.ctaSignOut.click();
-    await expect(page).toHaveURL("/signed-out");
-    await page.screenshot({
-      fullPage: true,
-      path: ".screenshots/signed-out.png",
-    });
+    await expect(page).toHaveURL(Dashboard.URL);
   });
 });

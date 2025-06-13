@@ -31,7 +31,7 @@ export default function SignedOutPage() {
           </p>
         </CardContent>
         <CardFooter className="flex justify-center pb-6">
-          <Button asChild size="lg" className="px-8">
+          <Button asChild size="lg" className="px-8" data-testid="sign-in">
             <Link href="/sign-in">Sign In Again</Link>
           </Button>
         </CardFooter>

@@ -2,7 +2,9 @@ import { Locator, Page } from "@playwright/test";
 import { PageDev } from "./base-page";
 import { PageHeader } from "./page-header";
 
+const URL = "/dashboard";
 export class Dashboard extends PageDev {
+  static readonly URL = URL;
   readonly header: PageHeader;
   readonly listAnimations: Locator;
   readonly listRecents: Locator;

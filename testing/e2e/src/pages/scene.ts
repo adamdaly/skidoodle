@@ -18,9 +18,12 @@ export class Scene extends PageDev {
   }
 
   async frameCreate() {
-    const responsePromise = this.page.waitForResponse(
-      (res) => res.url().includes("/frames") && res.status() === 201
-    );
+    const responsePromise = this.page.waitForResponse((res) => {
+      return (
+        res.url().includes("http://localhost:3000/frames") &&
+        res.status() === 201
+      );
+    });
 
     await this.ctaFrameCreate.click();
 

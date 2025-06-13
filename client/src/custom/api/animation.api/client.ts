@@ -1,5 +1,4 @@
 import { AxiosRequestConfig } from "axios";
-import { SERVER_URL } from "@/custom/constants";
 import { Animation, Frame, Scene } from "@/custom/types";
 import { clientInstance } from "../client-api";
 
@@ -8,12 +7,7 @@ export type PostSceneRequest = Pick<Scene, "animationid" | "name" | "index">;
 export const postScene = (
   body: PostSceneRequest,
   config?: AxiosRequestConfig
-) =>
-  clientInstance.post<Scene, PostSceneRequest>(
-    `${SERVER_URL}/scenes`,
-    body,
-    config
-  );
+) => clientInstance.post<Scene, PostSceneRequest>("/scenes", body, config);
 
 export type PostFrameRequest = {
   file: File;
@@ -36,13 +30,13 @@ export const postAnimation = (
   config?: AxiosRequestConfig
 ) =>
   clientInstance.post<PostAnimationResponse, PostAnimationRequest>(
-    `${SERVER_URL}/animations`,
+    "/animations",
     body,
     config
   );
 
 export const deleteAnimation = (id: number, config?: AxiosRequestConfig) =>
-  clientInstance.deleteRequest(`${SERVER_URL}/animations/${id}`, config);
+  clientInstance.deleteRequest(`/animations/${id}`, config);
 
 export type PostFrameResponse = Frame;
 
@@ -57,24 +51,17 @@ export const postFrame = (
   formData.append("index", body.index.toString());
   formData.append("sceneid", body.sceneid.toString());
 
-  return clientInstance.post<PostFrameResponse, FormData>(
-    `${SERVER_URL}/frames`,
-    formData,
-    {
-      ...config,
-      headers: {
-        ...config?.headers,
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  return clientInstance.post<PostFrameResponse, FormData>("/frames", formData, {
+    ...config,
+    headers: {
+      ...config?.headers,
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 export const deleteFrame = (id: number, config?: AxiosRequestConfig) =>
-  clientInstance.deleteRequest<Frame, void>(
-    `${SERVER_URL}/frames/${id}`,
-    config
-  );
+  clientInstance.deleteRequest<Frame, void>(`/frames/${id}`, config);
 
 export type PatchFrameRequest = {
   file?: File;
@@ -102,7 +89,7 @@ export const patchFrame = (
   }
 
   return clientInstance.patch<Frame, FormData>(
-    `${SERVER_URL}/frames/${id}`,
+    `/frames/${id}`,
     formData,
     config
   );

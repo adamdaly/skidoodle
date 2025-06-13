@@ -18,6 +18,10 @@ run-build:
 run-dev:
 	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml up --build
 
+.PHONY: run-testing
+run-testing:
+	docker compose -f docker-compose.yaml -f docker-compose.testing.yaml up -d --build
+
 .PHONY: build
 build:
 	docker compose up --build
@@ -38,13 +42,16 @@ restart:
 act:
 	./bin/act \
 		--var CI=true \
+		--var NODE_ENV=development \
 		--var POSTGRES_DB=$(POSTGRES_DB) \
 		--var POSTGRES_USER=$(POSTGRES_USER) \
 		--var POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
 		--var PGADMIN_DEFAULT_EMAIL=$(PGADMIN_DEFAULT_EMAIL) \
 		--var PGADMIN_DEFAULT_PASSWORD=$(PGADMIN_DEFAULT_PASSWORD) \
 		--var SERVER_URL=$(SERVER_URL) \
-		--var DATABASE_URL=$(AWS_DB_URL) \
+		--var CLIENT_SERVER_URL=$(CLIENT_SERVER_URL) \
+		--var FRAMES_RETRIEVE_URL=$(FRAMES_RETRIEVE_URL) \
+		--var DATABASE_URL=$(DATABASE_URL) \
 		--var PLAYWRIGHT_BASE_URL=$(PLAYWRIGHT_BASE_URL) \
 		--var PLAYWRIGHT_USER_USERNAME=$(PLAYWRIGHT_USER_USERNAME) \
 		--var PLAYWRIGHT_USER_PASSWORD=$(PLAYWRIGHT_USER_PASSWORD) \
@@ -58,13 +65,16 @@ act-e2e:
 	./bin/act \
 		-j "e2e" \
 		--var CI=true \
+		--var NODE_ENV=development \
 		--var POSTGRES_DB=$(POSTGRES_DB) \
 		--var POSTGRES_USER=$(POSTGRES_USER) \
 		--var POSTGRES_PASSWORD=$(POSTGRES_PASSWORD) \
 		--var PGADMIN_DEFAULT_EMAIL=$(PGADMIN_DEFAULT_EMAIL) \
 		--var PGADMIN_DEFAULT_PASSWORD=$(PGADMIN_DEFAULT_PASSWORD) \
 		--var SERVER_URL=$(SERVER_URL) \
-		--var DATABASE_URL=$(AWS_DB_URL) \
+		--var CLIENT_SERVER_URL=$(CLIENT_SERVER_URL) \
+		--var FRAMES_RETRIEVE_URL=$(FRAMES_RETRIEVE_URL) \
+		--var DATABASE_URL=$(DATABASE_URL) \
 		--var PLAYWRIGHT_BASE_URL=$(PLAYWRIGHT_BASE_URL) \
 		--var PLAYWRIGHT_USER_USERNAME=$(PLAYWRIGHT_USER_USERNAME) \
 		--var PLAYWRIGHT_USER_PASSWORD=$(PLAYWRIGHT_USER_PASSWORD) \
@@ -80,6 +90,18 @@ e2e:
 .PHONY: e2e-dev
 e2e-dev:
 	cd testing/e2e && npx playwright test --ui
+
+.PHONY: deploy
+deploy:
+	@echo "Are you sure you want to deploy? [y/N] "; \
+	read answer; \
+	if [ "$$answer" != "y" ] && [ "$$answer" != "Y" ]; then \
+		echo "Aborted by user"; \
+		exit 0; \
+	else \
+		echo "Proceeding with the task..."; \
+		npx sst deploy --stage production; \
+	fi
 
 help:
 	@echo "options:"

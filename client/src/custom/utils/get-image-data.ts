@@ -14,7 +14,7 @@ export const getImageData = async (
     return;
   }
 
-  const response = await fetch(`${FRAMES_RETRIEVE_URL}/frames`, {
+  const response = await fetch(FRAMES_RETRIEVE_URL, {
     method: "post",
     body: JSON.stringify({
       frames,
@@ -41,7 +41,7 @@ export const getImageData = async (
 
     buffer += decoder.decode(value, { stream: true });
     const lines = buffer.split("\n");
-    buffer = lines.pop();
+    buffer = lines.pop() ?? "";
 
     for (const line of lines) {
       if (!line) {

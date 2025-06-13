@@ -27,6 +27,16 @@ test.describe("Create animation flow", () => {
     await dashboard.goto({ waitUntil: "load" });
     await expect(dashboard.ctaAnimationCreate).toBeAttached();
     await dashboard.completeAnimationCreateForm();
+
+    const responsePromise = dashboard.page.waitForResponse(
+      (res) => res.url().includes("/animations") && res.status() === 201
+    );
+
+    const response = await responsePromise;
+    const createdAnimationData = await response.json();
+
+    await dashboard.page.waitForURL(`/animations/${createdAnimationData.id}`);
+
     await expect(dashboard.page).toHaveURL(/animations\/\d+$/);
     const url = new URL(page.url());
     await dashboard.goto({ waitUntil: "load" });
@@ -41,6 +51,6 @@ test.describe("Create animation flow", () => {
       )
     );
 
-    await expect(hrefs).toContain(url.pathname);
+    expect(hrefs).toContain(url.pathname);
   });
 });

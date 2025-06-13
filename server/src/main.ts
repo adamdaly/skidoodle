@@ -9,7 +9,10 @@ async function bootstrap() {
   app.use(cookieParser('secret'));
 
   app.enableCors({
-    origin: 'http://localhost:3004',
+    origin:
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3004'
+        : ['https://skidoodle.net', 'https://www.skidoodle.net'],
     credentials: true,
   });
 
