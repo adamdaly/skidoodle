@@ -18,25 +18,16 @@ export class Scene extends PageDev {
   }
 
   async frameCreate() {
-    try {
-      const responsePromise = this.page.waitForResponse((res) => {
-        console.log("res.url()", res.url(), res.status());
-        return (
-          res.url().includes("http://localhost:3000/frames") &&
-          res.status() === 201
-        );
-      });
+    const responsePromise = this.page.waitForResponse((res) => {
+      return (
+        res.url().includes("http://localhost:3000/frames") &&
+        res.status() === 201
+      );
+    });
 
-      await this.ctaFrameCreate.click();
+    await this.ctaFrameCreate.click();
 
-      const response = await responsePromise;
-      try {
-        return await response.json();
-      } catch (e) {
-        console.log("frames body error", e);
-      }
-    } catch (e) {
-      console.log("frames error", e);
-    }
+    const response = await responsePromise;
+    return await response.json();
   }
 }
