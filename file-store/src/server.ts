@@ -71,12 +71,15 @@ server.post("/frames", async (req: FramesRequest, res) => {
 server.post("/", upload.single("file"), (req, res) => {
   const file = req.file;
 
+  console.log("file", file);
+
   if (!file) {
     res.status(400).send("No file");
   } else {
     try {
       writeFileSync(`${directory}/${file.originalname}`, file.buffer, {});
-    } catch (e) {
+    } catch {
+      console.log("writeFileSync failed");
       res.status(400).send("writeFileSync failed");
       return;
     }

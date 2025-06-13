@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { getFile, saveFile, updateFile } from 'src/api/files';
 import { FileServiceBase } from './file.service.base';
 import { GetObjectOutput } from 'aws-sdk/clients/s3';
-import { isAxiosError } from 'axios';
 
 @Injectable()
 export class FileService implements FileServiceBase {
@@ -13,15 +12,7 @@ export class FileService implements FileServiceBase {
   async write(file: Express.Multer.File) {
     const fileName = `${crypto.randomUUID()}.${file.originalname.split('.')[1]}`;
 
-    try {
-      await saveFile(fileName, file);
-    } catch (e) {
-      if (isAxiosError(e)) {
-        console.log(e.message);
-      } else {
-        console.log(e);
-      }
-    }
+    await saveFile(fileName, file);
 
     return fileName;
   }
