@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CollabServiceProd } from './collab.service.prod';
 
+jest.mock('color');
+
 describe('CollabService', () => {
   let service: CollabServiceProd;
 
