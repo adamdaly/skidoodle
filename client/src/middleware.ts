@@ -27,7 +27,8 @@ export async function middleware(request: NextRequest) {
   if (
     request.nextUrl.pathname.startsWith("/dashboard") ||
     request.nextUrl.pathname.startsWith("/animations") ||
-    request.nextUrl.pathname.startsWith("/scenes")
+    request.nextUrl.pathname.startsWith("/scenes") ||
+    request.nextUrl.pathname.startsWith("/invite")
   ) {
     if (!isAuthenticated) {
       return NextResponse.redirect(new URL("/sign-in", baseUrl));

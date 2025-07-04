@@ -29,6 +29,9 @@ class AuthServiceClient implements AuthServiceClientBase {
   async fetchAuthSession() {
     return this.service.fetchAuthSession();
   }
+  async getCurrentUser() {
+    return this.service.getCurrentUser();
+  }
 }
 
 const Service =

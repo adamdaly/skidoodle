@@ -1,0 +1,84 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CollabInvite {
+  """"""
+  id: String!
+
+  """"""
+  parentSessionId: String!
+
+  """"""
+  sceneid: Float!
+
+  """"""
+  email: String!
+
+  """"""
+  pin: String!
+
+  """"""
+  expires: Float!
+}
+
+type CollabFrame {
+  """Session Id"""
+  sessionid: String!
+
+  """Frame Id"""
+  frameid: Int!
+}
+
+type CollabSession {
+  """Id"""
+  sessionid: String!
+
+  """Session Id"""
+  parentSessionId: String
+
+  """Email"""
+  email: String!
+
+  """Pin"""
+  pin: String!
+
+  """Expires On"""
+  expires: String!
+
+  """Selected Frames"""
+  frames: [CollabFrame!]
+
+  """Color"""
+  color: String!
+}
+
+type CollabPaint {
+  """Session Id"""
+  sessionid: String!
+
+  """Frame Id"""
+  frameid: Int!
+
+  """Frame Data"""
+  data: String!
+}
+
+type Query {
+  getRootSession(sessionid: String!): CollabSession!
+  getSessions(sessionid: String!): [CollabSession!]!
+  getFrameSelection(sessionid: String!): [CollabFrame!]!
+}
+
+type Mutation {
+  createParentSession(sceneid: Int!, frameid: Int!, email: String!): CollabSession!
+  createInvite(parentSessionId: String!, email: String!): CollabInvite!
+  updateSession(parentSessionId: String!, childSessionId: String!, frameid: Int!): CollabSession!
+  mutationPaint(sessionid: String!, frameid: Int!, data: String!): CollabPaint!
+}
+
+type Subscription {
+  sessions(sessionid: String!): [CollabSession!]!
+  frameSelection(sessionid: String!): [CollabFrame!]!
+  subscriptionPaint(sessionid: String!): CollabPaint!
+}

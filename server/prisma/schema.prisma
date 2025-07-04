@@ -19,6 +19,8 @@ model Animation {
   updatedAt DateTime @default(now())
   isDeleted Boolean  @default(false)
   Scene     Scene[]
+
+  @@map("animations")
 }
 
 model Frame {
@@ -31,6 +33,8 @@ model Frame {
   updatedAt DateTime @default(now())
   isDeleted Boolean  @default(false)
   Scene     Scene    @relation(fields: [sceneid], references: [id])
+
+  @@map("frames")
 }
 
 model Scene {
@@ -45,6 +49,8 @@ model Scene {
   Frame        Frame[]
   Animation    Animation      @relation(fields: [animationid], references: [id])
   Users_Scenes Users_Scenes[]
+
+  @@map("scenes")
 }
 
 model Users_Scenes {

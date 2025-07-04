@@ -94,3 +94,19 @@ export const patchFrame = (
     config
   );
 };
+
+export type GetAnimationResponse = Animation;
+
+export const getAnimation = (
+  animationid: number,
+  config?: AxiosRequestConfig
+) =>
+  clientInstance.get<GetAnimationResponse>(
+    `/animations/${animationid}`,
+    config
+  );
+
+export type GetSceneResponse = Scene;
+
+export const getScene = (sceneid: number, config?: AxiosRequestConfig) =>
+  clientInstance.get<GetSceneResponse>(`/scenes/${sceneid}`, config);
