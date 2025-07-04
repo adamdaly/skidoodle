@@ -33,3 +33,12 @@ export type Animation = {
   isDeleted: boolean;
   Scene: Scene[];
 };
+
+export type CollabSession = {
+  sessionid: string;
+  parentSessionId: string;
+  sceneid: number;
+  email: string;
+  expires: number;
+  color: string;
+};

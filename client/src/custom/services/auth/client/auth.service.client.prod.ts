@@ -4,6 +4,7 @@ import {
   signIn,
   signOut,
   fetchAuthSession,
+  getCurrentUser,
 } from "aws-amplify/auth";
 
 import { AuthServiceClientBase } from "../auth.service.base";
@@ -36,5 +37,9 @@ export default class AuthServiceClientProd implements AuthServiceClientBase {
 
   async fetchAuthSession() {
     return await fetchAuthSession();
+  }
+
+  getCurrentUser() {
+    return getCurrentUser();
   }
 }

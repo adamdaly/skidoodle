@@ -93,4 +93,26 @@ export default class SessionService {
 
     return false;
   }
+
+  static async getCurrentUser(accessToken: string) {
+    const payload = jwt.decode(accessToken) as JwtPayload;
+
+    if (!payload.sub) {
+      throw new Error("Missing User Id");
+    }
+
+    const user = await mongoService
+      .db()
+      .collection("users")
+      .findOne(new ObjectId(payload.sub));
+
+    if (!user) {
+      throw new Error("Unknown User");
+    }
+
+    return {
+      username: user.username,
+      userId: user._id,
+    };
+  }
 }

@@ -3,6 +3,7 @@ import {
   ConfirmSignUpOutput,
   SignInOutput,
   SignUpOutput,
+  GetCurrentUserOutput,
 } from "aws-amplify/auth";
 import {
   SignUpArgs,
@@ -18,6 +19,7 @@ export abstract class AuthServiceClientBase {
   abstract signIn(args: SignInArgs): Promise<SignInOutput>;
   abstract signOut(): Promise<void>;
   abstract fetchAuthSession(): Promise<AuthSession>;
+  abstract getCurrentUser(): Promise<GetCurrentUserOutput>;
 }
 
 export abstract class AuthServiceServerBase {

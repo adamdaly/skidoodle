@@ -43,4 +43,21 @@ export default class SessionController {
 
     res.status(401).send();
   }
+
+  static async getCurrentUser(req: SessionRequest, res: Response) {
+    const currentAccessToken = req.cookies["skidoodle.access_token"];
+
+    if (currentAccessToken) {
+      try {
+        const currentUser = await SessionService.getCurrentUser(
+          currentAccessToken
+        );
+
+        res.status(200).json(currentUser);
+        return;
+      } catch {}
+    }
+
+    res.status(401).send();
+  }
 }

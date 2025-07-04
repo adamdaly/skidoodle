@@ -5,27 +5,6 @@
 
 declare module "sst" {
   export interface Resource {
-    "skidoodleApi": {
-      "service": string
-      "type": "sst.aws.Service"
-      "url": string
-    }
-    "skidoodleBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "skidoodleClient": {
-      "type": "sst.aws.Nextjs"
-      "url": string
-    }
-    "skidoodleGetFrames": {
-      "name": string
-      "type": "sst.aws.Function"
-      "url": string
-    }
-    "skidoodleVpc": {
-      "type": "sst.aws.Vpc"
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />

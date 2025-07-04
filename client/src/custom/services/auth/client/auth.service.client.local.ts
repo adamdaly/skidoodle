@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   AuthSession,
   ConfirmSignUpOutput,
+  GetCurrentUserOutput,
   SignInOutput,
   SignUpOutput,
 } from "aws-amplify/auth";
@@ -99,5 +100,12 @@ export default class AuthServiceClientLocal implements AuthServiceClientBase {
       };
     }
     return session satisfies AuthSession;
+  }
+
+  async getCurrentUser(): Promise<GetCurrentUserOutput> {
+    const response = await axiosInstance.get<GetCurrentUserOutput>(
+      "/session/get-current-user"
+    );
+    return response.data;
   }
 }

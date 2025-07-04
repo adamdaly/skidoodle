@@ -47,9 +47,24 @@ export default $config({
       },
     });
 
+    const collabInvites = new sst.aws.Dynamo("skidoodleCollabInvites", {
+      fields: {
+        id: "string",
+      },
+      primaryIndex: { hashKey: "id" },
+    });
+
+    const collabSessions = new sst.aws.Dynamo("skidoodleCollabSessions", {
+      fields: {
+        parentSessionId: "string",
+        sessionid: "string",
+      },
+      primaryIndex: { hashKey: "parentSessionId", rangeKey: "sessionid" },
+    });
+
     const api = new sst.aws.Service("skidoodleApi", {
       cluster,
-      link: [bucket],
+      link: [bucket, collabInvites, collabSessions],
       loadBalancer: {
         domain: {
           name: "api.skidoodle.net",
@@ -72,6 +87,8 @@ export default $config({
         AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
         AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
         AWS_BUCKET: bucket.name,
+        AWS_COLLAB_INVITES: collabInvites.name,
+        AWS_COLLAB_SESSIONS: collabSessions.name,
         DATABASE_URL: process.env.AWS_DB_URL,
         COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
         COGNITO_USER_POOL_ID: process.env.COGNITO_USER_POOL_ID,
@@ -112,6 +129,7 @@ export default $config({
       apiUrl: api.url,
       clientUrl: client.url,
       getFramesUrl: getFrames.url,
+      collabInvites: collabInvites.urn,
     };
   },
 });
